@@ -13,7 +13,7 @@ export function DropdownMenu({
   trigger: React.ReactNode;
 }) {
   const [open, setOpen] = React.useState(false);
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(null);
 
   const onMouseEnter = () => {
     clearTimeout(timeoutRef.current);
