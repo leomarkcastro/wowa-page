@@ -1,0 +1,148 @@
+export type BaseFieldProps = {
+  before?: React.ReactNode | ((form: any) => React.ReactNode);
+  after?: React.ReactNode | ((form: any) => React.ReactNode);
+  row?: number;
+  cell?: number;
+};
+
+export type FieldType =
+  | ({
+      type: 'tabs';
+      name?: string;
+      tabs: Array<{
+        name?: string;
+        fields: FieldType[];
+      }>;
+    } & BaseFieldProps)
+  | ({
+      type: 'title';
+      name?: string;
+      label: string;
+    } & BaseFieldProps)
+  | ({
+      type: 'divider';
+      name?: string;
+      label?: string;
+    } & BaseFieldProps)
+  | ({
+      type: 'text';
+      name: string;
+      label: string;
+      placeholder?: string;
+      required?: boolean;
+      readonly?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'number';
+      name: string;
+      label: string;
+      min?: number;
+      max?: number;
+      required?: boolean;
+      readonly?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'select';
+      name: string;
+      label: string;
+      options: { label: string; value: string }[];
+      required?: boolean;
+      readonly?: boolean;
+      allowCustom?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'checkbox';
+      name: string;
+      label: string;
+      readonly?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'multiselect';
+      name: string;
+      label: string;
+      options: { label: string; value: string }[];
+      required?: boolean;
+      readonly?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'file';
+      name: string;
+      label: string;
+      accept?: string;
+      required?: boolean;
+      readonly?: boolean;
+      multiple?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'custom';
+      name: string;
+      label: string;
+      required?: boolean;
+      readonly?: boolean;
+      component: React.ReactNode | ((form: any) => React.ReactNode);
+    } & BaseFieldProps)
+  | ({
+      type: 'date';
+      name: string;
+      label: string;
+      required?: boolean;
+      readonly?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'time';
+      name: string;
+      label: string;
+      required?: boolean;
+      readonly?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'datetime';
+      name: string;
+      label: string;
+      required?: boolean;
+      readonly?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'textarea';
+      name: string;
+      label: string;
+      placeholder?: string;
+      required?: boolean;
+      readonly?: boolean;
+      rows?: number;
+    } & BaseFieldProps)
+  | ({
+      type: 'display';
+      name: string;
+      label: string;
+      component?: React.ReactNode | ((form: any) => React.ReactNode);
+    } & BaseFieldProps)
+  | ({
+      type: 'array';
+      name: string;
+      label: string;
+      field: Omit<FieldType, 'name'>; // The field template to repeat
+      min?: number;
+      max?: number;
+      required?: boolean;
+    } & BaseFieldProps);
+
+export interface QuickFormProps {
+  fields: FieldType[];
+  onSubmit: (data: any) => void;
+  onValueChange?: (form: any) => void;
+  className?: string;
+  gridCols?: number;
+  onCancel?: () => void;
+  onDelete?: () => void;
+  title?: string;
+  subtitle?: string;
+  defaultValues?: Record<string, any>;
+  hideSubmit?: boolean;
+  hideDelete?: boolean;
+  hideCancel?: boolean;
+  onForm?: (form: any) => void;
+  hideHeader?: boolean;
+  hideActionsCard?: boolean;
+  formRef?: any;
+}

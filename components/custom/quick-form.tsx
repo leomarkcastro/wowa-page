@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -22,145 +22,104 @@ import { CardFooter } from '../ui/card';
 import { Combobox } from '../ui/combobox';
 import { DeleteModal } from './delete-modal';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FieldType, QuickFormProps } from './quick-form.types';
+import { Plus, Trash2 } from 'lucide-react'; // Add this import
+import { useMediaQuery } from '@/hooks/use-media-query';
 
-type BaseFieldProps = {
-  before?: React.ReactNode | ((form: any) => React.ReactNode);
-  after?: React.ReactNode | ((form: any) => React.ReactNode);
-  row?: number;
-  cell?: number;
+const generateFieldSchema = (field?: FieldType): z.ZodTypeAny => {
+  if (!field || !field.type) return z.any();
+
+  let schema: z.ZodTypeAny;
+
+  switch (field.type) {
+    case 'select':
+    case 'text':
+    case 'textarea':
+    case 'date':
+    case 'time':
+    case 'datetime':
+      schema = z.string();
+      // set minimum length to 1 if required
+      // @ts-ignore
+      if (field.required) schema = schema.min(1);
+      break;
+    case 'number':
+      schema = z.coerce
+        .number()
+        .default(0)
+        .transform((val) => (isNaN(val) ? 0 : val));
+      // @ts-ignore
+      if (field.min !== undefined) schema = schema.min(field.min);
+      // @ts-ignore
+      if (field.max !== undefined) schema = schema.max(field.max);
+      break;
+    case 'checkbox':
+      schema = z.boolean().default(false);
+      break;
+    case 'multiselect':
+      schema = z.array(z.string());
+      break;
+    case 'file':
+      schema = field.multiple
+        ? z.array(z.instanceof(File))
+        : z.instanceof(File);
+      break;
+    case 'array':
+      // Handle arrays of objects or primitive types
+      // @ts-ignore
+      if (field.field?.type === 'object') {
+        const objectSchema: Record<string, z.ZodTypeAny> = {};
+        // @ts-ignore
+        field.field.fields?.forEach((f) => {
+          if (f.name) {
+            objectSchema[f.name] = generateFieldSchema(f);
+          }
+        });
+        schema = z.array(z.object(objectSchema));
+      } else {
+        // @ts-ignore
+        schema = z.array(generateFieldSchema(field.field));
+      }
+      // @ts-ignore
+      if (field.min) schema = schema.min(field.min);
+      // @ts-ignore
+      if (field.max) schema = schema.max(field.max);
+      // if the array is required, make it non-optional
+      // @ts-ignore
+      schema = field.required ? schema : schema.optional();
+      break;
+    default:
+      schema = z.any();
+  }
+
+  // Handle required/optional for all types except checkbox and array
+  if (field.type !== 'checkbox' && field.type !== 'array') {
+    // @ts-ignore
+    schema = field.required ? schema : schema.optional();
+  }
+
+  return schema;
 };
 
-export type FieldType =
-  | ({
-      type: 'tabs';
-      name?: string;
-      tabs: Array<{
-        name: string;
-        fields: FieldType[];
-      }>;
-    } & BaseFieldProps)
-  | ({
-      type: 'title';
-      name?: string;
-      label: string;
-    } & BaseFieldProps)
-  | ({
-      type: 'divider';
-      name?: string;
-      label?: string;
-    } & BaseFieldProps)
-  | ({
-      type: 'text';
-      name: string;
-      label: string;
-      placeholder?: string;
-      required?: boolean;
-      readonly?: boolean;
-    } & BaseFieldProps)
-  | ({
-      type: 'number';
-      name: string;
-      label: string;
-      min?: number;
-      max?: number;
-      required?: boolean;
-      readonly?: boolean;
-    } & BaseFieldProps)
-  | ({
-      type: 'select';
-      name: string;
-      label: string;
-      options: { label: string; value: string }[];
-      required?: boolean;
-      readonly?: boolean;
-      allowCustom?: boolean;
-    } & BaseFieldProps)
-  | ({
-      type: 'checkbox';
-      name: string;
-      label: string;
-      readonly?: boolean;
-    } & BaseFieldProps)
-  | ({
-      type: 'multiselect';
-      name: string;
-      label: string;
-      options: { label: string; value: string }[];
-      required?: boolean;
-      readonly?: boolean;
-    } & BaseFieldProps)
-  | ({
-      type: 'file';
-      name: string;
-      label: string;
-      accept?: string;
-      required?: boolean;
-      readonly?: boolean;
-    } & BaseFieldProps)
-  | ({
-      type: 'custom';
-      name: string;
-      label: string;
-      required?: boolean;
-      readonly?: boolean;
-      component: React.ReactNode | ((form: any) => React.ReactNode);
-    } & BaseFieldProps)
-  | ({
-      type: 'date';
-      name: string;
-      label: string;
-      required?: boolean;
-      readonly?: boolean;
-    } & BaseFieldProps)
-  | ({
-      type: 'time';
-      name: string;
-      label: string;
-      required?: boolean;
-      readonly?: boolean;
-    } & BaseFieldProps)
-  | ({
-      type: 'datetime';
-      name: string;
-      label: string;
-      required?: boolean;
-      readonly?: boolean;
-    } & BaseFieldProps)
-  | ({
-      type: 'textarea';
-      name: string;
-      label: string;
-      placeholder?: string;
-      required?: boolean;
-      readonly?: boolean;
-      rows?: number;
-    } & BaseFieldProps)
-  | ({
-      type: 'display';
-      name: string;
-      label: string;
-      component?: React.ReactNode | ((form: any) => React.ReactNode);
-    } & BaseFieldProps);
+const generateSchema = (args: { fields: FieldType[] }) => {
+  const schema: Record<string, z.ZodTypeAny> = {};
 
-export interface QuickFormProps {
-  fields: FieldType[];
-  onSubmit: (data: any) => void;
-  onValueChange?: (form: any) => void;
-  className?: string;
-  gridCols?: number;
-  onCancel?: () => void;
-  onDelete?: () => void;
-  title?: string;
-  subtitle?: string;
-  defaultValues?: Record<string, any>;
-  hideActions?: boolean;
-  hideSubmit?: boolean;
-  hideDelete?: boolean;
-  hideCancel?: boolean;
-  onForm?: (form: any) => void;
-  hideHeader?: boolean;
-  hideActionsCard?: boolean;
-}
+  const processFields = (fields: FieldType[]) => {
+    fields.forEach((field) => {
+      if (field.type === 'tabs') {
+        field.tabs.forEach((tab) => {
+          processFields(tab.fields);
+        });
+      } else if (field.name) {
+        schema[field.name] = generateFieldSchema(field);
+      }
+    });
+  };
+
+  processFields(args.fields);
+  const o = z.object(schema);
+  return o;
+};
 
 export function QuickForm({
   fields,
@@ -174,74 +133,24 @@ export function QuickForm({
   title,
   subtitle,
   defaultValues,
-  hideActions = false,
   hideSubmit = false,
   hideDelete = false,
   hideCancel = false,
   hideHeader = false,
   hideActionsCard = false,
+  formRef,
 }: QuickFormProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // Dynamically generate Zod schema based on fields
-  const generateSchema = () => {
-    const schema: Record<string, any> = {};
-
-    fields.forEach((field) => {
-      switch (field.type) {
-        case 'text':
-          schema[field.name] = field.required
-            ? z.string().min(1)
-            : z.string().optional();
-          break;
-        case 'number':
-          let numberSchema = z.number();
-          if (field.min !== undefined)
-            numberSchema = numberSchema.min(field.min);
-          if (field.max !== undefined)
-            numberSchema = numberSchema.max(field.max);
-          schema[field.name] = field.required
-            ? numberSchema
-            : numberSchema.optional();
-          break;
-        case 'select':
-          schema[field.name] = field.required
-            ? z.string().min(1)
-            : z.string().optional();
-          break;
-        case 'checkbox':
-          schema[field.name] = z.boolean().default(false);
-          break;
-        case 'multiselect':
-          schema[field.name] = field.required
-            ? z.array(z.string()).min(1)
-            : z.array(z.string());
-          break;
-        case 'file':
-          schema[field.name] = field.required
-            ? z.instanceof(File)
-            : z.instanceof(File).optional();
-          break;
-        case 'date':
-        case 'time':
-        case 'datetime':
-          schema[field.name] = field.required
-            ? z.string().min(1)
-            : z.string().optional();
-          break;
-        case 'textarea':
-          schema[field.name] = field.required
-            ? z.string().min(1)
-            : z.string().optional();
-          break;
-      }
+  const fieldsSchema = useMemo(() => {
+    const f = generateSchema({
+      fields,
     });
-
-    return z.object(schema);
-  };
+    return f;
+  }, [fields]);
 
   const form = useForm({
-    resolver: zodResolver(generateSchema()),
+    resolver: zodResolver(fieldsSchema),
     defaultValues: defaultValues,
   });
 
@@ -257,6 +166,7 @@ export function QuickForm({
     if (defaultValues) {
       Object.entries(defaultValues).forEach(([key, value]) => {
         form.setValue(key, value);
+        // form.trigger(key);
       });
     }
   }, [defaultValues, form]);
@@ -292,221 +202,342 @@ export function QuickForm({
   };
 
   const renderField = (field: FieldType) => {
-    switch (field.type) {
-      case 'tabs':
-        return wrapWithBeforeAfter(
-          <Tabs defaultValue={field.tabs[0]?.name} className='w-full'>
-            <TabsList className='w-full'>
-              {field.tabs.map((tab) => (
-                <TabsTrigger key={tab.name} value={tab.name} className='flex-1'>
-                  {tab.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            {field.tabs.map((tab) => (
-              <TabsContent key={tab.name} value={tab.name}>
-                <div className='space-y-4'>
-                  {Object.entries(
-                    tab.fields.reduce(
-                      (acc: Record<number, FieldType[]>, field) => {
-                        const row = field.row ?? 0;
-                        if (!acc[row]) acc[row] = [];
-                        acc[row].push(field);
-                        return acc;
-                      },
-                      {},
-                    ),
-                  ).map(([row, rowFields]) => (
-                    <div
-                      key={row}
-                      className={`grid grid-cols-${gridCols} gap-4`}
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))`,
+    const renderFields = (fields: FieldType[]) => {
+      // Group fields by row
+      const groupedFields = fields.reduce(
+        (acc: Record<number, FieldType[]>, field) => {
+          const row = field.row ?? 0;
+          if (!acc[row]) acc[row] = [];
+          acc[row].push(field);
+          return acc;
+        },
+        {},
+      );
+
+      return Object.entries(groupedFields).map(([row, rowFields]) => (
+        <div
+          key={row}
+          className='grid h-full gap-4'
+          style={{
+            gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))`,
+          }}
+        >
+          {rowFields.map((subField) => renderField(subField))}
+        </div>
+      ));
+    };
+
+    const fieldContent = () => {
+      switch (field.type) {
+        case 'tabs': {
+          const isMobile = !useMediaQuery('(min-width: 768px)');
+          const [tab, setTab] = useState(field.tabs[0]?.name);
+          return wrapWithBeforeAfter(
+            <Tabs
+              value={tab}
+              onValueChange={(value) => setTab(value)}
+              className='w-full'
+            >
+              {field.tabs.length > 1 && (
+                <>
+                  {isMobile ? (
+                    <Select
+                      defaultValue={field.tabs[0]?.name}
+                      onValueChange={(value) => {
+                        setTab(value);
                       }}
                     >
-                      {rowFields.map((subField) => (
-                        <div
-                          key={subField.name}
-                          className='flex flex-col gap-2'
-                          style={{
-                            gridColumn: subField.cell
-                              ? `span ${subField.cell}`
-                              : 'span 1',
-                          }}
+                      <SelectTrigger className='mb-4 w-full'>
+                        <SelectValue placeholder='Select tab' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {field.tabs.map((tab) => (
+                          <SelectItem key={tab.name} value={tab.name}>
+                            {tab.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <TabsList className='w-full'>
+                      {field.tabs.map((tab) => (
+                        <TabsTrigger
+                          key={tab.name}
+                          value={tab.name}
+                          className='flex-1'
                         >
-                          {subField.type !== 'title' && (
-                            <label className='text-xs font-medium'>
-                              {/* @ts-ignore */}
-                              {subField.label}
-                              {/* @ts-ignore */}
-                              {subField.type !== 'checkbox' &&
-                                // @ts-ignore
-                                subField.required && (
-                                  <span className='pl-1 text-red-500'>*</span>
-                                )}
-                            </label>
-                          )}
-                          {renderField(subField)}
-                          {subField.name &&
-                            form.formState.errors[subField.name] && (
-                              <p className='text-sm text-red-500'>
-                                {
-                                  form.formState.errors[subField.name]
-                                    ?.message as string
-                                }
-                              </p>
-                            )}
-                        </div>
+                          {tab.name}
+                        </TabsTrigger>
                       ))}
-                    </div>
-                  ))}
-                </div>
-              </TabsContent>
-            ))}
-          </Tabs>,
-          field,
-        );
-      case 'display':
-        return wrapWithBeforeAfter(
-          typeof field.component === 'function'
-            ? field.component(form)
-            : field.component || (
-                <div className='rounded-md bg-slate-50 p-2'>
-                  {form.getValues(field.name)}
-                </div>
-              ),
-          field,
-        );
-      case 'title':
-        return <h3 className='pt-4 text-lg font-semibold'>{field.label}</h3>;
-      case 'divider':
-        return <hr className='my-2 border-t border-gray-200' />;
-      case 'text':
-        return wrapWithBeforeAfter(
-          <Input
-            placeholder={field.placeholder}
-            readOnly={field.readonly}
-            {...form.register(field.name)}
-          />,
-          field,
-        );
-      case 'number':
-        return wrapWithBeforeAfter(
-          <Input
-            type='number'
-            readOnly={field.readonly}
-            {...form.register(field.name, { valueAsNumber: true })}
-          />,
-          field,
-        );
-      case 'select':
-        if (field.allowCustom) {
-          return wrapWithBeforeAfter(
-            <Combobox
-              value={watch[field.name]}
-              setValue={(value) => form.setValue(field.name, value)}
-              content={field.options}
-              allowCustom
-            />,
+                    </TabsList>
+                  )}
+                </>
+              )}
+              {field.tabs.map((tab) => (
+                <TabsContent key={tab.name} value={tab.name}>
+                  <div className='space-y-4'>{renderFields(tab.fields)}</div>
+                </TabsContent>
+              ))}
+            </Tabs>,
             field,
           );
         }
-        return wrapWithBeforeAfter(
-          <Select
-            onValueChange={(value) => form.setValue(field.name, value)}
-            value={watch[field.name]}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder='Select...' />
-            </SelectTrigger>
-            <SelectContent>
-              {field.options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
+        case 'display':
+          return wrapWithBeforeAfter(
+            typeof field.component === 'function'
+              ? field.component(form)
+              : field.component || (
+                  <div className='rounded-md bg-slate-50 p-2'>
+                    {form.getValues(field.name)}
+                  </div>
+                ),
+            field,
+          );
+        case 'title':
+          return <h3 className='pt-4 text-lg font-semibold'>{field.label}</h3>;
+        case 'divider':
+          return <hr className='my-2 border-t border-gray-200' />;
+        case 'text':
+          return wrapWithBeforeAfter(
+            <Input
+              placeholder={field.placeholder}
+              readOnly={field.readonly}
+              {...form.register(field.name)}
+            />,
+            field,
+          );
+        case 'number':
+          return wrapWithBeforeAfter(
+            <Input
+              type='number'
+              readOnly={field.readonly}
+              {...form.register(field.name, {
+                setValueAs: (value: string) => {
+                  const parsed = parseFloat(value);
+                  return isNaN(parsed) ? 0 : parsed;
+                },
+              })}
+            />,
+            field,
+          );
+        case 'select':
+          if (field.allowCustom) {
+            return wrapWithBeforeAfter(
+              <Combobox
+                value={watch[field.name]}
+                setValue={(value) => {
+                  form.setValue(field.name, value);
+                  // form.trigger(field.name); // Add this
+                }}
+                content={field.options}
+                allowCustom
+              />,
+              field,
+            );
+          }
+          return wrapWithBeforeAfter(
+            <Select
+              onValueChange={(value) => {
+                form.setValue(field.name, value);
+                // form.trigger(field.name); // Add this
+              }}
+              value={watch[field.name]}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder='Select...' />
+              </SelectTrigger>
+              <SelectContent>
+                {field.options.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>,
+            field,
+          );
+        case 'checkbox':
+          return wrapWithBeforeAfter(
+            <Checkbox
+              onCheckedChange={(checked) => {
+                form.setValue(field.name, checked);
+                // form.trigger(field.name); // Add this
+              }}
+              checked={watch[field.name]}
+            />,
+            field,
+          );
+        case 'file':
+          return wrapWithBeforeAfter(
+            <Input
+              type='file'
+              accept={field.accept}
+              multiple={field.multiple}
+              onChange={(e) => {
+                if (field.multiple) {
+                  const files = Array.from(e.target.files || []);
+                  form.setValue(field.name, files);
+                  // form.trigger(field.name); // Add this
+                } else {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    form.setValue(field.name, file);
+                    // form.trigger(field.name); // Add this
+                  }
+                }
+              }}
+            />,
+            field,
+          );
+        case 'custom':
+          return wrapWithBeforeAfter(
+            typeof field.component === 'function'
+              ? field.component(form)
+              : field.component,
+            field,
+          );
+        case 'date':
+          return wrapWithBeforeAfter(
+            <Input
+              type='date'
+              readOnly={field.readonly}
+              {...form.register(field.name)}
+            />,
+            field,
+          );
+        case 'time':
+          return wrapWithBeforeAfter(
+            <Input
+              type='time'
+              readOnly={field.readonly}
+              {...form.register(field.name)}
+            />,
+            field,
+          );
+        case 'datetime':
+          return wrapWithBeforeAfter(
+            <Input
+              type='datetime-local'
+              readOnly={field.readonly}
+              {...form.register(field.name)}
+            />,
+            field,
+          );
+        case 'textarea':
+          return wrapWithBeforeAfter(
+            <Textarea
+              placeholder={field.placeholder}
+              readOnly={field.readonly}
+              rows={field.rows}
+              {...form.register(field.name)}
+            />,
+            field,
+          );
+        case 'array':
+          const values = watch[field.name] || [];
+          return wrapWithBeforeAfter(
+            <div className='w-full space-y-4'>
+              {values.map((_, index) => (
+                <div key={index} className='flex w-full items-end gap-2'>
+                  <div className='w-full'>
+                    {/* @ts-ignore */}
+                    {renderField({
+                      ...field.field,
+                      name: `${field.name}.${index}`,
+                      label: `${field.label} ${index + 1}`,
+                    })}
+                  </div>
+                  <Button
+                    type='button'
+                    variant='outline'
+                    size='icon'
+                    className='h-10 w-10 flex-shrink-0'
+                    onClick={() => {
+                      const newValues = [...values];
+                      newValues.splice(index, 1);
+                      form.setValue(field.name, newValues);
+                      // form.trigger(field.name); // Add this
+                    }}
+                  >
+                    <Trash2 className='h-4 w-4' />
+                  </Button>
+                </div>
               ))}
-            </SelectContent>
-          </Select>,
-          field,
-        );
-      case 'checkbox':
-        return wrapWithBeforeAfter(
-          <Checkbox
-            onCheckedChange={(checked) => form.setValue(field.name, checked)}
-            checked={watch[field.name]}
-          />,
-          field,
-        );
-      case 'file':
-        return wrapWithBeforeAfter(
-          <Input
-            type='file'
-            accept={field.accept}
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) form.setValue(field.name, file);
-            }}
-          />,
-          field,
-        );
-      case 'custom':
-        return wrapWithBeforeAfter(
-          typeof field.component === 'function'
-            ? field.component(form)
-            : field.component,
-          field,
-        );
-      case 'date':
-        return wrapWithBeforeAfter(
-          <Input
-            type='date'
-            readOnly={field.readonly}
-            {...form.register(field.name)}
-          />,
-          field,
-        );
-      case 'time':
-        return wrapWithBeforeAfter(
-          <Input
-            type='time'
-            readOnly={field.readonly}
-            {...form.register(field.name)}
-          />,
-          field,
-        );
-      case 'datetime':
-        return wrapWithBeforeAfter(
-          <Input
-            type='datetime-local'
-            readOnly={field.readonly}
-            {...form.register(field.name)}
-          />,
-          field,
-        );
-      case 'textarea':
-        return wrapWithBeforeAfter(
-          <Textarea
-            placeholder={field.placeholder}
-            readOnly={field.readonly}
-            rows={field.rows}
-            {...form.register(field.name)}
-          />,
-          field,
-        );
-    }
+              {(!field.max || values.length < field.max) && (
+                <Button
+                  type='button'
+                  variant='outline'
+                  className='w-full'
+                  onClick={() => {
+                    form.setValue(field.name, [...values, null]);
+                    // form.trigger(field.name); // Add this
+                  }}
+                >
+                  <Plus className='mr-2 h-4 w-4' />
+                  Add {field.label}
+                </Button>
+              )}
+            </div>,
+            field,
+          );
+      }
+    };
+
+    // Common wrapper for all fields
+    const content = fieldContent();
+    if (!content) return null;
+
+    return (
+      <div
+        key={field.name}
+        className='flex flex-col gap-2'
+        style={{
+          gridColumn:
+            field.type === 'tabs'
+              ? 'span 1/-1'
+              : field.cell
+                ? `span ${field.cell}`
+                : 'span 1',
+        }}
+      >
+        {field.type !== 'title' && field.type !== 'tabs' && (
+          <label className='text-xs font-medium'>
+            {/* @ts-ignore */}
+            {field.label}
+            {/* @ts-ignore */}
+            {field.type !== 'checkbox' && field.required && (
+              <span className='pl-1 text-red-500'>*</span>
+            )}
+          </label>
+        )}
+        {content}
+        {field.name && form.formState.errors[field.name] && (
+          <p className='text-sm text-red-500'>
+            {form.formState.errors[field.name]?.message as string}
+          </p>
+        )}
+      </div>
+    );
   };
 
-  // Group fields by row
-  const groupedFields = fields.reduce(
-    (acc: Record<number, FieldType[]>, field) => {
-      const row = field.row ?? 0;
-      if (!acc[row]) acc[row] = [];
-      acc[row].push(field);
-      return acc;
-    },
-    {},
-  );
+  // Update the form content rendering part
+  const formContent = () => {
+    if (fields.length === 1) {
+      return renderField(fields[0]);
+    } else {
+      // Wrap multiple fields in an unnamed tab
+      const wrappedFields: FieldType = {
+        type: 'tabs',
+        tabs: [
+          {
+            fields: fields,
+          },
+        ],
+        name: 'wrapper',
+      };
+      return renderField(wrappedFields);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -519,14 +550,33 @@ export function QuickForm({
         }}
       />
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(
+          (data) => {
+            // const formData = form.getValues(); // Get all form values
+            // console.log('Raw form data:', formData);
+            // // validate schema
+            // const result = fieldsSchema.safeParse(formData);
+            // if (!result.success) {
+            //   console.error('Validation error:', result.error);
+            //   return;
+            // } else {
+            //   console.log('Validated form data:', result.data);
+            // }
+            console.log('Form data:', data);
+            onSubmit(data); // Use formData instead of data
+          },
+          (err) => {
+            console.error('Form validation error:', err);
+          },
+        )}
         className={cn('grid grid-cols-1 gap-2 lg:grid-cols-4')}
+        ref={formRef}
       >
         <div
           className={cn(
-            'col-span-3 space-y-3 rounded-lg bg-slate-100 p-4',
+            'col-span-3 space-y-3 overflow-y-auto rounded-lg p-4',
             className,
-            (hideActions || hideActionsCard) && 'lg:col-span-4',
+            hideActionsCard && 'lg:col-span-4',
           )}
         >
           {!hideHeader && (title || subtitle) && (
@@ -537,48 +587,9 @@ export function QuickForm({
               {title && <h2 className='text-2xl font-semibold'>{title}</h2>}
             </div>
           )}
-
-          {Object.entries(groupedFields).map(([row, rowFields]) => (
-            <div
-              key={row}
-              className={`grid grid-cols-${gridCols} gap-4`}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))`,
-              }}
-            >
-              {rowFields.map((field) => (
-                <div
-                  key={field.name}
-                  className='flex flex-col gap-2'
-                  style={{
-                    gridColumn: field.cell ? `span ${field.cell}` : 'span 1',
-                  }}
-                >
-                  {field.type === 'title' ? (
-                    ''
-                  ) : (
-                    <label className='text-xs font-medium'>
-                      {/* @ts-ignore */}
-                      {field.label}
-                      {/* @ts-ignore */}
-                      {field.type !== 'checkbox' && field.required && (
-                        <span className='pl-1 text-red-500'>*</span>
-                      )}
-                    </label>
-                  )}
-                  {renderField(field)}
-                  {form.formState.errors[field.name] && (
-                    <p className='text-sm text-red-500'>
-                      {form.formState.errors[field.name]?.message as string}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          ))}
+          {formContent()}
         </div>
-        {!hideActions && !hideActionsCard && (
+        {!hideActionsCard && (
           <div className='flex justify-end gap-2'>
             <Card className='h-fit w-full'>
               <CardHeader title='Actions' action={false} />

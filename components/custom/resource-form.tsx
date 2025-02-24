@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { createProvider } from '@/lib/services/createProvider';
 import { UseFormReturn } from 'react-hook-form';
+import { QuickFormProps } from './quick-form.types';
 
-interface ResourceFormProps<T = any> {
+interface ResourceFormProps<T = any> extends Partial<QuickFormProps> {
   mode: 'create' | 'edit';
   title: string;
   subtitle: string;
@@ -22,6 +23,9 @@ interface ResourceFormProps<T = any> {
   onCancel?: () => void;
   onValueChange?: (form: UseFormReturn<T>) => void;
   onForm?: (form: UseFormReturn<T>) => void; // Add this line
+  formRef?: any;
+  onAfterSubmit?: (data: any) => void;
+  getIDon?: any;
 }
 
 export function ResourceForm({
@@ -39,10 +43,13 @@ export function ResourceForm({
   dontReturnOnSubmit,
   onValueChange,
   onForm, // Add this line
+  onAfterSubmit,
+  getIDon,
+  ...resourceFormProps
 }: ResourceFormProps) {
   const router = useRouter();
   const param = useParams();
-  const { id } = param;
+  const id = getIDon ? getIDon() : param.id;
   const { toast } = useToast();
 
   const dataHookProvider = createProvider({
@@ -66,11 +73,21 @@ export function ResourceForm({
       if (preprocessData) {
         data = preprocessData(data);
       }
+      // convert all null fields to undefined
+      for (const key in data) {
+        if (data[key] === null) {
+          data[key] = undefined;
+        }
+      }
       setData(data);
     }
   }, [lData, loading, mode, id, preprocessData]);
 
   async function submitData(formData: any) {
+    // const r = true;
+
+    // if (r) return;
+
     const processedData = transformSubmitData
       ? await transformSubmitData(formData)
       : formData;
@@ -100,7 +117,12 @@ export function ResourceForm({
       });
     }
 
-    if (dontReturnOnSubmit) return;
+    if (dontReturnOnSubmit) {
+      if (onAfterSubmit) {
+        onAfterSubmit(processedData);
+      }
+      return;
+    }
 
     if (returnPath) {
       router.push(returnPath);
@@ -127,10 +149,12 @@ export function ResourceForm({
     }
   }
 
-  if (mode === 'edit' && loading) return <div>Loading...</div>;
+  if (mode === 'edit' && loading)
+    return <div className='p-4 text-center'>Loading...</div>;
 
   return (
     <QuickForm
+      {...resourceFormProps}
       gridCols={gridCols}
       onCancel={onCancel || (() => window.history.back())}
       onSubmit={submitData}

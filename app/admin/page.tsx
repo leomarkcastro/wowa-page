@@ -9,19 +9,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { MembersDataProvider } from '@/lib/dataProviders/members';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PlusIcon } from 'lucide-react';
 import { VehicleEditModal } from './(dashboard)/VehicleEditModalv2';
+import { CarsDataProvider } from '@/lib/dataProviders/cars';
 
 const Dashboard = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<string>('active');
   const [isAddingVehicle, setIsAddingVehicle] = useState(false);
+  const [vehicleID, setVehicleID] = useState<string | null>(null);
+  const searchParam = useSearchParams();
 
-  const handleAddVehicle = () => {};
+  // if id is in search params, open edit modal and set vehicleID
+  useEffect(() => {
+    const id = searchParam.get('id');
+    if (id) {
+      setVehicleID(id);
+      setIsAddingVehicle(true);
+    }
+  }, [searchParam]);
 
   return (
     <div className='container mx-auto p-4'>
@@ -86,6 +95,7 @@ const Dashboard = () => {
         <VehicleEditModal
           isOpen={isAddingVehicle}
           onClose={() => setIsAddingVehicle(false)}
+          itemID={vehicleID}
         />
       )}
 
@@ -93,20 +103,36 @@ const Dashboard = () => {
         name='Vehicles'
         enableUrlPersistence={true}
         onRowClick={(row) => {
-          router.push(`/admin/vehicles/edit/${row.id}`);
+          // router.push(`/admin/vehicles/edit/${row.id}`);
+          setVehicleID(row.id);
+          setIsAddingVehicle(true);
         }}
         actionButtons={
-          <Button onClick={() => setIsAddingVehicle(true)}>
+          <Button
+            onClick={() => {
+              setIsAddingVehicle(true);
+              setVehicleID(null);
+            }}
+          >
             <PlusIcon />
             Add New Vehicle
           </Button>
         }
         columns={[
           {
-            key: 'refId',
+            key: 'id',
             label: 'Ref ID',
             sortable: true,
             filterable: ['contains', 'equals'],
+            renderCell(value) {
+              return (
+                <p className='font-mono'>
+                  {value.length > 10
+                    ? value.slice(-7).toUpperCase() + ''
+                    : value}
+                </p>
+              );
+            },
           },
           {
             key: 'lotId',
@@ -133,42 +159,46 @@ const Dashboard = () => {
             filterable: ['contains', 'equals'],
           },
           {
-            key: 'lowEstimate',
+            key: 'marketValueLow',
             label: 'Low Est.',
             sortable: true,
             filterable: ['contains', 'equals'],
           },
           {
-            key: 'highEstimate',
+            key: 'marketValueHigh',
             label: 'High Est.',
             sortable: true,
             filterable: ['contains', 'equals'],
           },
           {
-            key: 'reserve',
+            key: 'isSellWithoutReserve',
             label: 'Reserve',
             sortable: true,
             filterable: ['contains', 'equals'],
+            renderCell(value) {
+              return value ? 'Y' : 'N';
+            },
           },
           {
-            key: 'consignor',
+            key: 'contactConsignor',
             label: 'Consignor',
             sortable: true,
             filterable: ['contains', 'equals'],
+            renderCell(value) {
+              return value || '--';
+            },
           },
           {
             key: 'status',
             label: 'Status',
             sortable: true,
             filterable: ['contains', 'equals'],
-          },
-          {
-            key: 'actions',
-            label: 'Actions',
-            sortable: false,
+            renderCell(value) {
+              return value || 'Pending';
+            },
           },
         ]}
-        dataSource={MembersDataProvider}
+        dataSource={CarsDataProvider}
       />
     </div>
   );

@@ -8,7 +8,8 @@ export const Car_List = graphql(`
         lotId
         vin
         year
-        makeModel
+        make
+        model
         transmission
         engineSize
         engineNumber
@@ -137,7 +138,8 @@ export const Car_Get = graphql(`
         lotId
         vin
         year
-        makeModel
+        make
+        model
         transmission
         engineSize
         engineNumber
