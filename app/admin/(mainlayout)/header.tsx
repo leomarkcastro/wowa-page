@@ -22,7 +22,6 @@ import {
   LineChart,
   ChevronDown,
   LogOut,
-  Settings,
   User,
 } from 'lucide-react';
 import Image from 'next/image';
@@ -46,17 +45,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/hooks/use-auth';
+import { apolloClient } from '@/lib/apollo/ApolloClient';
 
 // Add user store
 interface UserState {
   user: { name: string; email: string } | null;
   setUser: (user: { name: string; email: string } | null) => void;
 }
-
-export const useUser = create<UserState>((set) => ({
-  user: null, // Replace with actual user data or fetch from API
-  setUser: (user) => set({ user }),
-}));
 
 export const pathTitle = create<{
   pathName: string;
@@ -149,28 +145,38 @@ const navigationItems: NavItem[] = [
 ];
 
 export const AppHeaders = () => {
-  const { user } = useUser();
+  const { loading, user, logout } = useAuth();
+
+  async function logoutRoutine() {
+    /* Add logout handler */
+    await logout();
+    await apolloClient.resetStore();
+    window.location.href = '/auth/login';
+  }
 
   const UserMenu = () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='flex items-center gap-2'>
           <User className='h-5 w-5' />
-          <span>{user?.name}</span>
+          <span>{user?.displayName}</span>
           <ChevronDown className='h-4 w-4' />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-56'>
-        <DropdownMenuItem className='cursor-pointer'>
-          <User className='mr-2 h-4 w-4' />
-          <span>Profile</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem className='cursor-pointer'>
-          <Settings className='mr-2 h-4 w-4' />
-          <span>Settings</span>
-        </DropdownMenuItem>
+        <Link href='/admin/settings'>
+          <DropdownMenuItem className='cursor-pointer'>
+            <User className='mr-2 h-4 w-4' />
+            <span>Profile</span>
+          </DropdownMenuItem>
+        </Link>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className='cursor-pointer'>
+        <DropdownMenuItem
+          className='cursor-pointer'
+          onClick={() => {
+            logoutRoutine();
+          }}
+        >
           <LogOut className='mr-2 h-4 w-4' />
           <span>Logout</span>
         </DropdownMenuItem>
@@ -316,13 +322,13 @@ export const AppHeaders = () => {
                     {user ? (
                       <div className='flex items-center gap-2 p-2'>
                         <User className='h-5 w-5' />
-                        <span>{user.name}</span>
+                        <span>{user.displayName}</span>
                         <Button
                           variant='ghost'
                           size='sm'
                           className='ml-auto'
                           onClick={() => {
-                            /* Add logout handler */
+                            logoutRoutine();
                           }}
                         >
                           <LogOut className='h-4 w-4' />

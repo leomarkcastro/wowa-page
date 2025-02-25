@@ -27,7 +27,6 @@ export class TanstackDataProvider<TData, TError> {
         return useQuery({
             queryKey: this.getQueryKey('getList', params),
             queryFn: () => {
-                console.log('fetchig');
                 return this.dataProvider.getList(params)
             }
         });

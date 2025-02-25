@@ -13,7 +13,7 @@ interface ResourceFormProps<T = any> extends Partial<QuickFormProps> {
   title: string;
   subtitle: string;
   dataProvider: any;
-  fields: any[];
+  fields: QuickFormProps['fields'];
   returnPath?: string;
   dontReturnOnSubmit?: boolean;
   transformSubmitData?: (data: any) => Promise<any> | any;

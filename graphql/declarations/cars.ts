@@ -39,7 +39,6 @@ export const Car_List = graphql(`
         photoIds
         isConfirmedSeller
         contactSeller
-        contactConsignor
         contactSpecialist
         contactApprovedBy
         auctionId
@@ -49,47 +48,26 @@ export const Car_List = graphql(`
         isVehicleCollected
         isTransportationDelivered
         comments
+        contactConsignor {
+          actorType
+          name
+          middleName
+          lastName
+          company
+        }
+        contactConsignorId
         auction {
-          id
-          addressLine1
-          addressLine2
-          city
-          state
-          zip
-          country
           summary
-          body
-          tags
+          name
+          auctionID
           eventDateStart
           eventDateEnd
-          photoIds
-          createdAt
-          photos {
-            id
-            assignedTo
-            name
-            url
-            mime
-            size
-            metadata
-            createdAt
-            path
-            category
-            note
-          }
         }
         photos {
           id
-          assignedTo
           name
           url
           mime
-          size
-          metadata
-          createdAt
-          path
-          category
-          note
         }
       }
       page {
@@ -169,7 +147,6 @@ export const Car_Get = graphql(`
         photoIds
         isConfirmedSeller
         contactSeller
-        contactConsignor
         contactSpecialist
         contactApprovedBy
         auctionId
@@ -179,47 +156,26 @@ export const Car_Get = graphql(`
         isVehicleCollected
         isTransportationDelivered
         comments
+        contactConsignor {
+          actorType
+          name
+          middleName
+          lastName
+          company
+        }
+        contactConsignorId
         auction {
-          id
-          addressLine1
-          addressLine2
-          city
-          state
-          zip
-          country
           summary
-          body
-          tags
+          name
+          auctionID
           eventDateStart
           eventDateEnd
-          photoIds
-          createdAt
-          photos {
-            id
-            assignedTo
-            name
-            url
-            mime
-            size
-            metadata
-            createdAt
-            path
-            category
-            note
-          }
         }
         photos {
           id
-          assignedTo
           name
           url
           mime
-          size
-          metadata
-          createdAt
-          path
-          category
-          note
         }
       }
     }

@@ -59,7 +59,7 @@ interface DataTableProps {
     label: string;
     sortable?: boolean;
     filterable?: FilterOperator[]; // Changed from boolean to array of allowed operators
-    renderCell?: (value: any) => React.ReactNode; // Add this line
+    renderCell?: (value: any, allValue: any) => React.ReactNode; // Add this line
   }[];
   actionButtons?: React.ReactNode;
   onRowClick?: (row: any) => void;
@@ -501,7 +501,7 @@ export function DataProviderTable({
                   {columns.map((column) => (
                     <TableCell key={column.key}>
                       {column.renderCell
-                        ? column.renderCell(row[column.key])
+                        ? column.renderCell(row[column.key], row)
                         : row[column.key]}
                     </TableCell>
                   ))}

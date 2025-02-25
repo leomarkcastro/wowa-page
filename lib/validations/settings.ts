@@ -1,7 +1,7 @@
 import * as z from "zod"
 
 export const profileFormSchema = z.object({
-    firstName: z.string().min(2, "First name must be at least 2 characters"),
+    name: z.string().min(2, "First name must be at least 2 characters"),
     middleName: z.string().optional(),
     lastName: z.string().min(2, "Last name must be at least 2 characters"),
     email: z.string().email("Invalid email address"),

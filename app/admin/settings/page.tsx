@@ -12,7 +12,7 @@ export default function SettingsPage() {
       <Tabs defaultValue='profile' className='space-y-4'>
         <TabsList>
           <TabsTrigger value='profile'>Profile Settings</TabsTrigger>
-          <TabsTrigger value='sync'>Member Sync</TabsTrigger>
+          {/* <TabsTrigger value='sync'>Member Sync</TabsTrigger> */}
         </TabsList>
 
         <TabsContent value='profile'>

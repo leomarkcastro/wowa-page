@@ -51,6 +51,16 @@ export type FieldType =
       allowCustom?: boolean;
     } & BaseFieldProps)
   | ({
+      type: 'asyncSelect';
+      name: string;
+      label: string;
+      fetch: (query: string) => Promise<{ label: string; value: string }[]>;
+      required?: boolean;
+      readonly?: boolean;
+      debounce?: number;
+      addNewItemAction?: (inputValue: string) => void;
+    } & BaseFieldProps)
+  | ({
       type: 'checkbox';
       name: string;
       label: string;
@@ -130,6 +140,7 @@ export type FieldType =
 export interface QuickFormProps {
   fields: FieldType[];
   onSubmit: (data: any) => void;
+  onError?: (err: any) => void;
   onValueChange?: (form: any) => void;
   className?: string;
   gridCols?: number;
@@ -145,4 +156,5 @@ export interface QuickFormProps {
   hideHeader?: boolean;
   hideActionsCard?: boolean;
   formRef?: any;
+  readonly?: boolean; // Add this line
 }

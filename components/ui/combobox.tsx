@@ -23,6 +23,7 @@ interface ComboboxProps {
   setValue: (value: string) => void;
   content: { value: string; label: string }[];
   allowCustom?: boolean;
+  onInputChange?: (value: string) => void;
 }
 
 export function Combobox({
@@ -30,6 +31,7 @@ export function Combobox({
   setValue,
   content,
   allowCustom = false,
+  onInputChange,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState('');
@@ -84,6 +86,7 @@ export function Combobox({
               if (allowCustom) {
                 setValue(value);
               }
+              onInputChange?.(value);
             }}
           />
           <CommandList>

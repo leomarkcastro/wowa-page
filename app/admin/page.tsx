@@ -12,23 +12,27 @@ import {
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
-import { PlusIcon } from 'lucide-react';
-import { VehicleEditModal } from './(dashboard)/VehicleEditModalv2';
+import { EyeIcon, PencilIcon, PlusIcon, TrashIcon } from 'lucide-react';
+import { VehicleEditModal } from './(dashboard)/VehicleEditModal';
 import { CarsDataProvider } from '@/lib/dataProviders/cars';
+import { formatMoney } from '@/lib/utils';
 
 const Dashboard = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<string>('active');
   const [isAddingVehicle, setIsAddingVehicle] = useState(false);
   const [vehicleID, setVehicleID] = useState<string | null>(null);
+  const [readOnly, setReadOnly] = useState(false);
   const searchParam = useSearchParams();
 
   // if id is in search params, open edit modal and set vehicleID
   useEffect(() => {
     const id = searchParam.get('id');
     if (id) {
+      const readonly = searchParam.get('readonly');
       setVehicleID(id);
       setIsAddingVehicle(true);
+      setReadOnly(readonly === 'true');
     }
   }, [searchParam]);
 
@@ -96,22 +100,24 @@ const Dashboard = () => {
           isOpen={isAddingVehicle}
           onClose={() => setIsAddingVehicle(false)}
           itemID={vehicleID}
+          readOnly={readOnly}
         />
       )}
 
       <DataProviderTable
         name='Vehicles'
         enableUrlPersistence={true}
-        onRowClick={(row) => {
-          // router.push(`/admin/vehicles/edit/${row.id}`);
-          setVehicleID(row.id);
-          setIsAddingVehicle(true);
-        }}
+        // onRowClick={(row) => {
+        //   // router.push(`/admin/vehicles/edit/${row.id}`);
+        //   setVehicleID(row.id);
+        //   setIsAddingVehicle(true);
+        // }}
         actionButtons={
           <Button
             onClick={() => {
               setIsAddingVehicle(true);
               setVehicleID(null);
+              setReadOnly(false);
             }}
           >
             <PlusIcon />
@@ -163,12 +169,18 @@ const Dashboard = () => {
             label: 'Low Est.',
             sortable: true,
             filterable: ['contains', 'equals'],
+            renderCell(value) {
+              return formatMoney(value);
+            },
           },
           {
             key: 'marketValueHigh',
             label: 'High Est.',
             sortable: true,
             filterable: ['contains', 'equals'],
+            renderCell(value) {
+              return formatMoney(value);
+            },
           },
           {
             key: 'isSellWithoutReserve',
@@ -195,6 +207,50 @@ const Dashboard = () => {
             filterable: ['contains', 'equals'],
             renderCell(value) {
               return value || 'Pending';
+            },
+          },
+          {
+            key: 'actions',
+            label: 'Action',
+            renderCell(value, allValue) {
+              return (
+                <div className='flex w-fit items-center'>
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setReadOnly(true);
+                      setVehicleID(allValue.id);
+                      setIsAddingVehicle(true);
+                    }}
+                  >
+                    <EyeIcon className='h-4 w-4' />
+                  </Button>
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setReadOnly(false);
+                      setVehicleID(allValue.id);
+                      setIsAddingVehicle(true);
+                    }}
+                  >
+                    <PencilIcon className='h-4 w-4' />
+                  </Button>
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    className='text-destructive'
+                  >
+                    <TrashIcon className='h-4 w-4' />
+                  </Button>
+                </div>
+              );
             },
           },
         ]}

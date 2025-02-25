@@ -80,6 +80,7 @@ export const Files_Upload = graphql(`
   mutation File_upload($input: File_uploadInput!) {
     file_upload(input: $input) {
       files {
+        id
         url
         filename
       }

@@ -51,6 +51,7 @@ export type Api_Auction_GetOutputData = {
   __typename?: 'Api_Auction_getOutputData';
   addressLine1?: Maybe<Scalars['String']['output']>;
   addressLine2?: Maybe<Scalars['String']['output']>;
+  auctionID?: Maybe<Scalars['String']['output']>;
   body?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   country?: Maybe<Scalars['String']['output']>;
@@ -58,6 +59,7 @@ export type Api_Auction_GetOutputData = {
   eventDateEnd?: Maybe<Scalars['String']['output']>;
   eventDateStart?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   photoIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   photos?: Maybe<Array<Maybe<Api_Auction_GetOutputDataPhotos>>>;
   state?: Maybe<Scalars['String']['output']>;
@@ -108,6 +110,7 @@ export type Api_Auction_ListOutputData = {
   __typename?: 'Api_Auction_listOutputData';
   addressLine1?: Maybe<Scalars['String']['output']>;
   addressLine2?: Maybe<Scalars['String']['output']>;
+  auctionID?: Maybe<Scalars['String']['output']>;
   body?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   country?: Maybe<Scalars['String']['output']>;
@@ -115,6 +118,7 @@ export type Api_Auction_ListOutputData = {
   eventDateEnd?: Maybe<Scalars['String']['output']>;
   eventDateStart?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   photoIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   photos?: Maybe<Array<Maybe<Api_Auction_ListOutputDataPhotos>>>;
   state?: Maybe<Scalars['String']['output']>;
@@ -193,7 +197,8 @@ export type Api_Car_GetOutputData = {
   bodyStyle?: Maybe<Scalars['String']['output']>;
   comments?: Maybe<Scalars['String']['output']>;
   contactApprovedBy?: Maybe<Scalars['String']['output']>;
-  contactConsignor?: Maybe<Scalars['String']['output']>;
+  contactConsignor?: Maybe<Api_Car_GetOutputDataContactConsignor>;
+  contactConsignorId?: Maybe<Scalars['String']['output']>;
   contactSeller?: Maybe<Scalars['String']['output']>;
   contactSpecialist?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['String']['output']>;
@@ -241,6 +246,7 @@ export type Api_Car_GetOutputDataAuction = {
   __typename?: 'Api_Car_getOutputDataAuction';
   addressLine1?: Maybe<Scalars['String']['output']>;
   addressLine2?: Maybe<Scalars['String']['output']>;
+  auctionID?: Maybe<Scalars['String']['output']>;
   body?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   country?: Maybe<Scalars['String']['output']>;
@@ -248,6 +254,7 @@ export type Api_Car_GetOutputDataAuction = {
   eventDateEnd?: Maybe<Scalars['String']['output']>;
   eventDateStart?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   photoIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   photos?: Maybe<Array<Maybe<Api_Car_GetOutputDataAuctionPhotos>>>;
   state?: Maybe<Scalars['String']['output']>;
@@ -269,6 +276,35 @@ export type Api_Car_GetOutputDataAuctionPhotos = {
   path: Scalars['String']['output'];
   size: Scalars['String']['output'];
   url: Scalars['String']['output'];
+};
+
+export type Api_Car_GetOutputDataContactConsignor = {
+  __typename?: 'Api_Car_getOutputDataContactConsignor';
+  actorType?: Maybe<Scalars['String']['output']>;
+  addressLine1?: Maybe<Scalars['String']['output']>;
+  addressLine2?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  company?: Maybe<Scalars['String']['output']>;
+  companyContact?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  displayName?: Maybe<Scalars['String']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  faxNumber?: Maybe<Scalars['String']['output']>;
+  homeNumber?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  isActive?: Maybe<Scalars['String']['output']>;
+  lastLogin?: Maybe<Scalars['String']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  middleName?: Maybe<Scalars['String']['output']>;
+  mobileNumber?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  postalCode?: Maybe<Scalars['String']['output']>;
+  prefix?: Maybe<Scalars['String']['output']>;
+  role?: Maybe<Scalars['String']['output']>;
+  secondaryEmail?: Maybe<Scalars['String']['output']>;
+  state?: Maybe<Scalars['String']['output']>;
+  suffix?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
 export type Api_Car_GetOutputDataPhotos = {
@@ -316,7 +352,8 @@ export type Api_Car_ListOutputData = {
   bodyStyle?: Maybe<Scalars['String']['output']>;
   comments?: Maybe<Scalars['String']['output']>;
   contactApprovedBy?: Maybe<Scalars['String']['output']>;
-  contactConsignor?: Maybe<Scalars['String']['output']>;
+  contactConsignor?: Maybe<Api_Car_ListOutputDataContactConsignor>;
+  contactConsignorId?: Maybe<Scalars['String']['output']>;
   contactSeller?: Maybe<Scalars['String']['output']>;
   contactSpecialist?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['String']['output']>;
@@ -364,6 +401,7 @@ export type Api_Car_ListOutputDataAuction = {
   __typename?: 'Api_Car_listOutputDataAuction';
   addressLine1?: Maybe<Scalars['String']['output']>;
   addressLine2?: Maybe<Scalars['String']['output']>;
+  auctionID?: Maybe<Scalars['String']['output']>;
   body?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   country?: Maybe<Scalars['String']['output']>;
@@ -371,6 +409,7 @@ export type Api_Car_ListOutputDataAuction = {
   eventDateEnd?: Maybe<Scalars['String']['output']>;
   eventDateStart?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   photoIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   photos?: Maybe<Array<Maybe<Api_Car_ListOutputDataAuctionPhotos>>>;
   state?: Maybe<Scalars['String']['output']>;
@@ -392,6 +431,35 @@ export type Api_Car_ListOutputDataAuctionPhotos = {
   path: Scalars['String']['output'];
   size: Scalars['String']['output'];
   url: Scalars['String']['output'];
+};
+
+export type Api_Car_ListOutputDataContactConsignor = {
+  __typename?: 'Api_Car_listOutputDataContactConsignor';
+  actorType?: Maybe<Scalars['String']['output']>;
+  addressLine1?: Maybe<Scalars['String']['output']>;
+  addressLine2?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  company?: Maybe<Scalars['String']['output']>;
+  companyContact?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  displayName?: Maybe<Scalars['String']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  faxNumber?: Maybe<Scalars['String']['output']>;
+  homeNumber?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  isActive?: Maybe<Scalars['String']['output']>;
+  lastLogin?: Maybe<Scalars['String']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  middleName?: Maybe<Scalars['String']['output']>;
+  mobileNumber?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  postalCode?: Maybe<Scalars['String']['output']>;
+  prefix?: Maybe<Scalars['String']['output']>;
+  role?: Maybe<Scalars['String']['output']>;
+  secondaryEmail?: Maybe<Scalars['String']['output']>;
+  state?: Maybe<Scalars['String']['output']>;
+  suffix?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
 export type Api_Car_ListOutputDataPhotos = {
@@ -703,11 +771,13 @@ export type Api_Auction_CreateInputData = {
 export type Api_Auction_CreateInputDataData = {
   addressLine1?: InputMaybe<Scalars['String']['input']>;
   addressLine2?: InputMaybe<Scalars['String']['input']>;
+  auctionID?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   eventDateEnd?: InputMaybe<Scalars['String']['input']>;
   eventDateStart?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   photoIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   state?: InputMaybe<Scalars['String']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
@@ -806,11 +876,13 @@ export type Api_Auction_UpdateInputDataData = {
 export type Api_Auction_UpdateInputDataDataData = {
   addressLine1?: InputMaybe<Scalars['String']['input']>;
   addressLine2?: InputMaybe<Scalars['String']['input']>;
+  auctionID?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   eventDateEnd?: InputMaybe<Scalars['String']['input']>;
   eventDateStart?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   photoIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   state?: InputMaybe<Scalars['String']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
@@ -861,7 +933,8 @@ export type Api_Car_CreateInputDataData = {
   bodyStyle?: InputMaybe<Scalars['String']['input']>;
   comments?: InputMaybe<Scalars['String']['input']>;
   contactApprovedBy?: InputMaybe<Scalars['String']['input']>;
-  contactConsignor?: InputMaybe<Scalars['String']['input']>;
+  contactConsignor?: InputMaybe<Api_Car_CreateInputDataDataContactConsignor>;
+  contactConsignorId?: InputMaybe<Scalars['String']['input']>;
   contactSeller?: InputMaybe<Scalars['String']['input']>;
   contactSpecialist?: InputMaybe<Scalars['String']['input']>;
   engineNumber?: InputMaybe<Scalars['String']['input']>;
@@ -900,6 +973,34 @@ export type Api_Car_CreateInputDataData = {
   vin?: InputMaybe<Scalars['String']['input']>;
   wheels?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type Api_Car_CreateInputDataDataContactConsignor = {
+  actorType?: InputMaybe<Scalars['String']['input']>;
+  addressLine1?: InputMaybe<Scalars['String']['input']>;
+  addressLine2?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  company?: InputMaybe<Scalars['String']['input']>;
+  companyContact?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['String']['input']>;
+  displayName?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  faxNumber?: InputMaybe<Scalars['String']['input']>;
+  homeNumber?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['String']['input']>;
+  lastLogin?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  middleName?: InputMaybe<Scalars['String']['input']>;
+  mobileNumber?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  postalCode?: InputMaybe<Scalars['String']['input']>;
+  prefix?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Scalars['String']['input']>;
+  secondaryEmail?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<Scalars['String']['input']>;
+  suffix?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Api_Car_DeleteInput = {
@@ -995,7 +1096,8 @@ export type Api_Car_UpdateInputDataDataData = {
   bodyStyle?: InputMaybe<Scalars['String']['input']>;
   comments?: InputMaybe<Scalars['String']['input']>;
   contactApprovedBy?: InputMaybe<Scalars['String']['input']>;
-  contactConsignor?: InputMaybe<Scalars['String']['input']>;
+  contactConsignor?: InputMaybe<Api_Car_UpdateInputDataDataDataContactConsignor>;
+  contactConsignorId?: InputMaybe<Scalars['String']['input']>;
   contactSeller?: InputMaybe<Scalars['String']['input']>;
   contactSpecialist?: InputMaybe<Scalars['String']['input']>;
   engineNumber?: InputMaybe<Scalars['String']['input']>;
@@ -1034,6 +1136,34 @@ export type Api_Car_UpdateInputDataDataData = {
   vin?: InputMaybe<Scalars['String']['input']>;
   wheels?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type Api_Car_UpdateInputDataDataDataContactConsignor = {
+  actorType?: InputMaybe<Scalars['String']['input']>;
+  addressLine1?: InputMaybe<Scalars['String']['input']>;
+  addressLine2?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  company?: InputMaybe<Scalars['String']['input']>;
+  companyContact?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['String']['input']>;
+  displayName?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  faxNumber?: InputMaybe<Scalars['String']['input']>;
+  homeNumber?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['String']['input']>;
+  lastLogin?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  middleName?: InputMaybe<Scalars['String']['input']>;
+  mobileNumber?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  postalCode?: InputMaybe<Scalars['String']['input']>;
+  prefix?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Scalars['String']['input']>;
+  secondaryEmail?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<Scalars['String']['input']>;
+  suffix?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Api_File_CreateInput = {
@@ -1876,6 +2006,7 @@ export type FileUploadOutput = {
 export type FileUploadOutputFiles = {
   __typename?: 'FileUploadOutputFiles';
   filename: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
   url: Scalars['String']['output'];
 };
 
@@ -1902,6 +2033,7 @@ export type FileWhereUniqueInput = {
 
 export type File_UploadInput = {
   files: Array<InputMaybe<File_UploadInputFiles>>;
+  saveToDB?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type File_UploadInputFiles = {
@@ -4639,7 +4771,7 @@ export type Car_ListQueryVariables = Exact<{
 }>;
 
 
-export type Car_ListQuery = { __typename?: 'Query', api_car_list?: { __typename?: 'Api_Car_listOutput', data?: Array<{ __typename?: 'Api_Car_listOutputData', id?: string | null, lotId?: string | null, vin?: string | null, year?: number | null, make?: string | null, model?: string | null, transmission?: string | null, engineSize?: string | null, engineNumber?: string | null, bodyStyle?: string | null, mileage?: number | null, mileageType?: string | null, isNumbersMatching?: boolean | null, isRestored?: boolean | null, isInDamageOrAccident?: boolean | null, exteriorColor?: string | null, factoryName?: string | null, tires?: string | null, wheels?: string | null, exteriorFlags?: Array<string | null> | null, exteriorDetailNote?: string | null, interiorColor?: string | null, interiorSurfaceMaterial?: string | null, interiorCondition?: string | null, mechanicalSuspensionNote?: string | null, frameNote?: string | null, featuresAndOptionsNote?: string | null, notablePoints?: Array<string | null> | null, reservePrice?: number | null, marketValueHigh?: number | null, marketValueLow?: number | null, isSellWithoutReserve?: boolean | null, photoIds?: Array<string | null> | null, isConfirmedSeller?: boolean | null, contactSeller?: string | null, contactConsignor?: string | null, contactSpecialist?: string | null, contactApprovedBy?: string | null, auctionId?: string | null, createdAt?: string | null, isTitleReceived?: boolean | null, isPaymentProcessed?: boolean | null, isVehicleCollected?: boolean | null, isTransportationDelivered?: boolean | null, comments?: string | null, auction?: { __typename?: 'Api_Car_listOutputDataAuction', id?: string | null, addressLine1?: string | null, addressLine2?: string | null, city?: string | null, state?: string | null, zip?: string | null, country?: string | null, summary?: string | null, body?: string | null, tags?: Array<string | null> | null, eventDateStart?: string | null, eventDateEnd?: string | null, photoIds?: Array<string | null> | null, createdAt?: string | null, photos?: Array<{ __typename?: 'Api_Car_listOutputDataAuctionPhotos', id: string, assignedTo: string, name: string, url: string, mime: string, size: string, metadata: string, createdAt: string, path: string, category: string, note: string } | null> | null } | null, photos?: Array<{ __typename?: 'Api_Car_listOutputDataPhotos', id: string, assignedTo: string, name: string, url: string, mime: string, size: string, metadata: string, createdAt: string, path: string, category: string, note: string } | null> | null } | null> | null, page?: { __typename?: 'Api_Car_listOutputPage', total?: number | null, page?: number | null, pageSize?: number | null, range?: { __typename?: 'Api_Car_listOutputPageRange', from: number, to: number } | null } | null } | null };
+export type Car_ListQuery = { __typename?: 'Query', api_car_list?: { __typename?: 'Api_Car_listOutput', data?: Array<{ __typename?: 'Api_Car_listOutputData', id?: string | null, lotId?: string | null, vin?: string | null, year?: number | null, make?: string | null, model?: string | null, transmission?: string | null, engineSize?: string | null, engineNumber?: string | null, bodyStyle?: string | null, mileage?: number | null, mileageType?: string | null, isNumbersMatching?: boolean | null, isRestored?: boolean | null, isInDamageOrAccident?: boolean | null, exteriorColor?: string | null, factoryName?: string | null, tires?: string | null, wheels?: string | null, exteriorFlags?: Array<string | null> | null, exteriorDetailNote?: string | null, interiorColor?: string | null, interiorSurfaceMaterial?: string | null, interiorCondition?: string | null, mechanicalSuspensionNote?: string | null, frameNote?: string | null, featuresAndOptionsNote?: string | null, notablePoints?: Array<string | null> | null, reservePrice?: number | null, marketValueHigh?: number | null, marketValueLow?: number | null, isSellWithoutReserve?: boolean | null, photoIds?: Array<string | null> | null, isConfirmedSeller?: boolean | null, contactSeller?: string | null, contactSpecialist?: string | null, contactApprovedBy?: string | null, auctionId?: string | null, createdAt?: string | null, isTitleReceived?: boolean | null, isPaymentProcessed?: boolean | null, isVehicleCollected?: boolean | null, isTransportationDelivered?: boolean | null, comments?: string | null, contactConsignorId?: string | null, contactConsignor?: { __typename?: 'Api_Car_listOutputDataContactConsignor', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, auction?: { __typename?: 'Api_Car_listOutputDataAuction', summary?: string | null, name?: string | null, auctionID?: string | null, eventDateStart?: string | null, eventDateEnd?: string | null } | null, photos?: Array<{ __typename?: 'Api_Car_listOutputDataPhotos', id: string, name: string, url: string, mime: string } | null> | null } | null> | null, page?: { __typename?: 'Api_Car_listOutputPage', total?: number | null, page?: number | null, pageSize?: number | null, range?: { __typename?: 'Api_Car_listOutputPageRange', from: number, to: number } | null } | null } | null };
 
 export type Car_AggregateQueryVariables = Exact<{
   input: Api_Car_AggregateInput;
@@ -4660,7 +4792,7 @@ export type Car_GetQueryVariables = Exact<{
 }>;
 
 
-export type Car_GetQuery = { __typename?: 'Query', api_car_get?: { __typename?: 'Api_Car_getOutput', data?: { __typename?: 'Api_Car_getOutputData', id?: string | null, lotId?: string | null, vin?: string | null, year?: number | null, make?: string | null, model?: string | null, transmission?: string | null, engineSize?: string | null, engineNumber?: string | null, bodyStyle?: string | null, mileage?: number | null, mileageType?: string | null, isNumbersMatching?: boolean | null, isRestored?: boolean | null, isInDamageOrAccident?: boolean | null, exteriorColor?: string | null, factoryName?: string | null, tires?: string | null, wheels?: string | null, exteriorFlags?: Array<string | null> | null, exteriorDetailNote?: string | null, interiorColor?: string | null, interiorSurfaceMaterial?: string | null, interiorCondition?: string | null, mechanicalSuspensionNote?: string | null, frameNote?: string | null, featuresAndOptionsNote?: string | null, notablePoints?: Array<string | null> | null, reservePrice?: number | null, marketValueHigh?: number | null, marketValueLow?: number | null, isSellWithoutReserve?: boolean | null, photoIds?: Array<string | null> | null, isConfirmedSeller?: boolean | null, contactSeller?: string | null, contactConsignor?: string | null, contactSpecialist?: string | null, contactApprovedBy?: string | null, auctionId?: string | null, createdAt?: string | null, isTitleReceived?: boolean | null, isPaymentProcessed?: boolean | null, isVehicleCollected?: boolean | null, isTransportationDelivered?: boolean | null, comments?: string | null, auction?: { __typename?: 'Api_Car_getOutputDataAuction', id?: string | null, addressLine1?: string | null, addressLine2?: string | null, city?: string | null, state?: string | null, zip?: string | null, country?: string | null, summary?: string | null, body?: string | null, tags?: Array<string | null> | null, eventDateStart?: string | null, eventDateEnd?: string | null, photoIds?: Array<string | null> | null, createdAt?: string | null, photos?: Array<{ __typename?: 'Api_Car_getOutputDataAuctionPhotos', id: string, assignedTo: string, name: string, url: string, mime: string, size: string, metadata: string, createdAt: string, path: string, category: string, note: string } | null> | null } | null, photos?: Array<{ __typename?: 'Api_Car_getOutputDataPhotos', id: string, assignedTo: string, name: string, url: string, mime: string, size: string, metadata: string, createdAt: string, path: string, category: string, note: string } | null> | null } | null } | null };
+export type Car_GetQuery = { __typename?: 'Query', api_car_get?: { __typename?: 'Api_Car_getOutput', data?: { __typename?: 'Api_Car_getOutputData', id?: string | null, lotId?: string | null, vin?: string | null, year?: number | null, make?: string | null, model?: string | null, transmission?: string | null, engineSize?: string | null, engineNumber?: string | null, bodyStyle?: string | null, mileage?: number | null, mileageType?: string | null, isNumbersMatching?: boolean | null, isRestored?: boolean | null, isInDamageOrAccident?: boolean | null, exteriorColor?: string | null, factoryName?: string | null, tires?: string | null, wheels?: string | null, exteriorFlags?: Array<string | null> | null, exteriorDetailNote?: string | null, interiorColor?: string | null, interiorSurfaceMaterial?: string | null, interiorCondition?: string | null, mechanicalSuspensionNote?: string | null, frameNote?: string | null, featuresAndOptionsNote?: string | null, notablePoints?: Array<string | null> | null, reservePrice?: number | null, marketValueHigh?: number | null, marketValueLow?: number | null, isSellWithoutReserve?: boolean | null, photoIds?: Array<string | null> | null, isConfirmedSeller?: boolean | null, contactSeller?: string | null, contactSpecialist?: string | null, contactApprovedBy?: string | null, auctionId?: string | null, createdAt?: string | null, isTitleReceived?: boolean | null, isPaymentProcessed?: boolean | null, isVehicleCollected?: boolean | null, isTransportationDelivered?: boolean | null, comments?: string | null, contactConsignorId?: string | null, contactConsignor?: { __typename?: 'Api_Car_getOutputDataContactConsignor', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, auction?: { __typename?: 'Api_Car_getOutputDataAuction', summary?: string | null, name?: string | null, auctionID?: string | null, eventDateStart?: string | null, eventDateEnd?: string | null } | null, photos?: Array<{ __typename?: 'Api_Car_getOutputDataPhotos', id: string, name: string, url: string, mime: string } | null> | null } | null } | null };
 
 export type Car_CreateMutationVariables = Exact<{
   input: Api_Car_CreateInput;
@@ -4723,7 +4855,7 @@ export type File_UploadMutationVariables = Exact<{
 }>;
 
 
-export type File_UploadMutation = { __typename?: 'Mutation', file_upload?: { __typename?: 'FileUploadOutput', files: Array<{ __typename?: 'FileUploadOutputFiles', url: string, filename: string } | null> } | null };
+export type File_UploadMutation = { __typename?: 'Mutation', file_upload?: { __typename?: 'FileUploadOutput', files: Array<{ __typename?: 'FileUploadOutputFiles', id?: string | null, url: string, filename: string } | null> } | null };
 
 export type Members_ListQueryVariables = Exact<{
   input: Api_Member_ListInput;
@@ -4794,10 +4926,10 @@ export const Authclient_ChangePasswordDocument = {"kind":"Document","definitions
 export const Authclient_RequestPasswordResetDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authclient_requestPasswordReset"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authclient_requestPasswordReset"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}}]}]}}]} as unknown as DocumentNode<Authclient_RequestPasswordResetMutation, Authclient_RequestPasswordResetMutationVariables>;
 export const Authclient_ResetPasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authclient_resetPassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"token"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authclient_resetPassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"token"},"value":{"kind":"Variable","name":{"kind":"Name","value":"token"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}]}]}}]} as unknown as DocumentNode<Authclient_ResetPasswordMutation, Authclient_ResetPasswordMutationVariables>;
 export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserWhereUniqueInput"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserUpdateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"lastLogin"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
-export const Car_ListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_List"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_listInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_list"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lotId"}},{"kind":"Field","name":{"kind":"Name","value":"vin"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"make"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"transmission"}},{"kind":"Field","name":{"kind":"Name","value":"engineSize"}},{"kind":"Field","name":{"kind":"Name","value":"engineNumber"}},{"kind":"Field","name":{"kind":"Name","value":"bodyStyle"}},{"kind":"Field","name":{"kind":"Name","value":"mileage"}},{"kind":"Field","name":{"kind":"Name","value":"mileageType"}},{"kind":"Field","name":{"kind":"Name","value":"isNumbersMatching"}},{"kind":"Field","name":{"kind":"Name","value":"isRestored"}},{"kind":"Field","name":{"kind":"Name","value":"isInDamageOrAccident"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorColor"}},{"kind":"Field","name":{"kind":"Name","value":"factoryName"}},{"kind":"Field","name":{"kind":"Name","value":"tires"}},{"kind":"Field","name":{"kind":"Name","value":"wheels"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorFlags"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorDetailNote"}},{"kind":"Field","name":{"kind":"Name","value":"interiorColor"}},{"kind":"Field","name":{"kind":"Name","value":"interiorSurfaceMaterial"}},{"kind":"Field","name":{"kind":"Name","value":"interiorCondition"}},{"kind":"Field","name":{"kind":"Name","value":"mechanicalSuspensionNote"}},{"kind":"Field","name":{"kind":"Name","value":"frameNote"}},{"kind":"Field","name":{"kind":"Name","value":"featuresAndOptionsNote"}},{"kind":"Field","name":{"kind":"Name","value":"notablePoints"}},{"kind":"Field","name":{"kind":"Name","value":"reservePrice"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueHigh"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueLow"}},{"kind":"Field","name":{"kind":"Name","value":"isSellWithoutReserve"}},{"kind":"Field","name":{"kind":"Name","value":"photoIds"}},{"kind":"Field","name":{"kind":"Name","value":"isConfirmedSeller"}},{"kind":"Field","name":{"kind":"Name","value":"contactSeller"}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignor"}},{"kind":"Field","name":{"kind":"Name","value":"contactSpecialist"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedBy"}},{"kind":"Field","name":{"kind":"Name","value":"auctionId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"isTitleReceived"}},{"kind":"Field","name":{"kind":"Name","value":"isPaymentProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"isVehicleCollected"}},{"kind":"Field","name":{"kind":"Name","value":"isTransportationDelivered"}},{"kind":"Field","name":{"kind":"Name","value":"comments"}},{"kind":"Field","name":{"kind":"Name","value":"auction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"addressLine1"}},{"kind":"Field","name":{"kind":"Name","value":"addressLine2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"zip"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"body"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateStart"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateEnd"}},{"kind":"Field","name":{"kind":"Name","value":"photoIds"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"photos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"assignedTo"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}},{"kind":"Field","name":{"kind":"Name","value":"size"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"photos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"assignedTo"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}},{"kind":"Field","name":{"kind":"Name","value":"size"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"range"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}}]}}]}}]}}]} as unknown as DocumentNode<Car_ListQuery, Car_ListQueryVariables>;
+export const Car_ListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_List"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_listInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_list"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lotId"}},{"kind":"Field","name":{"kind":"Name","value":"vin"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"make"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"transmission"}},{"kind":"Field","name":{"kind":"Name","value":"engineSize"}},{"kind":"Field","name":{"kind":"Name","value":"engineNumber"}},{"kind":"Field","name":{"kind":"Name","value":"bodyStyle"}},{"kind":"Field","name":{"kind":"Name","value":"mileage"}},{"kind":"Field","name":{"kind":"Name","value":"mileageType"}},{"kind":"Field","name":{"kind":"Name","value":"isNumbersMatching"}},{"kind":"Field","name":{"kind":"Name","value":"isRestored"}},{"kind":"Field","name":{"kind":"Name","value":"isInDamageOrAccident"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorColor"}},{"kind":"Field","name":{"kind":"Name","value":"factoryName"}},{"kind":"Field","name":{"kind":"Name","value":"tires"}},{"kind":"Field","name":{"kind":"Name","value":"wheels"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorFlags"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorDetailNote"}},{"kind":"Field","name":{"kind":"Name","value":"interiorColor"}},{"kind":"Field","name":{"kind":"Name","value":"interiorSurfaceMaterial"}},{"kind":"Field","name":{"kind":"Name","value":"interiorCondition"}},{"kind":"Field","name":{"kind":"Name","value":"mechanicalSuspensionNote"}},{"kind":"Field","name":{"kind":"Name","value":"frameNote"}},{"kind":"Field","name":{"kind":"Name","value":"featuresAndOptionsNote"}},{"kind":"Field","name":{"kind":"Name","value":"notablePoints"}},{"kind":"Field","name":{"kind":"Name","value":"reservePrice"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueHigh"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueLow"}},{"kind":"Field","name":{"kind":"Name","value":"isSellWithoutReserve"}},{"kind":"Field","name":{"kind":"Name","value":"photoIds"}},{"kind":"Field","name":{"kind":"Name","value":"isConfirmedSeller"}},{"kind":"Field","name":{"kind":"Name","value":"contactSeller"}},{"kind":"Field","name":{"kind":"Name","value":"contactSpecialist"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedBy"}},{"kind":"Field","name":{"kind":"Name","value":"auctionId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"isTitleReceived"}},{"kind":"Field","name":{"kind":"Name","value":"isPaymentProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"isVehicleCollected"}},{"kind":"Field","name":{"kind":"Name","value":"isTransportationDelivered"}},{"kind":"Field","name":{"kind":"Name","value":"comments"}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignorId"}},{"kind":"Field","name":{"kind":"Name","value":"auction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"auctionID"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateStart"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateEnd"}}]}},{"kind":"Field","name":{"kind":"Name","value":"photos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"range"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}}]}}]}}]}}]} as unknown as DocumentNode<Car_ListQuery, Car_ListQueryVariables>;
 export const Car_AggregateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_Aggregate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_aggregateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"breakdown"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"countBy"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<Car_AggregateQuery, Car_AggregateQueryVariables>;
 export const Car_GroupByDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_GroupBy"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_groupByInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_groupBy"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"breakdown"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uniqueIdentifier"}},{"kind":"Field","name":{"kind":"Name","value":"counts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"countBy"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Car_GroupByQuery, Car_GroupByQueryVariables>;
-export const Car_GetDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_Get"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_getInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_get"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lotId"}},{"kind":"Field","name":{"kind":"Name","value":"vin"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"make"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"transmission"}},{"kind":"Field","name":{"kind":"Name","value":"engineSize"}},{"kind":"Field","name":{"kind":"Name","value":"engineNumber"}},{"kind":"Field","name":{"kind":"Name","value":"bodyStyle"}},{"kind":"Field","name":{"kind":"Name","value":"mileage"}},{"kind":"Field","name":{"kind":"Name","value":"mileageType"}},{"kind":"Field","name":{"kind":"Name","value":"isNumbersMatching"}},{"kind":"Field","name":{"kind":"Name","value":"isRestored"}},{"kind":"Field","name":{"kind":"Name","value":"isInDamageOrAccident"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorColor"}},{"kind":"Field","name":{"kind":"Name","value":"factoryName"}},{"kind":"Field","name":{"kind":"Name","value":"tires"}},{"kind":"Field","name":{"kind":"Name","value":"wheels"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorFlags"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorDetailNote"}},{"kind":"Field","name":{"kind":"Name","value":"interiorColor"}},{"kind":"Field","name":{"kind":"Name","value":"interiorSurfaceMaterial"}},{"kind":"Field","name":{"kind":"Name","value":"interiorCondition"}},{"kind":"Field","name":{"kind":"Name","value":"mechanicalSuspensionNote"}},{"kind":"Field","name":{"kind":"Name","value":"frameNote"}},{"kind":"Field","name":{"kind":"Name","value":"featuresAndOptionsNote"}},{"kind":"Field","name":{"kind":"Name","value":"notablePoints"}},{"kind":"Field","name":{"kind":"Name","value":"reservePrice"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueHigh"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueLow"}},{"kind":"Field","name":{"kind":"Name","value":"isSellWithoutReserve"}},{"kind":"Field","name":{"kind":"Name","value":"photoIds"}},{"kind":"Field","name":{"kind":"Name","value":"isConfirmedSeller"}},{"kind":"Field","name":{"kind":"Name","value":"contactSeller"}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignor"}},{"kind":"Field","name":{"kind":"Name","value":"contactSpecialist"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedBy"}},{"kind":"Field","name":{"kind":"Name","value":"auctionId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"isTitleReceived"}},{"kind":"Field","name":{"kind":"Name","value":"isPaymentProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"isVehicleCollected"}},{"kind":"Field","name":{"kind":"Name","value":"isTransportationDelivered"}},{"kind":"Field","name":{"kind":"Name","value":"comments"}},{"kind":"Field","name":{"kind":"Name","value":"auction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"addressLine1"}},{"kind":"Field","name":{"kind":"Name","value":"addressLine2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"zip"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"body"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateStart"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateEnd"}},{"kind":"Field","name":{"kind":"Name","value":"photoIds"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"photos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"assignedTo"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}},{"kind":"Field","name":{"kind":"Name","value":"size"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"photos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"assignedTo"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}},{"kind":"Field","name":{"kind":"Name","value":"size"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Car_GetQuery, Car_GetQueryVariables>;
+export const Car_GetDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_Get"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_getInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_get"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lotId"}},{"kind":"Field","name":{"kind":"Name","value":"vin"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"make"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"transmission"}},{"kind":"Field","name":{"kind":"Name","value":"engineSize"}},{"kind":"Field","name":{"kind":"Name","value":"engineNumber"}},{"kind":"Field","name":{"kind":"Name","value":"bodyStyle"}},{"kind":"Field","name":{"kind":"Name","value":"mileage"}},{"kind":"Field","name":{"kind":"Name","value":"mileageType"}},{"kind":"Field","name":{"kind":"Name","value":"isNumbersMatching"}},{"kind":"Field","name":{"kind":"Name","value":"isRestored"}},{"kind":"Field","name":{"kind":"Name","value":"isInDamageOrAccident"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorColor"}},{"kind":"Field","name":{"kind":"Name","value":"factoryName"}},{"kind":"Field","name":{"kind":"Name","value":"tires"}},{"kind":"Field","name":{"kind":"Name","value":"wheels"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorFlags"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorDetailNote"}},{"kind":"Field","name":{"kind":"Name","value":"interiorColor"}},{"kind":"Field","name":{"kind":"Name","value":"interiorSurfaceMaterial"}},{"kind":"Field","name":{"kind":"Name","value":"interiorCondition"}},{"kind":"Field","name":{"kind":"Name","value":"mechanicalSuspensionNote"}},{"kind":"Field","name":{"kind":"Name","value":"frameNote"}},{"kind":"Field","name":{"kind":"Name","value":"featuresAndOptionsNote"}},{"kind":"Field","name":{"kind":"Name","value":"notablePoints"}},{"kind":"Field","name":{"kind":"Name","value":"reservePrice"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueHigh"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueLow"}},{"kind":"Field","name":{"kind":"Name","value":"isSellWithoutReserve"}},{"kind":"Field","name":{"kind":"Name","value":"photoIds"}},{"kind":"Field","name":{"kind":"Name","value":"isConfirmedSeller"}},{"kind":"Field","name":{"kind":"Name","value":"contactSeller"}},{"kind":"Field","name":{"kind":"Name","value":"contactSpecialist"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedBy"}},{"kind":"Field","name":{"kind":"Name","value":"auctionId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"isTitleReceived"}},{"kind":"Field","name":{"kind":"Name","value":"isPaymentProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"isVehicleCollected"}},{"kind":"Field","name":{"kind":"Name","value":"isTransportationDelivered"}},{"kind":"Field","name":{"kind":"Name","value":"comments"}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignorId"}},{"kind":"Field","name":{"kind":"Name","value":"auction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"auctionID"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateStart"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateEnd"}}]}},{"kind":"Field","name":{"kind":"Name","value":"photos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Car_GetQuery, Car_GetQueryVariables>;
 export const Car_CreateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Car_Create"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_createInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_create"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"ids"}}]}}]}}]} as unknown as DocumentNode<Car_CreateMutation, Car_CreateMutationVariables>;
 export const Car_UpdateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Car_Update"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_updateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_update"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"ids"}}]}}]}}]} as unknown as DocumentNode<Car_UpdateMutation, Car_UpdateMutationVariables>;
 export const Car_DeleteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Car_Delete"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_deleteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_delete"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"ids"}}]}}]}}]} as unknown as DocumentNode<Car_DeleteMutation, Car_DeleteMutationVariables>;
@@ -4806,7 +4938,7 @@ export const Files_GetDocument = {"kind":"Document","definitions":[{"kind":"Oper
 export const Files_CreateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Files_Create"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_file_createInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_file_create"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"ids"}}]}}]}}]} as unknown as DocumentNode<Files_CreateMutation, Files_CreateMutationVariables>;
 export const Files_UpdateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Files_Update"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_file_updateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_file_update"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"ids"}}]}}]}}]} as unknown as DocumentNode<Files_UpdateMutation, Files_UpdateMutationVariables>;
 export const Files_DeleteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Files_Delete"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_file_deleteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_file_delete"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"ids"}}]}}]}}]} as unknown as DocumentNode<Files_DeleteMutation, Files_DeleteMutationVariables>;
-export const File_UploadDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"File_upload"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"File_uploadInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"file_upload"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"files"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"filename"}}]}}]}}]}}]} as unknown as DocumentNode<File_UploadMutation, File_UploadMutationVariables>;
+export const File_UploadDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"File_upload"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"File_uploadInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"file_upload"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"files"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"filename"}}]}}]}}]}}]} as unknown as DocumentNode<File_UploadMutation, File_UploadMutationVariables>;
 export const Members_ListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Members_List"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_member_listInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_member_list"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"prefix"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"suffix"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"mobileNumber"}},{"kind":"Field","name":{"kind":"Name","value":"faxNumber"}},{"kind":"Field","name":{"kind":"Name","value":"homeNumber"}},{"kind":"Field","name":{"kind":"Name","value":"secondaryEmail"}},{"kind":"Field","name":{"kind":"Name","value":"addressLine1"}},{"kind":"Field","name":{"kind":"Name","value":"addressLine2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"postalCode"}},{"kind":"Field","name":{"kind":"Name","value":"company"}},{"kind":"Field","name":{"kind":"Name","value":"companyContact"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"lastLogin"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"range"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}}]}}]}}]}}]} as unknown as DocumentNode<Members_ListQuery, Members_ListQueryVariables>;
 export const Members_AggregateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Members_Aggregate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_member_aggregateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_member_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"breakdown"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"countBy"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<Members_AggregateQuery, Members_AggregateQueryVariables>;
 export const Members_GroupByDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Members_GroupBy"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_member_groupByInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_member_groupBy"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"breakdown"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uniqueIdentifier"}},{"kind":"Field","name":{"kind":"Name","value":"counts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"countBy"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Members_GroupByQuery, Members_GroupByQueryVariables>;

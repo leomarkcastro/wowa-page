@@ -25,6 +25,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FieldType, QuickFormProps } from './quick-form.types';
 import { Plus, Trash2 } from 'lucide-react'; // Add this import
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { AsyncSelect } from '../ui/async-select';
 
 const generateFieldSchema = (field?: FieldType): z.ZodTypeAny => {
   if (!field || !field.type) return z.any();
@@ -124,6 +125,7 @@ const generateSchema = (args: { fields: FieldType[] }) => {
 export function QuickForm({
   fields,
   onSubmit,
+  onError,
   onValueChange,
   onForm,
   onCancel,
@@ -139,6 +141,7 @@ export function QuickForm({
   hideHeader = false,
   hideActionsCard = false,
   formRef,
+  readonly = false, // Add this line
 }: QuickFormProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -202,6 +205,65 @@ export function QuickForm({
   };
 
   const renderField = (field: FieldType) => {
+    // Add this function to transform fields
+    const transformFieldIfReadonly = (field: FieldType): FieldType => {
+      if (!readonly) return field;
+
+      // Don't transform these field types
+      if (
+        ['display', 'array', 'tabs', 'title', 'divider'].includes(field.type)
+      ) {
+        return field;
+      }
+
+      // Transform input fields to display type
+      return {
+        type: 'display',
+        name: field.name,
+        // @ts-ignore
+        label: field.label || '',
+        component: (form: any) => {
+          const value = form.getValues(field.name);
+          if (field.type === 'select' || field.type === 'multiselect') {
+            const options = field.options;
+            if (Array.isArray(value)) {
+              return options
+                .filter((opt) => value.includes(opt.value))
+                .map((opt) => opt.label)
+                .join(', ');
+            }
+            return (
+              options.find((opt) => opt.value === value)?.label || value || '--'
+            );
+          }
+          if (field.type === 'asyncSelect') {
+            const [val, setVal] = useState(value);
+            const [loading, setLoading] = useState(false);
+            useEffect(() => {
+              (async function fetchOptions() {
+                if (!value) return;
+                setLoading(true);
+                const options = await field.fetch(value);
+                console.log(value, options);
+                setVal(
+                  options.find((opt) => opt.value === value)?.label || value,
+                );
+                setLoading(false);
+              })();
+            }, [value]);
+            return loading ? 'Loading...' : val || '--';
+          }
+          if (field.type === 'checkbox') {
+            return value ? 'Yes' : 'No';
+          }
+          return value || '--';
+        },
+      };
+    };
+
+    const transformedField = transformFieldIfReadonly(field);
+
+    // Continue with existing renderField logic using transformedField
     const renderFields = (fields: FieldType[]) => {
       // Group fields by row
       const groupedFields = fields.reduce(
@@ -228,21 +290,21 @@ export function QuickForm({
     };
 
     const fieldContent = () => {
-      switch (field.type) {
+      switch (transformedField.type) {
         case 'tabs': {
           const isMobile = !useMediaQuery('(min-width: 768px)');
-          const [tab, setTab] = useState(field.tabs[0]?.name);
+          const [tab, setTab] = useState(transformedField.tabs[0]?.name);
           return wrapWithBeforeAfter(
             <Tabs
               value={tab}
               onValueChange={(value) => setTab(value)}
               className='w-full'
             >
-              {field.tabs.length > 1 && (
+              {transformedField.tabs.length > 1 && (
                 <>
                   {isMobile ? (
                     <Select
-                      defaultValue={field.tabs[0]?.name}
+                      defaultValue={transformedField.tabs[0]?.name}
                       onValueChange={(value) => {
                         setTab(value);
                       }}
@@ -251,7 +313,7 @@ export function QuickForm({
                         <SelectValue placeholder='Select tab' />
                       </SelectTrigger>
                       <SelectContent>
-                        {field.tabs.map((tab) => (
+                        {transformedField.tabs.map((tab) => (
                           <SelectItem key={tab.name} value={tab.name}>
                             {tab.name}
                           </SelectItem>
@@ -260,7 +322,7 @@ export function QuickForm({
                     </Select>
                   ) : (
                     <TabsList className='w-full'>
-                      {field.tabs.map((tab) => (
+                      {transformedField.tabs.map((tab) => (
                         <TabsTrigger
                           key={tab.name}
                           value={tab.name}
@@ -273,178 +335,182 @@ export function QuickForm({
                   )}
                 </>
               )}
-              {field.tabs.map((tab) => (
+              {transformedField.tabs.map((tab) => (
                 <TabsContent key={tab.name} value={tab.name}>
                   <div className='space-y-4'>{renderFields(tab.fields)}</div>
                 </TabsContent>
               ))}
             </Tabs>,
-            field,
+            transformedField,
           );
         }
         case 'display':
           return wrapWithBeforeAfter(
-            typeof field.component === 'function'
-              ? field.component(form)
-              : field.component || (
+            typeof transformedField.component === 'function'
+              ? transformedField.component(form)
+              : transformedField.component || (
                   <div className='rounded-md bg-slate-50 p-2'>
-                    {form.getValues(field.name)}
+                    {form.getValues(transformedField.name)}
                   </div>
                 ),
-            field,
+            transformedField,
           );
         case 'title':
-          return <h3 className='pt-4 text-lg font-semibold'>{field.label}</h3>;
+          return (
+            <h3 className='pt-4 text-lg font-semibold'>
+              {transformedField.label}
+            </h3>
+          );
         case 'divider':
           return <hr className='my-2 border-t border-gray-200' />;
         case 'text':
           return wrapWithBeforeAfter(
             <Input
-              placeholder={field.placeholder}
-              readOnly={field.readonly}
-              {...form.register(field.name)}
+              placeholder={transformedField.placeholder}
+              readOnly={transformedField.readonly}
+              {...form.register(transformedField.name)}
             />,
-            field,
+            transformedField,
           );
         case 'number':
           return wrapWithBeforeAfter(
             <Input
               type='number'
-              readOnly={field.readonly}
-              {...form.register(field.name, {
+              readOnly={transformedField.readonly}
+              {...form.register(transformedField.name, {
                 setValueAs: (value: string) => {
                   const parsed = parseFloat(value);
                   return isNaN(parsed) ? 0 : parsed;
                 },
               })}
             />,
-            field,
+            transformedField,
           );
         case 'select':
-          if (field.allowCustom) {
+          if (transformedField.allowCustom) {
             return wrapWithBeforeAfter(
               <Combobox
-                value={watch[field.name]}
+                value={watch[transformedField.name]}
                 setValue={(value) => {
-                  form.setValue(field.name, value);
+                  form.setValue(transformedField.name, value);
                   // form.trigger(field.name); // Add this
                 }}
-                content={field.options}
+                content={transformedField.options}
                 allowCustom
               />,
-              field,
+              transformedField,
             );
           }
           return wrapWithBeforeAfter(
             <Select
               onValueChange={(value) => {
-                form.setValue(field.name, value);
+                form.setValue(transformedField.name, value);
                 // form.trigger(field.name); // Add this
               }}
-              value={watch[field.name]}
+              value={watch[transformedField.name]}
             >
               <SelectTrigger>
                 <SelectValue placeholder='Select...' />
               </SelectTrigger>
               <SelectContent>
-                {field.options.map((option) => (
+                {transformedField.options.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>,
-            field,
+            transformedField,
           );
         case 'checkbox':
           return wrapWithBeforeAfter(
             <Checkbox
               onCheckedChange={(checked) => {
-                form.setValue(field.name, checked);
+                form.setValue(transformedField.name, checked);
                 // form.trigger(field.name); // Add this
               }}
-              checked={watch[field.name]}
+              checked={watch[transformedField.name]}
             />,
-            field,
+            transformedField,
           );
         case 'file':
           return wrapWithBeforeAfter(
             <Input
               type='file'
-              accept={field.accept}
-              multiple={field.multiple}
+              accept={transformedField.accept}
+              multiple={transformedField.multiple}
               onChange={(e) => {
-                if (field.multiple) {
+                if (transformedField.multiple) {
                   const files = Array.from(e.target.files || []);
-                  form.setValue(field.name, files);
+                  form.setValue(transformedField.name, files);
                   // form.trigger(field.name); // Add this
                 } else {
                   const file = e.target.files?.[0];
                   if (file) {
-                    form.setValue(field.name, file);
+                    form.setValue(transformedField.name, file);
                     // form.trigger(field.name); // Add this
                   }
                 }
               }}
             />,
-            field,
+            transformedField,
           );
         case 'custom':
           return wrapWithBeforeAfter(
-            typeof field.component === 'function'
-              ? field.component(form)
-              : field.component,
-            field,
+            typeof transformedField.component === 'function'
+              ? transformedField.component(form)
+              : transformedField.component,
+            transformedField,
           );
         case 'date':
           return wrapWithBeforeAfter(
             <Input
               type='date'
-              readOnly={field.readonly}
-              {...form.register(field.name)}
+              readOnly={transformedField.readonly}
+              {...form.register(transformedField.name)}
             />,
-            field,
+            transformedField,
           );
         case 'time':
           return wrapWithBeforeAfter(
             <Input
               type='time'
-              readOnly={field.readonly}
-              {...form.register(field.name)}
+              readOnly={transformedField.readonly}
+              {...form.register(transformedField.name)}
             />,
-            field,
+            transformedField,
           );
         case 'datetime':
           return wrapWithBeforeAfter(
             <Input
               type='datetime-local'
-              readOnly={field.readonly}
-              {...form.register(field.name)}
+              readOnly={transformedField.readonly}
+              {...form.register(transformedField.name)}
             />,
-            field,
+            transformedField,
           );
         case 'textarea':
           return wrapWithBeforeAfter(
             <Textarea
-              placeholder={field.placeholder}
-              readOnly={field.readonly}
-              rows={field.rows}
-              {...form.register(field.name)}
+              placeholder={transformedField.placeholder}
+              readOnly={transformedField.readonly}
+              rows={transformedField.rows}
+              {...form.register(transformedField.name)}
             />,
-            field,
+            transformedField,
           );
         case 'array':
-          const values = watch[field.name] || [];
+          const values = watch[transformedField.name] || [];
           return wrapWithBeforeAfter(
             <div className='w-full space-y-4'>
               {values.map((_, index) => (
-                <div key={index} className='flex w-full items-end gap-2'>
+                <div key={index} className='flex w-full items-end gap-2 pl-4'>
                   <div className='w-full'>
                     {/* @ts-ignore */}
                     {renderField({
-                      ...field.field,
-                      name: `${field.name}.${index}`,
-                      label: `${field.label} ${index + 1}`,
+                      ...transformedField.field,
+                      name: `${transformedField.name}.${index}`,
+                      label: `${transformedField.label} - Item ${index + 1}`,
                     })}
                   </div>
                   <Button
@@ -455,7 +521,7 @@ export function QuickForm({
                     onClick={() => {
                       const newValues = [...values];
                       newValues.splice(index, 1);
-                      form.setValue(field.name, newValues);
+                      form.setValue(transformedField.name, newValues);
                       // form.trigger(field.name); // Add this
                     }}
                   >
@@ -463,22 +529,38 @@ export function QuickForm({
                   </Button>
                 </div>
               ))}
-              {(!field.max || values.length < field.max) && (
+              {(!transformedField.max ||
+                values.length < transformedField.max) && (
                 <Button
                   type='button'
                   variant='outline'
                   className='w-full'
                   onClick={() => {
-                    form.setValue(field.name, [...values, null]);
+                    form.setValue(transformedField.name, [...values, null]);
                     // form.trigger(field.name); // Add this
                   }}
                 >
                   <Plus className='mr-2 h-4 w-4' />
-                  Add {field.label}
+                  Add {transformedField.label}
                 </Button>
               )}
             </div>,
-            field,
+            transformedField,
+          );
+        case 'asyncSelect':
+          return wrapWithBeforeAfter(
+            <AsyncSelect
+              value={watch[transformedField.name]}
+              onChange={(value) => {
+                form.setValue(transformedField.name, value);
+                form.trigger(transformedField.name);
+              }}
+              fetch={transformedField.fetch}
+              debounce={transformedField.debounce}
+              disabled={transformedField.readonly}
+              addNewItemAction={transformedField.addNewItemAction}
+            />,
+            transformedField,
           );
       }
     };
@@ -489,33 +571,37 @@ export function QuickForm({
 
     return (
       <div
-        key={field.name}
+        key={transformedField.name}
         className='flex flex-col gap-2'
         style={{
           gridColumn:
-            field.type === 'tabs'
+            transformedField.type === 'tabs'
               ? 'span 1/-1'
-              : field.cell
-                ? `span ${field.cell}`
+              : transformedField.cell
+                ? `span ${transformedField.cell}`
                 : 'span 1',
         }}
       >
-        {field.type !== 'title' && field.type !== 'tabs' && (
-          <label className='text-xs font-medium'>
-            {/* @ts-ignore */}
-            {field.label}
-            {/* @ts-ignore */}
-            {field.type !== 'checkbox' && field.required && (
-              <span className='pl-1 text-red-500'>*</span>
-            )}
-          </label>
-        )}
+        {transformedField.type !== 'title' &&
+          transformedField.type !== 'tabs' && (
+            <label className='text-xs font-medium'>
+              {/* @ts-ignore */}
+              {transformedField.label}
+              {/* @ts-ignore */}
+              {transformedField.type !== 'checkbox' &&
+                // @ts-ignore
+                transformedField.required && (
+                  <span className='pl-1 text-red-500'>*</span>
+                )}
+            </label>
+          )}
         {content}
-        {field.name && form.formState.errors[field.name] && (
-          <p className='text-sm text-red-500'>
-            {form.formState.errors[field.name]?.message as string}
-          </p>
-        )}
+        {transformedField.name &&
+          form.formState.errors[transformedField.name] && (
+            <p className='text-sm text-red-500'>
+              {form.formState.errors[transformedField.name]?.message as string}
+            </p>
+          )}
       </div>
     );
   };
@@ -562,11 +648,12 @@ export function QuickForm({
             // } else {
             //   console.log('Validated form data:', result.data);
             // }
-            console.log('Form data:', data);
+            // console.log('Form data:', data);
             onSubmit(data); // Use formData instead of data
           },
           (err) => {
             console.error('Form validation error:', err);
+            onError?.(err);
           },
         )}
         className={cn('grid grid-cols-1 gap-2 lg:grid-cols-4')}
