@@ -65,6 +65,8 @@ export type FieldType =
       name: string;
       label: string;
       readonly?: boolean;
+      yesText?: string;
+      noText?: string;
     } & BaseFieldProps)
   | ({
       type: 'multiselect';
@@ -128,6 +130,31 @@ export type FieldType =
       component?: React.ReactNode | ((form: any) => React.ReactNode);
     } & BaseFieldProps)
   | ({
+      type: 'fileGallery';
+      name: string;
+      label: string;
+      pageSize?: number;
+      size?: 'sm' | 'md' | 'lg' | number;
+      aspectRatio?: number;
+      onFileClick?: (file: {
+        id: string;
+        filename: string;
+        url: string;
+      }) => void;
+      onDelete?: (file: { id: string; filename: string; url: string }) => void;
+      required?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'multiFileInput';
+      name: string;
+      label: string;
+      maxFiles?: number;
+      allowedTypes?: string[];
+      showExistingFiles?: boolean;
+      required?: boolean;
+      trigger?: React.ReactNode;
+    } & BaseFieldProps)
+  | ({
       type: 'array';
       name: string;
       label: string;
@@ -157,4 +184,8 @@ export interface QuickFormProps {
   hideActionsCard?: boolean;
   formRef?: any;
   readonly?: boolean; // Add this line
+  onDynamicField?: (
+    fields: FieldType[],
+    values: Record<string, any>,
+  ) => Array<{ id: string; toHide: boolean }>;
 }

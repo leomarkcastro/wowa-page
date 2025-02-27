@@ -49,6 +49,8 @@ export function ProfileSettings() {
       toast({
         title: 'Profile updated',
         description: 'Your profile has been updated successfully.',
+        duration: 2000,
+        autoFocus: true,
       });
     } catch (error) {
       toast({
@@ -69,6 +71,8 @@ export function ProfileSettings() {
       toast({
         title: 'Password updated',
         description: 'Your password has been updated successfully.',
+        duration: 2000,
+        autoFocus: true,
       });
     } catch (error) {
       toast({

@@ -27,3 +27,17 @@ export function formatMoney(amount: number) {
 export function displayBoolean(value: boolean) {
   return value ? 'Yes' : 'No';
 }
+
+
+export const truncateFileName = (fileName: string, maxLength: number = 20) => {
+  if (fileName.length <= maxLength) return fileName;
+
+  const extension = fileName.split('.').pop() || '';
+  const nameWithoutExt = fileName.slice(0, fileName.lastIndexOf('.'));
+
+  const truncatedName = nameWithoutExt.slice(
+    0,
+    maxLength - extension.length - 3,
+  );
+  return `${truncatedName}...${extension}`;
+};

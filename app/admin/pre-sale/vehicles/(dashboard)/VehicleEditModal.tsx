@@ -13,6 +13,8 @@ import { UseFormReturn } from 'react-hook-form';
 import { CarsDataProvider } from '@/lib/dataProviders/cars';
 import { useSearchParams } from 'next/navigation';
 import { MembersDataProvider } from '@/lib/dataProviders/members';
+import { FileItem } from '@/components/ui/MultiFileInput';
+import { CircleDollarSign } from 'lucide-react';
 
 interface VehicleEditModalProps {
   isOpen: boolean;
@@ -74,6 +76,14 @@ export function VehicleEditModal({
         onOpenChange={(open) => !open && handleClose()}
       >
         <DialogContent className='flex max-h-[90vh] max-w-4xl flex-col gap-0 p-0'>
+          {loading && (
+            <div className='absolute inset-0 flex items-center justify-center bg-white/50 bg-opacity-90'>
+              <div className='flex items-center gap-4'>
+                <div className='h-3 w-3 animate-spin bg-gray-700' />
+                <p className='text-lg font-semibold text-gray-900'>Saving...</p>
+              </div>
+            </div>
+          )}
           <DialogHeader className='border-b p-2'>
             <DialogTitle className='p-2 px-4 text-xl font-semibold text-gray-900'>
               {readonly
@@ -89,7 +99,7 @@ export function VehicleEditModal({
             </DialogTitle>
           </DialogHeader>
 
-          <div className='h-full overflow-auto'>
+          <div className='h-full overflow-auto px-4'>
             <ResourceForm
               mode={itemID ? 'edit' : 'create'}
               title={
@@ -107,15 +117,27 @@ export function VehicleEditModal({
               dontReturnOnSubmit={true}
               onForm={(form) => setForm(form)}
               formRef={formRef}
+              preprocessData={(data) => {
+                if (data.photos) {
+                  data.photos = data.photos.map(
+                    (photo) =>
+                      ({
+                        id: photo.id,
+                        name: photo.url,
+                      }) as FileItem,
+                  );
+                }
+                return data;
+              }}
               transformSubmitData={(data) => {
                 setLoading(true);
                 setErrMessage('');
-                console.log('data', data);
                 const deepCopyData = JSON.parse(JSON.stringify(data));
-
+                deepCopyData.photoIds = deepCopyData.photos.map(
+                  (photo) => photo.id,
+                );
                 delete deepCopyData.photos;
                 delete deepCopyData.createdAt;
-                delete deepCopyData.auction;
 
                 return deepCopyData;
               }}
@@ -132,6 +154,13 @@ export function VehicleEditModal({
               }}
               getIDon={() => {
                 return sp.get('id');
+              }}
+              onDynamicField={(f, v) => {
+                const toHide = [];
+                if (!v.isSellWithoutReserve) {
+                  toHide.push({ id: 'reservePrice', toHide: true });
+                }
+                return toHide;
               }}
               fields={[
                 {
@@ -286,6 +315,7 @@ export function VehicleEditModal({
                           type: 'checkbox',
                           name: 'isNumbersMatching',
                           label: 'Numbers Matching',
+
                           row: 2,
                           cell: 1,
                         },
@@ -293,6 +323,7 @@ export function VehicleEditModal({
                           type: 'checkbox',
                           name: 'isRestored',
                           label: 'Restored',
+
                           row: 2,
                           cell: 1,
                         },
@@ -300,6 +331,7 @@ export function VehicleEditModal({
                           type: 'checkbox',
                           name: 'isInDamageOrAccident',
                           label: 'Damage or Accident History',
+
                           row: 3,
                           cell: 1,
                         },
@@ -370,11 +402,35 @@ export function VehicleEditModal({
                           cell: 2,
                         },
                         {
-                          type: 'file',
+                          type: 'multiFileInput',
                           name: 'photos',
-                          label: 'Photos',
-                          multiple: true,
+                          label: 'Upload Image',
                           row: 1,
+                          cell: 2,
+                        },
+                        {
+                          type: 'fileGallery',
+                          name: 'photos',
+                          label: '',
+                          onDelete(file) {
+                            console.log('onDelete', file);
+                          },
+                          onFileClick(file) {
+                            window.open(
+                              process.env.NEXT_PUBLIC_SERVER_URL +
+                                '/api/files/name/' +
+                                file.filename,
+                              '_blank',
+                            );
+                          },
+                          row: 1,
+                          cell: 2,
+                          size: 250,
+                          aspectRatio: 16 / 9,
+                        },
+                        {
+                          type: 'divider',
+                          row: 2,
                           cell: 2,
                         },
                         {
@@ -404,43 +460,54 @@ export function VehicleEditModal({
                         },
                         {
                           type: 'number',
-                          name: 'reservePrice',
-                          label: 'Reserve Price',
-                          row: 1,
+                          name: 'marketValueLow',
+                          label: 'Market Value (Low)',
+                          before: (
+                            <CircleDollarSign className='text-gray-500' />
+                          ),
+                          row: 2,
                           cell: 1,
                         },
                         {
                           type: 'number',
                           name: 'marketValueHigh',
                           label: 'Market Value (High)',
-                          row: 1,
-                          cell: 1,
-                        },
-                        {
-                          type: 'number',
-                          name: 'marketValueLow',
-                          label: 'Market Value (Low)',
+                          before: (
+                            <CircleDollarSign className='text-gray-500' />
+                          ),
                           row: 2,
                           cell: 1,
-                        },
-                        {
-                          type: 'title',
-                          label: 'Payment Status',
-                          row: 3,
-                          cell: 2,
                         },
                         {
                           type: 'checkbox',
                           name: 'isSellWithoutReserve',
                           label: 'Sell Without Reserve',
-                          row: 2,
+
+                          row: 3,
                           cell: 1,
+                        },
+                        {
+                          type: 'number',
+                          name: 'reservePrice',
+                          label: 'Reserve Price',
+                          before: (
+                            <CircleDollarSign className='text-gray-500' />
+                          ),
+                          row: 3,
+                          cell: 1,
+                        },
+                        {
+                          type: 'title',
+                          label: 'Payment Status',
+                          row: 4,
+                          cell: 2,
                         },
                         {
                           type: 'checkbox',
                           name: 'isPaymentProcessed',
                           label: 'Payment Processed',
-                          row: 3,
+
+                          row: 5,
                           cell: 1,
                         },
                       ],
@@ -458,6 +525,7 @@ export function VehicleEditModal({
                           type: 'checkbox',
                           name: 'isConfirmedSeller',
                           label: 'Confirmed Seller',
+
                           row: 1,
                           cell: 1,
                         },
@@ -529,6 +597,7 @@ export function VehicleEditModal({
                           type: 'checkbox',
                           name: 'isTitleReceived',
                           label: 'Title Received',
+
                           row: 4,
                           cell: 2,
                         },
@@ -536,6 +605,7 @@ export function VehicleEditModal({
                           type: 'checkbox',
                           name: 'isVehicleCollected',
                           label: 'Vehicle Collected',
+
                           row: 5,
                           cell: 2,
                         },
@@ -543,6 +613,7 @@ export function VehicleEditModal({
                           type: 'checkbox',
                           name: 'isTransportationDelivered',
                           label: 'Transportation Delivered',
+
                           row: 5,
                           cell: 2,
                         },

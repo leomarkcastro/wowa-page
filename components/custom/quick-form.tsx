@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -26,6 +25,9 @@ import { FieldType, QuickFormProps } from './quick-form.types';
 import { Plus, Trash2 } from 'lucide-react'; // Add this import
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { AsyncSelect } from '../ui/async-select';
+import { FileItem, MultiFileInput } from '../ui/MultiFileInput';
+import { FileGallery } from '../FileGallery';
+import { Toggle } from '../ui/toggle';
 
 const generateFieldSchema = (field?: FieldType): z.ZodTypeAny => {
   if (!field || !field.type) return z.any();
@@ -142,6 +144,7 @@ export function QuickForm({
   hideActionsCard = false,
   formRef,
   readonly = false, // Add this line
+  onDynamicField, // Add this line
 }: QuickFormProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -204,14 +207,31 @@ export function QuickForm({
     );
   };
 
+  const dynamicFields = useMemo(() => {
+    return onDynamicField?.(fields, watch) || [];
+  }, [fields, watch]);
+
   const renderField = (field: FieldType) => {
+    // Get dynamic visibility rules
+    const shouldHide = dynamicFields.find((df) => df.id === field.name)?.toHide;
+
+    // If field should be hidden, return null
+    if (shouldHide) return null;
+
     // Add this function to transform fields
     const transformFieldIfReadonly = (field: FieldType): FieldType => {
       if (!readonly) return field;
 
       // Don't transform these field types
       if (
-        ['display', 'array', 'tabs', 'title', 'divider'].includes(field.type)
+        [
+          'display',
+          'array',
+          'tabs',
+          'title',
+          'divider',
+          'fileGallery',
+        ].includes(field.type)
       ) {
         return field;
       }
@@ -255,6 +275,10 @@ export function QuickForm({
           }
           if (field.type === 'checkbox') {
             return value ? 'Yes' : 'No';
+          }
+          if (field.type === 'multiFileInput') {
+            // NOTE that I assume you would rely on the FileGallery component to display files
+            return '';
           }
           return value || '--';
         },
@@ -424,13 +448,21 @@ export function QuickForm({
           );
         case 'checkbox':
           return wrapWithBeforeAfter(
-            <Checkbox
-              onCheckedChange={(checked) => {
-                form.setValue(transformedField.name, checked);
-                // form.trigger(field.name); // Add this
+            <Toggle
+              pressed={watch[transformedField.name]}
+              onPressedChange={(e) => {
+                form.setValue(transformedField.name, e);
               }}
-              checked={watch[transformedField.name]}
-            />,
+              className={cn(
+                watch[transformedField.name]
+                  ? '!bg-green-500 font-bold !text-white'
+                  : 'bg-gray-100',
+              )}
+            >
+              {watch[transformedField.name]
+                ? transformedField.yesText || 'Yes'
+                : transformedField.noText || 'No'}
+            </Toggle>,
             transformedField,
           );
         case 'file':
@@ -513,23 +545,25 @@ export function QuickForm({
                       label: `${transformedField.label} - Item ${index + 1}`,
                     })}
                   </div>
-                  <Button
-                    type='button'
-                    variant='outline'
-                    size='icon'
-                    className='h-10 w-10 flex-shrink-0'
-                    onClick={() => {
-                      const newValues = [...values];
-                      newValues.splice(index, 1);
-                      form.setValue(transformedField.name, newValues);
-                      // form.trigger(field.name); // Add this
-                    }}
-                  >
-                    <Trash2 className='h-4 w-4' />
-                  </Button>
+                  {!readonly && (
+                    <Button
+                      type='button'
+                      variant='outline'
+                      size='icon'
+                      className='h-10 w-10 flex-shrink-0'
+                      onClick={() => {
+                        const newValues = [...values];
+                        newValues.splice(index, 1);
+                        form.setValue(transformedField.name, newValues);
+                        // form.trigger(field.name); // Add this
+                      }}
+                    >
+                      <Trash2 className='h-4 w-4' />
+                    </Button>
+                  )}
                 </div>
               ))}
-              {(!transformedField.max ||
+              {((!readonly && !transformedField.max) ||
                 values.length < transformedField.max) && (
                 <Button
                   type='button'
@@ -561,6 +595,59 @@ export function QuickForm({
               addNewItemAction={transformedField.addNewItemAction}
             />,
             transformedField,
+          );
+        case 'multiFileInput':
+          return wrapWithBeforeAfter(
+            <MultiFileInput
+              initialFiles={watch[field.name] || []}
+              onUploadComplete={(files) => {
+                form.setValue(field.name, files);
+                form.trigger(field.name);
+              }}
+              // @ts-ignore
+              maxFiles={field.maxFiles}
+              // @ts-ignore
+              allowedTypes={field.allowedTypes}
+              // @ts-ignore
+              showExistingFiles={field.showExistingFiles}
+              // @ts-ignore
+              trigger={field.trigger}
+            />,
+            field,
+          );
+        case 'fileGallery':
+          return wrapWithBeforeAfter(
+            <FileGallery
+              files={(watch[field.name] || []).map((f: FileItem) => ({
+                ...f,
+                filename: f.name || f.name,
+                url: `http://localhost:3000/api/files/name/${f.name || f.name}`,
+              }))}
+              // @ts-ignore
+              pageSize={field.pageSize}
+              // @ts-ignore
+              size={field.size}
+              // @ts-ignore
+              aspectRatio={field.aspectRatio}
+              // @ts-ignore
+              onFileClick={field.onFileClick}
+              onDelete={
+                // @ts-ignore
+                field.onDelete
+                  ? (file) => {
+                      const files = watch[field.name] || [];
+                      form.setValue(
+                        field.name,
+                        files.filter((f: any) => f.id !== file.id),
+                      );
+                      form.trigger(field.name);
+                      // @ts-ignore
+                      field.onDelete?.(file);
+                    }
+                  : undefined
+              }
+            />,
+            field,
           );
       }
     };

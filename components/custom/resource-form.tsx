@@ -114,6 +114,8 @@ export function ResourceForm({
       toast({
         title: 'Created Successfully',
         description: `${title} has been created successfully`,
+        duration: 2000,
+        autoFocus: true,
       });
     }
 

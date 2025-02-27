@@ -1,7 +1,7 @@
 'use client';
 
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -65,6 +65,7 @@ interface DataTableProps {
   onRowClick?: (row: any) => void;
   initialFilters?: Record<string, FilterValue[]>; // Add this line
   enableUrlPersistence?: boolean; // Add this line
+  passFilters?: boolean; // Add this line
 }
 
 interface FilterValue {
@@ -145,6 +146,7 @@ export function DataProviderTable({
   onRowClick,
   initialFilters = {}, // Add default value
   enableUrlPersistence = false,
+  passFilters = false,
 }: DataTableProps) {
   const dataHookProvider = createProvider({
     name: dataSource.name,
@@ -227,16 +229,22 @@ export function DataProviderTable({
     setCurrentPage(1);
   }, [debouncedSearch, filters, pageSize]);
 
+  const alreadyLoaded = useRef(false);
+
   // Replace the problematic useEffect
   useEffect(() => {
+    if (alreadyLoaded.current && !passFilters) {
+      return;
+    }
     // const filtersChanged =
     //   JSON.stringify(filters) !== JSON.stringify(initialFilters);
     // if (filtersChanged) {
     if (initialFilters) {
       setFilters(initialFilters);
+      alreadyLoaded.current = true;
     }
     // }
-  }, []);
+  }, [initialFilters]);
 
   // Add this useEffect at the beginning
   useEffect(() => {

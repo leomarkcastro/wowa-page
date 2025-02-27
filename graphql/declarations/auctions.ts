@@ -5,6 +5,8 @@ export const Auction_List = graphql(`
     api_auction_list(input: $input) {
       data {
         id
+        auctionID
+        name
         addressLine1
         addressLine2
         city
@@ -75,6 +77,8 @@ export const Auction_Get = graphql(`
     api_auction_get(input: $input) {
       data {
         id
+        auctionID
+        name
         addressLine1
         addressLine2
         city

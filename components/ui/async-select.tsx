@@ -45,6 +45,22 @@ export function AsyncSelect({
     { label: string; value: string }[]
   >([]);
   const debouncedSearch = useDebounce(inputValue, debounce);
+  const [firstLoad, setFirstLoad] = React.useState(true);
+
+  React.useEffect(() => {
+    if (firstLoad) {
+      setFirstLoad(false);
+      if (!value) {
+        fetch(value).then((results) => {
+          setOptions(results);
+          const matchingOption = results.find((item) => item.value === value);
+          if (matchingOption) {
+            setInputValue(matchingOption.label);
+          }
+        });
+      }
+    }
+  }, [value, firstLoad]);
 
   // Load options when search changes
   React.useEffect(() => {

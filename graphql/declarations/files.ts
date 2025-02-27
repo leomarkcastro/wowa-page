@@ -87,3 +87,16 @@ export const Files_Upload = graphql(`
     }
   }
 `);
+
+export const File_UploadURL = graphql(`
+  mutation File_uploadURL($input: File_uploadURLInput!) {
+    file_uploadURL(input: $input) {
+      files {
+        id
+        uploadURL
+        fileName
+        viewURL
+      }
+    }
+  }
+`);
