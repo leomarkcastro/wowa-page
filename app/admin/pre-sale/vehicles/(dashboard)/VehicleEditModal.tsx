@@ -53,6 +53,8 @@ export function VehicleEditModal({
     url.searchParams.delete('readonly');
     window.history.pushState({}, '', url.toString());
 
+    console.log('close');
+
     onClose();
   };
 
@@ -133,7 +135,7 @@ export function VehicleEditModal({
                 setLoading(true);
                 setErrMessage('');
                 const deepCopyData = JSON.parse(JSON.stringify(data));
-                deepCopyData.photoIds = deepCopyData.photos.map(
+                deepCopyData.photoIds = deepCopyData.photos?.map(
                   (photo) => photo.id,
                 );
                 delete deepCopyData.photos;
@@ -143,7 +145,7 @@ export function VehicleEditModal({
               }}
               onAfterSubmit={() => {
                 setLoading(false);
-                return !itemID ? () => handleClose() : () => {};
+                return (!itemID ? handleClose : () => {})();
               }}
               onError={(err) => {
                 setLoading(false);
@@ -444,8 +446,8 @@ export function VehicleEditModal({
                             row: 1,
                             cell: 2,
                           },
-                          required: true,
-                          min: 1,
+                          // required: true,
+                          // min: 1,
                         },
                       ],
                     },

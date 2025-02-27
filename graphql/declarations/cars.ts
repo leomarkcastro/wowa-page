@@ -69,6 +69,7 @@ export const Car_List = graphql(`
           url
           mime
         }
+        deletedAt
       }
       page {
         total
@@ -177,6 +178,7 @@ export const Car_Get = graphql(`
           url
           mime
         }
+        deletedAt
       }
     }
   }

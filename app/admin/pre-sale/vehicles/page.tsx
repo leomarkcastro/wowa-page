@@ -9,6 +9,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useMemo, useState } from 'react';
@@ -18,21 +28,25 @@ import { CarsDataProvider } from '@/lib/dataProviders/cars';
 import { formatMoney } from '@/lib/utils';
 import { AuctionSelector } from './(dashboard)/AuctionSelector';
 import { useCarFilterStore } from './(dashboard)/useCarFilterStore';
+import { createProvider } from '@/lib/services/createProvider';
+import { toast } from '@/hooks/use-toast';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState<string>('active');
   const [isAddingVehicle, setIsAddingVehicle] = useState(false);
   const [vehicleID, setVehicleID] = useState<string | null>(null);
   const [readOnly, setReadOnly] = useState(false);
-  const [rawSelectedAuction, setSelectedAuction] = useCarFilterStore(
-    (state) => [state.filter, state.setFilter],
-  );
+  const [carsFiltering, setCarsFiltering] = useCarFilterStore((state) => [
+    state.filter,
+    state.setFilter,
+  ]);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteVehicleId, setDeleteVehicleId] = useState<string | null>(null);
   const searchParam = useSearchParams();
 
-  console.log('selectedAuction', rawSelectedAuction);
   const selectedAuction = useMemo(() => {
-    return rawSelectedAuction;
-  }, [rawSelectedAuction]);
+    return carsFiltering;
+  }, [carsFiltering]);
 
   // if id is in search params, open edit modal and set vehicleID
   useEffect(() => {
@@ -44,6 +58,32 @@ const Dashboard = () => {
       setReadOnly(readonly === 'true');
     }
   }, [searchParam]);
+
+  const dataProvider = CarsDataProvider;
+
+  const dataHookProvider = createProvider({
+    name: dataProvider.name,
+    dataProvider: dataProvider,
+  });
+
+  const useDelete = dataHookProvider.useDelete();
+
+  const handleDeleteVehicle = async (id: string) => {
+    // Placeholder for actual delete implementation
+    // console.log('Deleting vehicle:', id);
+    // TODO: Implement actual delete logic here
+    await useDelete.mutateAsync({
+      id: id,
+      meta: {},
+      resource: dataProvider.name.toLowerCase(),
+    });
+    toast({
+      title: 'Deleted Successfully',
+      description: `Vehicle has been deleted successfully`,
+    });
+    setShowDeleteConfirm(false);
+    setDeleteVehicleId(null);
+  };
 
   return (
     <div className='container mx-auto p-4'>
@@ -59,7 +99,13 @@ const Dashboard = () => {
       <Tabs
         defaultValue='active'
         className='mb-6 bg-white'
-        onValueChange={(value) => setActiveTab(value)}
+        value={carsFiltering.deleted ? 'deleted' : 'active'}
+        onValueChange={(value) => {
+          setCarsFiltering({
+            ...carsFiltering,
+            deleted: value === 'deleted',
+          });
+        }}
       >
         <TabsList className='grid w-[400px] grid-cols-2'>
           <TabsTrigger value='active'>Active Listings</TabsTrigger>
@@ -90,7 +136,7 @@ const Dashboard = () => {
         <AuctionSelector
           selectedAuction={selectedAuction.auction}
           setSelectedAuction={(val) => {
-            setSelectedAuction({
+            setCarsFiltering({
               ...selectedAuction,
               auction: val,
             });
@@ -106,6 +152,29 @@ const Dashboard = () => {
           readOnly={readOnly}
         />
       )}
+
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              vehicle from the system.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+              onClick={() =>
+                deleteVehicleId && handleDeleteVehicle(deleteVehicleId)
+              }
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <DataProviderTable
         name='Vehicles'
@@ -249,6 +318,8 @@ const Dashboard = () => {
                     variant='ghost'
                     onClick={(e) => {
                       e.stopPropagation();
+                      setDeleteVehicleId(allValue.id);
+                      setShowDeleteConfirm(true);
                     }}
                     className='text-destructive'
                   >
@@ -259,18 +330,23 @@ const Dashboard = () => {
             },
           },
         ]}
-        initialFilters={
-          selectedAuction.auction === 'na'
-            ? {}
-            : {
-                auctionId: [
+        initialFilters={{
+          auctionId:
+            selectedAuction.auction === 'na'
+              ? []
+              : [
                   {
                     operator: 'equals',
                     value: selectedAuction.auction,
                   },
                 ],
-              }
-        }
+          deletedAt: [
+            {
+              operator: !carsFiltering.deleted ? 'equals' : 'nequals',
+              value: 's:null',
+            },
+          ],
+        }}
         passFilters
         dataSource={CarsDataProvider}
       />

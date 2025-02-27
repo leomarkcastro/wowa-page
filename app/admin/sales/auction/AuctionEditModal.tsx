@@ -112,7 +112,7 @@ export function AuctionEditModal({
               hideActionsCard={true}
               hideHeader={true}
               readonly={readonly}
-              dontReturnOnSubmit={true}
+              dontReturnOnSubmit={itemID ? true : false}
               onForm={(form) => setForm(form)}
               formRef={formRef}
               preprocessData={(data) => {
@@ -139,7 +139,7 @@ export function AuctionEditModal({
               }}
               onAfterSubmit={() => {
                 setLoading(false);
-                return !itemID ? () => handleClose() : () => {};
+                return (!itemID ? handleClose : () => {})();
               }}
               onError={(err) => {
                 setLoading(false);

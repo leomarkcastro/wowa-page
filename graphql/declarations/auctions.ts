@@ -33,6 +33,7 @@ export const Auction_List = graphql(`
           category
           note
         }
+        deletedAt
       }
       page {
         total
@@ -105,6 +106,7 @@ export const Auction_Get = graphql(`
           category
           note
         }
+        deletedAt
       }
     }
   }

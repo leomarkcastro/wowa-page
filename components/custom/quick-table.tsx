@@ -42,13 +42,18 @@ import { useDebounce } from '@uidotdev/usehooks';
 import { createProvider } from '@/lib/services/createProvider';
 
 export type FilterOperator =
-  | 'equals'
   | 'contains'
+  | 'equals'
   | 'gt'
   | 'lt'
   | 'gte'
   | 'lte'
-  | 'neq';
+  | 'ncontains'
+  | 'nequals'
+  | 'startsWith'
+  | 'endsWith'
+  | 'nstartsWith'
+  | 'nendsWith';
 
 // Update interfaces
 interface DataTableProps {
@@ -190,7 +195,7 @@ export function DataProviderTable({
         return '≥';
       case 'lte':
         return '≤';
-      case 'neq':
+      case 'nequals':
         return '≠';
       default:
         return operator;
@@ -395,7 +400,7 @@ export function DataProviderTable({
                               {op === 'lt' && 'Less than'}
                               {op === 'gte' && 'Greater or equal'}
                               {op === 'lte' && 'Less or equal'}
-                              {op === 'neq' && 'Not equal'}
+                              {op === 'nequals' && 'Not equal'}
                             </SelectItem>
                           ))}
                       </SelectContent>

@@ -3,12 +3,24 @@
 import { DataProviderTable } from '@/components/custom/quick-table';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { EyeIcon, PencilIcon, PlusIcon, TrashIcon } from 'lucide-react';
 import { AuctionsDataProvider } from '@/lib/dataProviders/auctions';
 import { AuctionEditModal } from './AuctionEditModal';
 import { fMoment } from '@/lib/services/fMoment';
+import { createProvider } from '@/lib/services/createProvider';
+import { toast } from '@/hooks/use-toast';
 
 const Dashboard = () => {
   const router = useRouter();
@@ -17,6 +29,30 @@ const Dashboard = () => {
   const [auctionID, setAuctionID] = useState<string | null>(null);
   const [readOnly, setReadOnly] = useState(false);
   const searchParam = useSearchParams();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteAuctionId, setDeleteAuctionId] = useState<string | null>(null);
+
+  const dataProvider = AuctionsDataProvider;
+  const dataHookProvider = createProvider({
+    name: dataProvider.name,
+    dataProvider: dataProvider,
+  });
+
+  const useDelete = dataHookProvider.useDelete();
+
+  const handleDeleteAuction = async (id: string) => {
+    await useDelete.mutateAsync({
+      id: id,
+      meta: {},
+      resource: dataProvider.name.toLowerCase(),
+    });
+    toast({
+      title: 'Deleted Successfully',
+      description: `Auction has been deleted successfully`,
+    });
+    setShowDeleteConfirm(false);
+    setDeleteAuctionId(null);
+  };
 
   useEffect(() => {
     const id = searchParam.get('id');
@@ -58,6 +94,29 @@ const Dashboard = () => {
           readOnly={readOnly}
         />
       )}
+
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              auction from the system.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+              onClick={() =>
+                deleteAuctionId && handleDeleteAuction(deleteAuctionId)
+              }
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <DataProviderTable
         name='Auctions'
@@ -169,6 +228,8 @@ const Dashboard = () => {
                     variant='ghost'
                     onClick={(e) => {
                       e.stopPropagation();
+                      setDeleteAuctionId(allValue.id);
+                      setShowDeleteConfirm(true);
                     }}
                     className='text-destructive'
                   >

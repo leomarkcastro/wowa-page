@@ -1,23 +1,31 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+interface CarFilter {
+    status: string;
+    active: boolean;
+    auction: string;
+    deleted: boolean;
+}
+
+const initialState: CarFilter = {
+    status: 'active',
+    auction: 'na',
+    active: true,
+    deleted: false,
+};
+
 export const useCarFilterStore = create<{
-    filter: {
-        status: string;
-        auction: string;
-    };
-    setFilter: (filter: { status: string; auction: string }) => void;
+    filter: CarFilter;
+    setFilter: (filter: CarFilter) => void;
 }>()(
     persist(
         (set, get) => ({
-            filter: {
-                status: 'active',
-                auction: 'na',
-            },
+            filter: initialState,
             setFilter: (filter) => set({ filter }),
         }),
         {
-            name: 'cars-filter', // name of the item in the storage (must be unique)
+            name: 'dash-cars-filter', // name of the item in the storage (must be unique)
         },
     ),
 );
