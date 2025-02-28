@@ -48,6 +48,7 @@ export const Car_List = graphql(`
         isVehicleCollected
         isTransportationDelivered
         comments
+        status
         contactConsignor {
           actorType
           name
@@ -152,6 +153,7 @@ export const Car_Get = graphql(`
         contactApprovedBy
         auctionId
         createdAt
+        status
         isTitleReceived
         isPaymentProcessed
         isVehicleCollected

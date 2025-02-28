@@ -1,24 +1,23 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { VehicleStatus } from "./types";
 
-interface CarFilter {
-    status: VehicleStatus;
+interface AuctionFilter {
+    status: string;
     active: boolean;
     auction: string;
     deleted: boolean;
 }
 
-const initialState: CarFilter = {
-    status: 'Pending',
+const initialState: AuctionFilter = {
+    status: 'active',
     auction: 'na',
     active: true,
     deleted: false,
 };
 
-export const useCarFilterStore = create<{
-    filter: CarFilter;
-    setFilter: (filter: CarFilter) => void;
+export const useAuctionFilterStore = create<{
+    filter: AuctionFilter;
+    setFilter: (filter: AuctionFilter) => void;
 }>()(
     persist(
         (set, get) => ({
@@ -26,7 +25,7 @@ export const useCarFilterStore = create<{
             setFilter: (filter) => set({ filter }),
         }),
         {
-            name: 'dash-cars-filter', // name of the item in the storage (must be unique)
+            name: 'dash-auctions-filter', // name of the item in the storage (must be unique)
         },
     ),
 );

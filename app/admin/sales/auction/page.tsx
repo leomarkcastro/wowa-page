@@ -1,248 +1,157 @@
 'use client';
 
-import { DataProviderTable } from '@/components/custom/quick-table';
+import { DataTableTemplate } from '@/components/custom/data-table-template';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { EyeIcon, PencilIcon, PlusIcon, TrashIcon } from 'lucide-react';
 import { AuctionsDataProvider } from '@/lib/dataProviders/auctions';
-import { AuctionEditModal } from './AuctionEditModal';
 import { fMoment } from '@/lib/services/fMoment';
-import { createProvider } from '@/lib/services/createProvider';
-import { toast } from '@/hooks/use-toast';
+import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
+import { AuctionEditModal } from './(components)/AuctionEditModal';
+import { useMemo } from 'react';
+import { useAuctionFilterStore } from './(components)/useAuctionFilterStore';
 
 const Dashboard = () => {
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState<string>('active');
-  const [isAddingAuction, setIsAddingAuction] = useState(false);
-  const [auctionID, setAuctionID] = useState<string | null>(null);
-  const [readOnly, setReadOnly] = useState(false);
-  const searchParam = useSearchParams();
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleteAuctionId, setDeleteAuctionId] = useState<string | null>(null);
+  const [auctionsFiltering, setAuctionsFiltering] = useAuctionFilterStore(
+    (state) => [state.filter, state.setFilter],
+  );
 
-  const dataProvider = AuctionsDataProvider;
-  const dataHookProvider = createProvider({
-    name: dataProvider.name,
-    dataProvider: dataProvider,
-  });
-
-  const useDelete = dataHookProvider.useDelete();
-
-  const handleDeleteAuction = async (id: string) => {
-    await useDelete.mutateAsync({
-      id: id,
-      meta: {},
-      resource: dataProvider.name.toLowerCase(),
-    });
-    toast({
-      title: 'Deleted Successfully',
-      description: `Auction has been deleted successfully`,
-    });
-    setShowDeleteConfirm(false);
-    setDeleteAuctionId(null);
-  };
-
-  useEffect(() => {
-    const id = searchParam.get('id');
-    if (id) {
-      const readonly = searchParam.get('readonly');
-      setAuctionID(id);
-      setIsAddingAuction(true);
-      setReadOnly(readonly === 'true');
-    }
-  }, [searchParam]);
+  const selectedAuction = useMemo(() => {
+    return auctionsFiltering;
+  }, [auctionsFiltering]);
 
   return (
-    <div className='container mx-auto p-4'>
-      <div className='mb-8 flex items-center justify-between'>
-        <div>
-          <h1 className='text-2xl font-bold text-primary'>Auction Events</h1>
-          <p className='mt-2 text-sm text-muted-foreground'>
-            Manage auction events and listings
-          </p>
-        </div>
-      </div>
-
-      <Tabs
-        defaultValue='active'
-        className='mb-6 bg-white'
-        onValueChange={(value) => setActiveTab(value)}
-      >
-        <TabsList className='grid w-[400px] grid-cols-2'>
-          <TabsTrigger value='active'>Active Auctions</TabsTrigger>
-          <TabsTrigger value='deleted'>Past Auctions</TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      {isAddingAuction && (
-        <AuctionEditModal
-          isOpen={isAddingAuction}
-          onClose={() => setIsAddingAuction(false)}
-          itemID={auctionID}
-          readOnly={readOnly}
-        />
-      )}
-
-      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              auction from the system.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
-              onClick={() =>
-                deleteAuctionId && handleDeleteAuction(deleteAuctionId)
-              }
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <DataProviderTable
-        name='Auctions'
-        enableUrlPersistence={true}
-        actionButtons={
-          <Button
-            onClick={() => {
-              setIsAddingAuction(true);
-              setAuctionID(null);
-              setReadOnly(false);
-            }}
-          >
-            <PlusIcon />
-            Create New Auction
-          </Button>
-        }
-        columns={[
-          {
-            key: 'id',
-            label: 'Record ID',
-            sortable: true,
-            filterable: ['contains', 'equals'],
-            renderCell(value) {
-              return (
-                <p className='font-mono'>
-                  {value.length > 10 ? value.slice(-7).toUpperCase() : value}
-                </p>
-              );
-            },
+    <DataTableTemplate
+      title='Auction Events'
+      description='Manage auction events and listings'
+      tabs={[
+        { value: 'active', label: 'Active Auctions' },
+        { value: 'deleted', label: 'Past Auctions' },
+      ]}
+      defaultTab={auctionsFiltering.deleted ? 'deleted' : 'active'}
+      onTabChange={(value) => {
+        setAuctionsFiltering({
+          ...auctionsFiltering,
+          deleted: value === 'deleted',
+        });
+      }}
+      initialFilters={{}}
+      filterSection={<></>}
+      dataProvider={AuctionsDataProvider}
+      EditModal={AuctionEditModal}
+      addNewLabel='Create New Auction'
+      tableColumns={({
+        setIsEditing,
+        setItemID,
+        setReadOnly,
+        setShowDeleteConfirm,
+        setDeleteItemId,
+      }) => [
+        {
+          key: 'id',
+          label: 'Record ID',
+          sortable: true,
+          filterable: ['contains', 'equals'],
+          renderCell(value) {
+            return (
+              <p className='font-mono'>
+                {value.length > 10 ? value.slice(-7).toUpperCase() : value}
+              </p>
+            );
           },
-          {
-            key: 'auctionID',
-            label: 'Auction ID',
-            sortable: true,
-            filterable: ['contains', 'equals'],
-            renderCell(value) {
-              return (
-                <p className='font-mono'>
-                  {value.length > 10 ? value.slice(-7).toUpperCase() : value}
-                </p>
-              );
-            },
+        },
+        {
+          key: 'auctionID',
+          label: 'Auction ID',
+          sortable: true,
+          filterable: ['contains', 'equals'],
+          renderCell(value) {
+            return (
+              <p className='font-mono'>
+                {value.length > 10 ? value.slice(-7).toUpperCase() : value}
+              </p>
+            );
           },
-          {
-            key: 'summary',
-            label: 'Summary',
-            sortable: true,
-            filterable: ['contains', 'equals'],
+        },
+        {
+          key: 'summary',
+          label: 'Summary',
+          sortable: true,
+          filterable: ['contains', 'equals'],
+        },
+        {
+          key: 'eventDateStart',
+          label: 'Start Date',
+          sortable: true,
+          filterable: ['contains', 'equals'],
+          renderCell(value) {
+            return fMoment(value).format('MMM DD, YYYY hh:mm A');
           },
-          {
-            key: 'eventDateStart',
-            label: 'Start Date',
-            sortable: true,
-            filterable: ['contains', 'equals'],
-            renderCell(value) {
-              return fMoment(value).format('MMM DD, YYYY hh:mm A');
-            },
+        },
+        {
+          key: 'eventDateEnd',
+          label: 'End Date',
+          sortable: true,
+          filterable: ['contains', 'equals'],
+          renderCell(value) {
+            return fMoment(value).format('MMM DD, YYYY hh:mm A');
           },
-          {
-            key: 'eventDateEnd',
-            label: 'End Date',
-            sortable: true,
-            filterable: ['contains', 'equals'],
-            renderCell(value) {
-              return fMoment(value).format('MMM DD, YYYY hh:mm A');
-            },
+        },
+        {
+          key: 'city',
+          label: 'Location',
+          sortable: true,
+          filterable: ['contains', 'equals'],
+          renderCell(value, allValue) {
+            return `${value}, ${allValue.state}`;
           },
-          {
-            key: 'city',
-            label: 'Location',
-            sortable: true,
-            filterable: ['contains', 'equals'],
-            renderCell(value, allValue) {
-              return `${value}, ${allValue.state}`;
-            },
+        },
+        {
+          key: 'actions',
+          label: 'Action',
+          renderCell(value, allValue) {
+            return (
+              <div className='flex w-fit items-center'>
+                <Button
+                  size='icon'
+                  variant='ghost'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setReadOnly(true);
+                    setItemID(allValue.id);
+                    setIsEditing(true);
+                  }}
+                >
+                  <EyeIcon className='h-4 w-4' />
+                </Button>
+                <Button
+                  size='icon'
+                  variant='ghost'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setReadOnly(false);
+                    setItemID(allValue.id);
+                    setIsEditing(true);
+                  }}
+                >
+                  <PencilIcon className='h-4 w-4' />
+                </Button>
+                <Button
+                  size='icon'
+                  variant='ghost'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteItemId(allValue.id);
+                    setShowDeleteConfirm(true);
+                  }}
+                  className='text-destructive'
+                >
+                  <TrashIcon className='h-4 w-4' />
+                </Button>
+              </div>
+            );
           },
-          {
-            key: 'actions',
-            label: 'Action',
-            renderCell(value, allValue) {
-              return (
-                <div className='flex w-fit items-center'>
-                  <Button
-                    size='icon'
-                    variant='ghost'
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setReadOnly(true);
-                      setAuctionID(allValue.id);
-                      setIsAddingAuction(true);
-                    }}
-                  >
-                    <EyeIcon className='h-4 w-4' />
-                  </Button>
-                  <Button
-                    size='icon'
-                    variant='ghost'
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setReadOnly(false);
-                      setAuctionID(allValue.id);
-                      setIsAddingAuction(true);
-                    }}
-                  >
-                    <PencilIcon className='h-4 w-4' />
-                  </Button>
-                  <Button
-                    size='icon'
-                    variant='ghost'
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDeleteAuctionId(allValue.id);
-                      setShowDeleteConfirm(true);
-                    }}
-                    className='text-destructive'
-                  >
-                    <TrashIcon className='h-4 w-4' />
-                  </Button>
-                </div>
-              );
-            },
-          },
-        ]}
-        dataSource={AuctionsDataProvider}
-      />
-    </div>
+        },
+      ]}
+    />
   );
 };
 

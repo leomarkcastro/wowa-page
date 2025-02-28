@@ -47,6 +47,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/use-auth';
 import { apolloClient } from '@/lib/apollo/ApolloClient';
+import { cn } from '@/lib/utils';
 
 // Add user store
 interface UserState {
@@ -56,10 +57,13 @@ interface UserState {
 
 export const pathTitle = create<{
   pathName: string;
-  setPathName: (path: string) => void;
+  subPathName?: string;
+  setPathName: (path: string, subPath?: string) => void;
 }>((set) => ({
   pathName: 'Dashboard',
-  setPathName: (path: string) => set({ pathName: path }),
+  setPathName: (path: string, subPath?: string) => {
+    set({ pathName: path, subPathName: subPath });
+  },
 }));
 
 type NavItem = {
@@ -118,13 +122,13 @@ const navigationItems: NavItem[] = [
     children: [
       {
         name: 'Consignors',
-        href: '/admin/users/consignors',
+        href: '/admin/users/consignor',
         icon: Users,
         description: 'Manage seller accounts and consignments',
       },
       {
         name: 'Buyers',
-        href: '/admin/users/buyers',
+        href: '/admin/users/buyer',
         icon: UserCircle,
         description: 'View and manage buyer profiles',
       },
@@ -146,6 +150,10 @@ const navigationItems: NavItem[] = [
 
 export const AppHeaders = () => {
   const { loading, user, logout } = useAuth();
+  const [pathName, subPathName] = pathTitle((state) => [
+    state.pathName,
+    state.subPathName,
+  ]);
 
   async function logoutRoutine() {
     /* Add logout handler */
@@ -196,7 +204,7 @@ export const AppHeaders = () => {
                 {item.children ? (
                   <>
                     <NavigationMenuTrigger
-                      className={item.name === 'Pre-sale' ? 'text-primary' : ''}
+                      className={item.name === pathName ? 'text-primary' : ''}
                     >
                       {item.name}
                     </NavigationMenuTrigger>
@@ -207,7 +215,12 @@ export const AppHeaders = () => {
                             <NavigationMenuLink asChild key={child.name}>
                               <Link
                                 href={child.href || '#'}
-                                className='block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground'
+                                className={cn(
+                                  'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+                                  subPathName === child.name
+                                    ? 'bg-primary/15 text-foreground'
+                                    : '',
+                                )}
                               >
                                 <div className='flex items-center gap-2 font-medium leading-none'>
                                   {child.icon && (
@@ -215,7 +228,7 @@ export const AppHeaders = () => {
                                   )}
                                   {child.name}
                                 </div>
-                                <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>
+                                <p className='line-clamp-2 text-sm leading-snug'>
                                   {child.description}
                                 </p>
                               </Link>

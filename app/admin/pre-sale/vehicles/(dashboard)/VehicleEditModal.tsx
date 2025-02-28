@@ -8,13 +8,15 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ResourceForm } from '@/components/custom/resource-form';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { CarsDataProvider } from '@/lib/dataProviders/cars';
 import { useSearchParams } from 'next/navigation';
 import { MembersDataProvider } from '@/lib/dataProviders/members';
 import { FileItem } from '@/components/ui/MultiFileInput';
 import { CircleDollarSign } from 'lucide-react';
+import { VEHICLE_STATUSES } from '@/lib/constants/vehicle';
+import { AuctionsDataProvider } from '@/lib/dataProviders/auctions';
 
 interface VehicleEditModalProps {
   isOpen: boolean;
@@ -35,6 +37,10 @@ export function VehicleEditModal({
   const [loading, setLoading] = useState(false);
   const [errMessage, setErrMessage] = useState('');
   const [readonly, setReadonly] = useState(readOnly);
+
+  useEffect(() => {
+    setReadonly(readOnly);
+  }, [readOnly]);
 
   const dataProvider = CarsDataProvider;
 
@@ -139,6 +145,7 @@ export function VehicleEditModal({
                   (photo) => photo.id,
                 );
                 delete deepCopyData.photos;
+                delete deepCopyData.auction;
                 delete deepCopyData.createdAt;
 
                 return deepCopyData;
@@ -176,6 +183,19 @@ export function VehicleEditModal({
                           label: 'Basic Information',
                           row: 1,
                           cell: 2,
+                        },
+                        {
+                          type: 'select',
+                          name: 'status',
+                          label: 'Status',
+                          required: true,
+                          row: 2,
+                          cell: 1,
+                          allowCustom: true,
+                          options: VEHICLE_STATUSES.map((status) => ({
+                            label: status.label,
+                            value: status.value,
+                          })).filter((status) => status.value !== 'all'),
                         },
                         {
                           type: 'text',
@@ -545,7 +565,8 @@ export function VehicleEditModal({
                           row: 2,
                           cell: 1,
                           addNewItemAction(inputValue) {
-                            console.log('addNewItemAction', inputValue);
+                            // open in a new tab
+                            window.open('/admin/users/consignor', '_blank');
                           },
                           async fetch(query) {
                             return (
@@ -582,11 +603,28 @@ export function VehicleEditModal({
                           cell: 1,
                         },
                         {
-                          type: 'text',
-                          name: 'auction',
+                          type: 'asyncSelect',
+                          name: 'auctionId',
                           label: 'Auction',
-                          row: 3,
+                          row: 2,
                           cell: 1,
+                          addNewItemAction(inputValue) {
+                            // open in a new tab
+                            window.open('/admin/sales/auction', '_blank');
+                          },
+                          async fetch(query) {
+                            return (
+                              await AuctionsDataProvider.getList({
+                                sorters: [],
+                                search: query,
+                                filters: [],
+                                pagination: { page: 1, perPage: 10 },
+                              })
+                            ).data.map((item) => ({
+                              label: [item.auctionID, item.name].join(' - '),
+                              value: item.id,
+                            }));
+                          },
                         },
                         {
                           type: 'date',

@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ResourceForm } from '@/components/custom/resource-form';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { AuctionsDataProvider } from '@/lib/dataProviders/auctions';
 import { useSearchParams } from 'next/navigation';
@@ -33,6 +33,10 @@ export function AuctionEditModal({
   const [loading, setLoading] = useState(false);
   const [errMessage, setErrMessage] = useState('');
   const [readonly, setReadonly] = useState(readOnly);
+
+  useEffect(() => {
+    setReadonly(readOnly);
+  }, [readOnly]);
 
   const dataProvider = AuctionsDataProvider;
 
@@ -185,7 +189,6 @@ export function AuctionEditModal({
                           type: 'text',
                           name: 'summary',
                           label: 'Summary',
-                          required: true,
                           row: 2,
                           cell: 2,
                         },
@@ -193,7 +196,6 @@ export function AuctionEditModal({
                           type: 'textarea',
                           name: 'body',
                           label: 'Description',
-                          required: true,
                           row: 3,
                           cell: 2,
                         },
@@ -222,7 +224,6 @@ export function AuctionEditModal({
                           type: 'text',
                           name: 'addressLine1',
                           label: 'Address Line 1',
-                          required: true,
                           row: 1,
                           cell: 2,
                         },
@@ -237,7 +238,6 @@ export function AuctionEditModal({
                           type: 'text',
                           name: 'city',
                           label: 'City',
-                          required: true,
                           row: 3,
                           cell: 1,
                         },
@@ -245,7 +245,6 @@ export function AuctionEditModal({
                           type: 'text',
                           name: 'state',
                           label: 'State/Province',
-                          required: true,
                           row: 3,
                           cell: 1,
                         },
@@ -253,7 +252,6 @@ export function AuctionEditModal({
                           type: 'text',
                           name: 'zip',
                           label: 'ZIP/Postal Code',
-                          required: true,
                           row: 4,
                           cell: 1,
                         },
@@ -261,7 +259,6 @@ export function AuctionEditModal({
                           type: 'text',
                           name: 'country',
                           label: 'Country',
-                          required: true,
                           row: 4,
                           cell: 1,
                         },

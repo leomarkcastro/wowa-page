@@ -1,4 +1,3 @@
-export type VehicleStatus = 'Approved' | 'Pending' | 'Declined' | 'Withdrawn' | 'Cancelled';
 export type PhotoType = 'consignor' | 'marketing';
 export type PhotoCategory = 'exterior' | 'interior' | 'engine' | 'damage' | 'documentation';
 
