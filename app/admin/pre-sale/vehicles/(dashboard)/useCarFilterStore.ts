@@ -1,6 +1,6 @@
+import { VehicleStatus } from "@/lib/constants/vehicle";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { VehicleStatus } from "./types";
 
 interface CarFilter {
     status: VehicleStatus;
@@ -10,7 +10,7 @@ interface CarFilter {
 }
 
 const initialState: CarFilter = {
-    status: 'Pending',
+    status: 'pending',
     auction: 'na',
     active: true,
     deleted: false,
