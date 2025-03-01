@@ -113,7 +113,12 @@ const generateSchema = (args: { fields: FieldType[] }) => {
         field.tabs.forEach((tab) => {
           processFields(tab.fields);
         });
-      } else if (field.name) {
+      } else if (
+        field.name &&
+        !['title', 'divider', 'tabs', 'display', 'fileGallery'].includes(
+          field.type,
+        )
+      ) {
         schema[field.name] = generateFieldSchema(field);
       }
     });
@@ -735,6 +740,7 @@ export function QuickForm({
             // } else {
             //   console.log('Validated form data:', result.data);
             // }
+            // console.log('zod form', fieldsSchema.shape);
             // console.log('Form data:', data);
             onSubmit(data); // Use formData instead of data
           },
