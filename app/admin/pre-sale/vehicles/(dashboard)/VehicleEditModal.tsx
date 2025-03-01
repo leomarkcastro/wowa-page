@@ -88,12 +88,12 @@ export function VehicleEditModal({
             <div className='absolute inset-0 flex items-center justify-center bg-white/50 bg-opacity-90'>
               <div className='flex items-center gap-4'>
                 <div className='h-3 w-3 animate-spin bg-gray-700' />
-                <p className='text-lg font-semibold text-gray-900'>Saving...</p>
+                <p className='text-lg font-semibold text-primary'>Saving...</p>
               </div>
             </div>
           )}
           <DialogHeader className='border-b p-2'>
-            <DialogTitle className='p-2 px-4 text-xl font-semibold text-gray-900'>
+            <DialogTitle className='p-2 px-4 text-xl font-semibold text-primary'>
               {readonly
                 ? 'View Vehicle'
                 : itemID

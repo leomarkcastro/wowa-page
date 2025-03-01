@@ -1,4 +1,7 @@
-import NeumorphicClock from '../custom/neumorphic-clock';
+import Image from 'next/image';
+import { Card } from '../custom/card';
+import { WaveBackground } from '../custom/WaveBackground';
+import { useEffect, useState } from 'react';
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -7,22 +10,48 @@ interface AuthLayoutProps {
 }
 
 export function AuthLayout({ children, heading, subheading }: AuthLayoutProps) {
+  const [currentTime, setCurrentTime] = useState<string>('');
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(
+        now.toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        }),
+      );
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className='container relative grid min-h-screen grid-cols-1 flex-col items-center justify-center lg:max-w-screen-lg lg:grid-cols-2 lg:px-0'>
-      <div className='relative hidden h-full flex-col p-10 text-white dark:border-r lg:flex'>
-        <div className='relative z-20 flex flex-1 items-center justify-center'>
-          <NeumorphicClock />
-        </div>
+    <>
+      <div className='absolute inset-0 left-0 top-0'>
+        <WaveBackground />
       </div>
-      <div className='lg:p-8'>
-        <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
-          <div className='flex flex-col space-y-2 text-center'>
-            <h1 className='text-2xl font-semibold tracking-tight'>{heading}</h1>
-            <p className='text-sm text-muted-foreground'>{subheading}</p>
+      <div className='container relative z-10 grid min-h-screen grid-cols-1 flex-col items-center justify-center px-4 lg:max-w-screen-lg lg:grid-cols-1 lg:px-0'>
+        <Card className='mx-auto w-fit p-8 pb-4 shadow-lg'>
+          <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
+            <div className='relative w-full'>
+              <Image src='/logo-text.png' width={350} height={120} alt='logo' />
+            </div>
+            <div className='flex flex-col space-y-2 text-center'>
+              <p className='text-sm text-muted-foreground'>{subheading}</p>
+            </div>
+            {children}
           </div>
-          {children}
-        </div>
+          <div className='text-center'>
+            <span className='font-mono text-sm font-semibold text-foreground/65'>
+              {currentTime}
+            </span>
+          </div>
+        </Card>
       </div>
-    </div>
+    </>
   );
 }

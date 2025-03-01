@@ -1,6 +1,6 @@
 'use client';
-import { useEffect } from 'react';
 import { pathTitle } from './header';
+import { useEffect } from 'react';
 
 export default function PagePath(props: {
   id: string;
@@ -8,9 +8,9 @@ export default function PagePath(props: {
   subtitle?: string;
 }) {
   const setPathTitle = pathTitle((state) => state.setPathName);
+
   useEffect(() => {
     setPathTitle(props.title, props.subtitle);
   }, [props]);
-
   return <></>;
 }

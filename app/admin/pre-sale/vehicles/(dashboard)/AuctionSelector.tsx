@@ -51,12 +51,13 @@ export const AuctionSelector = ({
           <SelectValue placeholder='Select auction' />
         </SelectTrigger>
         <SelectContent>
+          <SelectItem value='na'>All Cars</SelectItem>
+          <SelectItem value='s:null'>Not in Auction</SelectItem>
           {data?.data?.map((auction) => (
             <SelectItem key={auction.id} value={auction.id}>
               {auction.name}
             </SelectItem>
           ))}
-          <SelectItem value='na'>Not in Auction</SelectItem>
         </SelectContent>
       </Select>
     </div>

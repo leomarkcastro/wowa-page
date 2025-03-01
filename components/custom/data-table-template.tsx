@@ -1,7 +1,13 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -106,24 +112,28 @@ export function DataTableTemplate({
         </Button>
       </div>
 
-      {tabs && (
-        <Tabs
-          defaultValue={defaultTab}
-          className='mb-6 bg-white'
-          onValueChange={onTabChange}
-        >
-          <TabsList className={`grid w-[400px] grid-cols-${tabs.length}`}>
-            {tabs.map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value}>
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-      )}
+      {(tabs || filterSection) && (
+        <div className='mb-3 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
+          {tabs && (
+            <div className='space-y-2'>
+              <label className='text-sm font-medium text-muted-foreground'>
+                View
+              </label>
+              <Select defaultValue={defaultTab} onValueChange={onTabChange}>
+                <SelectTrigger className='w-full'>
+                  <SelectValue placeholder='Select view' />
+                </SelectTrigger>
+                <SelectContent className='w-[200px]'>
+                  {tabs.map((tab) => (
+                    <SelectItem key={tab.value} value={tab.value}>
+                      {tab.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
-      {filterSection && (
-        <div className='mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
           {filterSection}
         </div>
       )}
@@ -159,6 +169,11 @@ export function DataTableTemplate({
       <DataProviderTable
         name={dataProvider.name}
         enableUrlPersistence={true}
+        onRowClick={(item) => {
+          setIsEditing(true);
+          setItemID(item.id);
+          setReadOnly(true);
+        }}
         columns={tableColumns({
           setIsEditing,
           setItemID,

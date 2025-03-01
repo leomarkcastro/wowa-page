@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
+
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -461,7 +462,7 @@ export function QuickForm({
               className={cn(
                 watch[transformedField.name]
                   ? '!bg-green-500 font-bold !text-white'
-                  : 'bg-gray-100',
+                  : 'border border-gray-300 bg-background',
               )}
             >
               {watch[transformedField.name]

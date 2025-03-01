@@ -92,7 +92,7 @@ export function FileGallery({
                     alt={file.filename}
                     className='relative h-full w-full rounded object-contain'
                   />
-                  <p className='absolute bottom-1 left-0 right-0 bg-white/50 text-center text-xs'>
+                  <p className='absolute bottom-1 left-0 right-0 bg-accent/50 text-center text-xs text-accent-foreground'>
                     {truncateFileName(file.filename.toLowerCase())}
                   </p>
                 </div>

@@ -1,3 +1,5 @@
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from './app-sidebar';
 import { AppHeaders } from './header';
 
 export default function SidebarLayout({
@@ -6,10 +8,13 @@ export default function SidebarLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className='w-full'>
-      {/* <SidebarTrigger  /> */}
-      <AppHeaders />
-      {children}
-    </main>
+    <SidebarProvider>
+      <AppSidebar />
+      <main className='w-full pt-16'>
+        {/* <SidebarTrigger  /> */}
+        <AppHeaders />
+        {children}
+      </main>
+    </SidebarProvider>
   );
 }
