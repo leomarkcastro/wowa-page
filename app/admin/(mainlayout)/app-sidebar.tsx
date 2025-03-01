@@ -145,8 +145,8 @@ export function AppSidebar() {
 
   return (
     <Sidebar className='z-30 w-64 border-r border-none bg-accent text-accent-foreground'>
-      <SidebarContent className='noScrollbar border-r-2 bg-accent text-accent-foreground'>
-        <div className='p-6'>
+      <SidebarContent className='noScrollbar border-r-2 bg-accent pb-24 text-accent-foreground'>
+        <div className='p-6 pb-1'>
           <h1 className='flex items-center gap-2 text-xl font-semibold'>
             <div className='relative mx-auto -ml-1 aspect-[24/4] w-full'>
               <Image src='/logo-text.png' width={200} height={60} alt='logo' />
@@ -179,7 +179,7 @@ export function AppSidebar() {
                                 'flex items-center gap-3 rounded-lg px-3 py-2 text-accent-foreground transition-colors hover:bg-primary/20 hover:text-foreground/50',
                                 (pathID === child.name ||
                                   subPathID === child.name) &&
-                                  'bg-primary/75 text-primary-foreground',
+                                  'bg-primary/75 text-white',
                               )}
                               title={child.description}
                             >
@@ -198,7 +198,7 @@ export function AppSidebar() {
                           className={cn(
                             'flex items-center gap-3 rounded-lg px-3 py-2 text-accent-foreground transition-colors hover:bg-primary/20 hover:text-foreground/50',
                             (pathID === item.name || subPathID === item.name) &&
-                              'bg-white/10 text-primary',
+                              'bg-primary/75 text-white',
                           )}
                           title={item.description}
                         >
