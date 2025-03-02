@@ -232,6 +232,7 @@ export function QuickForm({
       if (
         [
           'display',
+          'custom',
           'array',
           'tabs',
           'title',

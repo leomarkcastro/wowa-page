@@ -13,6 +13,8 @@ import { UseFormReturn } from 'react-hook-form';
 import { AuctionsDataProvider } from '@/lib/dataProviders/auctions';
 import { useSearchParams } from 'next/navigation';
 import { FileItem } from '@/components/ui/MultiFileInput';
+import { fMoment } from '@/lib/services/fMoment';
+import { ChangeLogHistory } from '@/components/ChangeLogHistory';
 
 interface AuctionEditModalProps {
   isOpen: boolean;
@@ -116,7 +118,7 @@ export function AuctionEditModal({
               hideActionsCard={true}
               hideHeader={true}
               readonly={readonly}
-              dontReturnOnSubmit={itemID ? true : false}
+              dontReturnOnSubmit={true}
               onForm={(form) => setForm(form)}
               formRef={formRef}
               preprocessData={(data) => {
@@ -129,6 +131,13 @@ export function AuctionEditModal({
                       }) as FileItem,
                   );
                 }
+                // convert date start and end to 2025-03-29T15:09 format
+                data.eventDateStart = fMoment(data.eventDateStart).format(
+                  'YYYY-MM-DDTHH:mm',
+                );
+                data.eventDateEnd = fMoment(data.eventDateEnd).format(
+                  'YYYY-MM-DDTHH:mm',
+                );
                 return data;
               }}
               transformSubmitData={(data) => {
@@ -299,6 +308,27 @@ export function AuctionEditModal({
                             type: 'text',
                             row: 1,
                             cell: 2,
+                          },
+                        },
+                      ],
+                    },
+
+                    {
+                      name: 'Edit History',
+                      fields: [
+                        {
+                          type: 'custom',
+                          label: 'Edit History Table',
+                          name: 'created',
+                          row: 1,
+                          cell: 2,
+                          component(form) {
+                            return (
+                              <ChangeLogHistory
+                                dataType='auction'
+                                dataId={itemID}
+                              />
+                            );
                           },
                         },
                       ],

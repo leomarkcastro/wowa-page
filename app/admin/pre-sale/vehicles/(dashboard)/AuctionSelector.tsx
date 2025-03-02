@@ -55,7 +55,7 @@ export const AuctionSelector = ({
           <SelectItem value='s:null'>Not in Auction</SelectItem>
           {data?.data?.map((auction) => (
             <SelectItem key={auction.id} value={auction.id}>
-              {auction.name}
+              {auction.auctionID} - {auction.name}
             </SelectItem>
           ))}
         </SelectContent>

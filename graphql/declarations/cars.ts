@@ -38,9 +38,6 @@ export const Car_List = graphql(`
         isSellWithoutReserve
         photoIds
         isConfirmedSeller
-        contactSeller
-        contactSpecialist
-        contactApprovedBy
         auctionId
         createdAt
         isTitleReceived
@@ -49,6 +46,23 @@ export const Car_List = graphql(`
         isTransportationDelivered
         comments
         status
+        contactSellerId
+        contactSeller {
+          actorType
+          name
+          middleName
+          lastName
+          company
+        }
+        contactSpecialist
+        contactApprovedById
+        contactApprovedBy {
+          actorType
+          name
+          middleName
+          lastName
+          company
+        }
         contactConsignor {
           actorType
           name
@@ -148,9 +162,6 @@ export const Car_Get = graphql(`
         isSellWithoutReserve
         photoIds
         isConfirmedSeller
-        contactSeller
-        contactSpecialist
-        contactApprovedBy
         auctionId
         createdAt
         status
@@ -159,6 +170,23 @@ export const Car_Get = graphql(`
         isVehicleCollected
         isTransportationDelivered
         comments
+        contactSellerId
+        contactSeller {
+          actorType
+          name
+          middleName
+          lastName
+          company
+        }
+        contactSpecialist
+        contactApprovedById
+        contactApprovedBy {
+          actorType
+          name
+          middleName
+          lastName
+          company
+        }
         contactConsignor {
           actorType
           name

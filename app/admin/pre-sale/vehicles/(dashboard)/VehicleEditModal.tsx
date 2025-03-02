@@ -17,6 +17,7 @@ import { FileItem } from '@/components/ui/MultiFileInput';
 import { CircleDollarSign } from 'lucide-react';
 import { VEHICLE_STATUSES } from '@/lib/constants/vehicle';
 import { AuctionsDataProvider } from '@/lib/dataProviders/auctions';
+import { ChangeLogHistory } from '@/components/ChangeLogHistory';
 
 interface VehicleEditModalProps {
   isOpen: boolean;
@@ -166,7 +167,7 @@ export function VehicleEditModal({
               }}
               onDynamicField={(f, v) => {
                 const toHide = [];
-                if (!v.isSellWithoutReserve) {
+                if (v.isSellWithoutReserve) {
                   toHide.push({ id: 'reservePrice', toHide: true });
                 }
                 return toHide;
@@ -191,7 +192,7 @@ export function VehicleEditModal({
                           required: true,
                           row: 2,
                           cell: 1,
-                          allowCustom: true,
+                          // allowCustom: true,
                           options: VEHICLE_STATUSES.map((status) => ({
                             label: status.label,
                             value: status.value,
@@ -547,25 +548,39 @@ export function VehicleEditModal({
                           type: 'checkbox',
                           name: 'isConfirmedSeller',
                           label: 'Confirmed Seller',
-
-                          row: 1,
+                          row: 2,
                           cell: 1,
                         },
                         {
-                          type: 'text',
-                          name: 'contactSeller',
+                          type: 'asyncSelect',
+                          name: 'contactSellerId',
                           label: 'Contact Seller',
-                          row: 1,
+                          row: 2,
                           cell: 1,
+                          addNewItemAction(inputValue) {
+                            window.open('/admin/users/consignor', '_blank');
+                          },
+                          async fetch(query) {
+                            return (
+                              await MembersDataProvider.getList({
+                                sorters: [],
+                                search: query,
+                                filters: [],
+                                pagination: { page: 1, perPage: 10 },
+                              })
+                            ).data.map((item) => ({
+                              label: [item.name, item.lastName].join(' '),
+                              value: item.id,
+                            }));
+                          },
                         },
                         {
                           type: 'asyncSelect',
                           name: 'contactConsignorId',
                           label: 'Contact Consignor',
-                          row: 2,
+                          row: 3,
                           cell: 1,
                           addNewItemAction(inputValue) {
-                            // open in a new tab
                             window.open('/admin/users/consignor', '_blank');
                           },
                           async fetch(query) {
@@ -586,30 +601,45 @@ export function VehicleEditModal({
                           type: 'text',
                           name: 'contactSpecialist',
                           label: 'Contact Specialist',
-                          row: 2,
-                          cell: 1,
-                        },
-                        {
-                          type: 'title',
-                          label: 'Process Status',
-                          row: 4,
-                          cell: 2,
-                        },
-                        {
-                          type: 'text',
-                          name: 'contactApprovedBy',
-                          label: 'Approved By',
                           row: 3,
                           cell: 1,
                         },
                         {
                           type: 'asyncSelect',
-                          name: 'auctionId',
-                          label: 'Auction',
-                          row: 2,
+                          name: 'contactApprovedById',
+                          label: 'Contact Approved By',
+                          row: 4,
                           cell: 1,
                           addNewItemAction(inputValue) {
-                            // open in a new tab
+                            window.open('/admin/users/consignor', '_blank');
+                          },
+                          async fetch(query) {
+                            return (
+                              await MembersDataProvider.getList({
+                                sorters: [],
+                                search: query,
+                                filters: [],
+                                pagination: { page: 1, perPage: 10 },
+                              })
+                            ).data.map((item) => ({
+                              label: [item.name, item.lastName].join(' '),
+                              value: item.id,
+                            }));
+                          },
+                        },
+                        {
+                          type: 'title',
+                          label: 'Process Status',
+                          row: 5,
+                          cell: 2,
+                        },
+                        {
+                          type: 'asyncSelect',
+                          name: 'auctionId',
+                          label: 'Auction',
+                          row: 6,
+                          cell: 1,
+                          addNewItemAction(inputValue) {
                             window.open('/admin/sales/auction', '_blank');
                           },
                           async fetch(query) {
@@ -627,35 +657,45 @@ export function VehicleEditModal({
                           },
                         },
                         {
-                          type: 'date',
-                          name: 'createdAt',
-                          label: 'Created At',
-                          row: 4,
-                          cell: 2,
-                        },
-                        {
                           type: 'checkbox',
                           name: 'isTitleReceived',
                           label: 'Title Received',
-
-                          row: 4,
-                          cell: 2,
+                          row: 6,
+                          cell: 1,
                         },
                         {
                           type: 'checkbox',
                           name: 'isVehicleCollected',
                           label: 'Vehicle Collected',
-
-                          row: 5,
-                          cell: 2,
+                          row: 7,
+                          cell: 1,
                         },
                         {
                           type: 'checkbox',
                           name: 'isTransportationDelivered',
                           label: 'Transportation Delivered',
-
-                          row: 5,
+                          row: 7,
+                          cell: 1,
+                        },
+                      ],
+                    },
+                    {
+                      name: 'Edit History',
+                      fields: [
+                        {
+                          type: 'custom',
+                          label: 'Edit History Table',
+                          name: 'created',
+                          row: 1,
                           cell: 2,
+                          component(form) {
+                            return (
+                              <ChangeLogHistory
+                                dataType='car'
+                                dataId={itemID}
+                              />
+                            );
+                          },
                         },
                       ],
                     },
