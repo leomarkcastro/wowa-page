@@ -249,9 +249,19 @@ export function DataProviderTable({
     setTotalRecords(lData?.total); // Add this line
   }, [persistanceLoaded, lLoading, lData]);
 
+  const lastFilter = useRef('');
+
   // Add this new useEffect before the existing useEffect
   useEffect(() => {
-    setCurrentPage(1);
+    let debounceStringify = JSON.stringify({
+      debouncedSearch,
+      filters,
+      pageSize,
+    });
+    if (lastFilter.current !== debounceStringify) {
+      lastFilter.current = debounceStringify;
+      setCurrentPage(1);
+    }
   }, [debouncedSearch, filters, pageSize]);
 
   const alreadyLoaded = useRef(false);
