@@ -553,29 +553,6 @@ export function VehicleEditModal({
                         },
                         {
                           type: 'asyncSelect',
-                          name: 'contactSellerId',
-                          label: 'Contact Seller',
-                          row: 2,
-                          cell: 1,
-                          addNewItemAction(inputValue) {
-                            window.open('/admin/users/consignor', '_blank');
-                          },
-                          async fetch(query) {
-                            return (
-                              await MembersDataProvider.getList({
-                                sorters: [],
-                                search: query,
-                                filters: [],
-                                pagination: { page: 1, perPage: 10 },
-                              })
-                            ).data.map((item) => ({
-                              label: [item.name, item.lastName].join(' '),
-                              value: item.id,
-                            }));
-                          },
-                        },
-                        {
-                          type: 'asyncSelect',
                           name: 'contactConsignorId',
                           label: 'Contact Consignor',
                           row: 3,

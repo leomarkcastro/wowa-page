@@ -194,21 +194,27 @@ export type Api_Car_GetOutput = {
 
 export type Api_Car_GetOutputData = {
   __typename?: 'Api_Car_getOutputData';
+  additionalNote?: Maybe<Scalars['String']['output']>;
   auction?: Maybe<Api_Car_GetOutputDataAuction>;
   auctionId?: Maybe<Scalars['String']['output']>;
   bodyStyle?: Maybe<Scalars['String']['output']>;
   comments?: Maybe<Scalars['String']['output']>;
+  commissionRate?: Maybe<Scalars['Float']['output']>;
   contactApprovedBy?: Maybe<Api_Car_GetOutputDataContactApprovedBy>;
   contactApprovedById?: Maybe<Scalars['String']['output']>;
   contactConsignor?: Maybe<Api_Car_GetOutputDataContactConsignor>;
   contactConsignorId?: Maybe<Scalars['String']['output']>;
-  contactSeller?: Maybe<Api_Car_GetOutputDataContactSeller>;
-  contactSellerId?: Maybe<Scalars['String']['output']>;
   contactSpecialist?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['String']['output']>;
+  customerNet?: Maybe<Scalars['Float']['output']>;
   deletedAt?: Maybe<Scalars['String']['output']>;
   engineNumber?: Maybe<Scalars['String']['output']>;
   engineSize?: Maybe<Scalars['String']['output']>;
+  entryFee?: Maybe<Scalars['Float']['output']>;
+  entryFeeCollectedBy?: Maybe<Api_Car_GetOutputDataEntryFeeCollectedBy>;
+  entryFeePaidAt?: Maybe<Scalars['String']['output']>;
+  entryFeePaymentMethod?: Maybe<Scalars['String']['output']>;
+  entryFeeStatus?: Maybe<Scalars['String']['output']>;
   exteriorColor?: Maybe<Scalars['String']['output']>;
   exteriorDetailNote?: Maybe<Scalars['String']['output']>;
   exteriorFlags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -219,6 +225,7 @@ export type Api_Car_GetOutputData = {
   interiorColor?: Maybe<Scalars['String']['output']>;
   interiorCondition?: Maybe<Scalars['String']['output']>;
   interiorSurfaceMaterial?: Maybe<Scalars['String']['output']>;
+  isClearTitle?: Maybe<Scalars['Boolean']['output']>;
   isConfirmedSeller?: Maybe<Scalars['Boolean']['output']>;
   isInDamageOrAccident?: Maybe<Scalars['Boolean']['output']>;
   isNumbersMatching?: Maybe<Scalars['Boolean']['output']>;
@@ -232,11 +239,14 @@ export type Api_Car_GetOutputData = {
   make?: Maybe<Scalars['String']['output']>;
   marketValueHigh?: Maybe<Scalars['Float']['output']>;
   marketValueLow?: Maybe<Scalars['Float']['output']>;
+  marketingPhotos?: Maybe<Array<Maybe<Api_Car_GetOutputDataMarketingPhotos>>>;
+  marketingPhotosIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   mechanicalSuspensionNote?: Maybe<Scalars['String']['output']>;
   mileage?: Maybe<Scalars['Float']['output']>;
   mileageType?: Maybe<Scalars['String']['output']>;
   model?: Maybe<Scalars['String']['output']>;
   notablePoints?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  overallNote?: Maybe<Scalars['String']['output']>;
   photoIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   photos?: Maybe<Array<Maybe<Api_Car_GetOutputDataPhotos>>>;
   reservePrice?: Maybe<Scalars['Float']['output']>;
@@ -343,8 +353,8 @@ export type Api_Car_GetOutputDataContactConsignor = {
   updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
-export type Api_Car_GetOutputDataContactSeller = {
-  __typename?: 'Api_Car_getOutputDataContactSeller';
+export type Api_Car_GetOutputDataEntryFeeCollectedBy = {
+  __typename?: 'Api_Car_getOutputDataEntryFeeCollectedBy';
   actorType?: Maybe<Scalars['String']['output']>;
   addressLine1?: Maybe<Scalars['String']['output']>;
   addressLine2?: Maybe<Scalars['String']['output']>;
@@ -370,6 +380,21 @@ export type Api_Car_GetOutputDataContactSeller = {
   state?: Maybe<Scalars['String']['output']>;
   suffix?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['String']['output']>;
+};
+
+export type Api_Car_GetOutputDataMarketingPhotos = {
+  __typename?: 'Api_Car_getOutputDataMarketingPhotos';
+  assignedTo: Scalars['String']['output'];
+  category: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  metadata: Scalars['String']['output'];
+  mime: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  note: Scalars['String']['output'];
+  path: Scalars['String']['output'];
+  size: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type Api_Car_GetOutputDataPhotos = {
@@ -412,21 +437,27 @@ export type Api_Car_ListOutput = {
 
 export type Api_Car_ListOutputData = {
   __typename?: 'Api_Car_listOutputData';
+  additionalNote?: Maybe<Scalars['String']['output']>;
   auction?: Maybe<Api_Car_ListOutputDataAuction>;
   auctionId?: Maybe<Scalars['String']['output']>;
   bodyStyle?: Maybe<Scalars['String']['output']>;
   comments?: Maybe<Scalars['String']['output']>;
+  commissionRate?: Maybe<Scalars['Float']['output']>;
   contactApprovedBy?: Maybe<Api_Car_ListOutputDataContactApprovedBy>;
   contactApprovedById?: Maybe<Scalars['String']['output']>;
   contactConsignor?: Maybe<Api_Car_ListOutputDataContactConsignor>;
   contactConsignorId?: Maybe<Scalars['String']['output']>;
-  contactSeller?: Maybe<Api_Car_ListOutputDataContactSeller>;
-  contactSellerId?: Maybe<Scalars['String']['output']>;
   contactSpecialist?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['String']['output']>;
+  customerNet?: Maybe<Scalars['Float']['output']>;
   deletedAt?: Maybe<Scalars['String']['output']>;
   engineNumber?: Maybe<Scalars['String']['output']>;
   engineSize?: Maybe<Scalars['String']['output']>;
+  entryFee?: Maybe<Scalars['Float']['output']>;
+  entryFeeCollectedBy?: Maybe<Api_Car_ListOutputDataEntryFeeCollectedBy>;
+  entryFeePaidAt?: Maybe<Scalars['String']['output']>;
+  entryFeePaymentMethod?: Maybe<Scalars['String']['output']>;
+  entryFeeStatus?: Maybe<Scalars['String']['output']>;
   exteriorColor?: Maybe<Scalars['String']['output']>;
   exteriorDetailNote?: Maybe<Scalars['String']['output']>;
   exteriorFlags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -437,6 +468,7 @@ export type Api_Car_ListOutputData = {
   interiorColor?: Maybe<Scalars['String']['output']>;
   interiorCondition?: Maybe<Scalars['String']['output']>;
   interiorSurfaceMaterial?: Maybe<Scalars['String']['output']>;
+  isClearTitle?: Maybe<Scalars['Boolean']['output']>;
   isConfirmedSeller?: Maybe<Scalars['Boolean']['output']>;
   isInDamageOrAccident?: Maybe<Scalars['Boolean']['output']>;
   isNumbersMatching?: Maybe<Scalars['Boolean']['output']>;
@@ -450,11 +482,14 @@ export type Api_Car_ListOutputData = {
   make?: Maybe<Scalars['String']['output']>;
   marketValueHigh?: Maybe<Scalars['Float']['output']>;
   marketValueLow?: Maybe<Scalars['Float']['output']>;
+  marketingPhotos?: Maybe<Array<Maybe<Api_Car_ListOutputDataMarketingPhotos>>>;
+  marketingPhotosIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   mechanicalSuspensionNote?: Maybe<Scalars['String']['output']>;
   mileage?: Maybe<Scalars['Float']['output']>;
   mileageType?: Maybe<Scalars['String']['output']>;
   model?: Maybe<Scalars['String']['output']>;
   notablePoints?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  overallNote?: Maybe<Scalars['String']['output']>;
   photoIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   photos?: Maybe<Array<Maybe<Api_Car_ListOutputDataPhotos>>>;
   reservePrice?: Maybe<Scalars['Float']['output']>;
@@ -561,8 +596,8 @@ export type Api_Car_ListOutputDataContactConsignor = {
   updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
-export type Api_Car_ListOutputDataContactSeller = {
-  __typename?: 'Api_Car_listOutputDataContactSeller';
+export type Api_Car_ListOutputDataEntryFeeCollectedBy = {
+  __typename?: 'Api_Car_listOutputDataEntryFeeCollectedBy';
   actorType?: Maybe<Scalars['String']['output']>;
   addressLine1?: Maybe<Scalars['String']['output']>;
   addressLine2?: Maybe<Scalars['String']['output']>;
@@ -588,6 +623,21 @@ export type Api_Car_ListOutputDataContactSeller = {
   state?: Maybe<Scalars['String']['output']>;
   suffix?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['String']['output']>;
+};
+
+export type Api_Car_ListOutputDataMarketingPhotos = {
+  __typename?: 'Api_Car_listOutputDataMarketingPhotos';
+  assignedTo: Scalars['String']['output'];
+  category: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  metadata: Scalars['String']['output'];
+  mime: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  note: Scalars['String']['output'];
+  path: Scalars['String']['output'];
+  size: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type Api_Car_ListOutputDataPhotos = {
@@ -714,6 +764,99 @@ export type Api_Changelog_ListOutputPageRange = {
 
 export type Api_Changelog_UpdateOutput = {
   __typename?: 'Api_Changelog_updateOutput';
+  count?: Maybe<Scalars['Float']['output']>;
+  ids?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+export type Api_Comment_AggregateOutput = {
+  __typename?: 'Api_Comment_aggregateOutput';
+  breakdown?: Maybe<Array<Maybe<Api_Comment_AggregateOutputBreakdown>>>;
+};
+
+export type Api_Comment_AggregateOutputBreakdown = {
+  __typename?: 'Api_Comment_aggregateOutputBreakdown';
+  count?: Maybe<Scalars['Float']['output']>;
+  countBy?: Maybe<Scalars['String']['output']>;
+};
+
+export type Api_Comment_CreateOutput = {
+  __typename?: 'Api_Comment_createOutput';
+  count?: Maybe<Scalars['Float']['output']>;
+  ids?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+export type Api_Comment_DeleteOutput = {
+  __typename?: 'Api_Comment_deleteOutput';
+  count?: Maybe<Scalars['Float']['output']>;
+  ids?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+export type Api_Comment_GetOutput = {
+  __typename?: 'Api_Comment_getOutput';
+  data?: Maybe<Api_Comment_GetOutputData>;
+};
+
+export type Api_Comment_GetOutputData = {
+  __typename?: 'Api_Comment_getOutputData';
+  body?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  fileIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  files?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  id?: Maybe<Scalars['String']['output']>;
+  locationID?: Maybe<Scalars['String']['output']>;
+  sender?: Maybe<Scalars['String']['output']>;
+};
+
+export type Api_Comment_GroupByOutput = {
+  __typename?: 'Api_Comment_groupByOutput';
+  breakdown?: Maybe<Array<Maybe<Api_Comment_GroupByOutputBreakdown>>>;
+};
+
+export type Api_Comment_GroupByOutputBreakdown = {
+  __typename?: 'Api_Comment_groupByOutputBreakdown';
+  counts: Array<Maybe<Api_Comment_GroupByOutputBreakdownCounts>>;
+  uniqueIdentifier?: Maybe<Scalars['String']['output']>;
+};
+
+export type Api_Comment_GroupByOutputBreakdownCounts = {
+  __typename?: 'Api_Comment_groupByOutputBreakdownCounts';
+  count?: Maybe<Scalars['Float']['output']>;
+  countBy?: Maybe<Scalars['String']['output']>;
+};
+
+export type Api_Comment_ListOutput = {
+  __typename?: 'Api_Comment_listOutput';
+  data?: Maybe<Array<Maybe<Api_Comment_ListOutputData>>>;
+  page?: Maybe<Api_Comment_ListOutputPage>;
+};
+
+export type Api_Comment_ListOutputData = {
+  __typename?: 'Api_Comment_listOutputData';
+  body?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  fileIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  files?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  id?: Maybe<Scalars['String']['output']>;
+  locationID?: Maybe<Scalars['String']['output']>;
+  sender?: Maybe<Scalars['String']['output']>;
+};
+
+export type Api_Comment_ListOutputPage = {
+  __typename?: 'Api_Comment_listOutputPage';
+  page?: Maybe<Scalars['Float']['output']>;
+  pageSize?: Maybe<Scalars['Float']['output']>;
+  range?: Maybe<Api_Comment_ListOutputPageRange>;
+  total?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Api_Comment_ListOutputPageRange = {
+  __typename?: 'Api_Comment_listOutputPageRange';
+  from: Scalars['Float']['output'];
+  to: Scalars['Float']['output'];
+};
+
+export type Api_Comment_UpdateOutput = {
+  __typename?: 'Api_Comment_updateOutput';
   count?: Maybe<Scalars['Float']['output']>;
   ids?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
@@ -1110,6 +1253,7 @@ export type Api_Auction_UpdateInputDataDataData = {
   state?: InputMaybe<Scalars['String']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  updateID: Scalars['String']['input'];
   zip?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1152,19 +1296,23 @@ export type Api_Car_CreateInputData = {
 };
 
 export type Api_Car_CreateInputDataData = {
+  additionalNote?: InputMaybe<Scalars['String']['input']>;
   auctionId?: InputMaybe<Scalars['String']['input']>;
   bodyStyle?: InputMaybe<Scalars['String']['input']>;
   comments?: InputMaybe<Scalars['String']['input']>;
-  contactApprovedBy?: InputMaybe<Api_Car_CreateInputDataDataContactApprovedBy>;
+  commissionRate?: InputMaybe<Scalars['Float']['input']>;
   contactApprovedById?: InputMaybe<Scalars['String']['input']>;
-  contactConsignor?: InputMaybe<Api_Car_CreateInputDataDataContactConsignor>;
   contactConsignorId?: InputMaybe<Scalars['String']['input']>;
-  contactSeller?: InputMaybe<Api_Car_CreateInputDataDataContactSeller>;
-  contactSellerId?: InputMaybe<Scalars['String']['input']>;
   contactSpecialist?: InputMaybe<Scalars['String']['input']>;
+  customerNet?: InputMaybe<Scalars['Float']['input']>;
   deletedAt?: InputMaybe<Scalars['String']['input']>;
   engineNumber?: InputMaybe<Scalars['String']['input']>;
   engineSize?: InputMaybe<Scalars['String']['input']>;
+  entryFee?: InputMaybe<Scalars['Float']['input']>;
+  entryFeeCollectedBy?: InputMaybe<Api_Car_CreateInputDataDataEntryFeeCollectedBy>;
+  entryFeePaidAt?: InputMaybe<Scalars['String']['input']>;
+  entryFeePaymentMethod?: InputMaybe<Scalars['String']['input']>;
+  entryFeeStatus?: InputMaybe<Scalars['String']['input']>;
   exteriorColor?: InputMaybe<Scalars['String']['input']>;
   exteriorDetailNote?: InputMaybe<Scalars['String']['input']>;
   exteriorFlags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -1174,6 +1322,7 @@ export type Api_Car_CreateInputDataData = {
   interiorColor?: InputMaybe<Scalars['String']['input']>;
   interiorCondition?: InputMaybe<Scalars['String']['input']>;
   interiorSurfaceMaterial?: InputMaybe<Scalars['String']['input']>;
+  isClearTitle?: InputMaybe<Scalars['Boolean']['input']>;
   isConfirmedSeller?: InputMaybe<Scalars['Boolean']['input']>;
   isInDamageOrAccident?: InputMaybe<Scalars['Boolean']['input']>;
   isNumbersMatching?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1187,11 +1336,13 @@ export type Api_Car_CreateInputDataData = {
   make?: InputMaybe<Scalars['String']['input']>;
   marketValueHigh?: InputMaybe<Scalars['Float']['input']>;
   marketValueLow?: InputMaybe<Scalars['Float']['input']>;
+  marketingPhotosIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   mechanicalSuspensionNote?: InputMaybe<Scalars['String']['input']>;
   mileage?: InputMaybe<Scalars['Float']['input']>;
   mileageType?: InputMaybe<Scalars['String']['input']>;
   model?: InputMaybe<Scalars['String']['input']>;
   notablePoints?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  overallNote?: InputMaybe<Scalars['String']['input']>;
   photoIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   reservePrice?: InputMaybe<Scalars['Float']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
@@ -1202,63 +1353,7 @@ export type Api_Car_CreateInputDataData = {
   year?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type Api_Car_CreateInputDataDataContactApprovedBy = {
-  actorType?: InputMaybe<Scalars['String']['input']>;
-  addressLine1?: InputMaybe<Scalars['String']['input']>;
-  addressLine2?: InputMaybe<Scalars['String']['input']>;
-  city?: InputMaybe<Scalars['String']['input']>;
-  company?: InputMaybe<Scalars['String']['input']>;
-  companyContact?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['String']['input']>;
-  displayName?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  faxNumber?: InputMaybe<Scalars['String']['input']>;
-  homeNumber?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['String']['input']>;
-  lastLogin?: InputMaybe<Scalars['String']['input']>;
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  middleName?: InputMaybe<Scalars['String']['input']>;
-  mobileNumber?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  postalCode?: InputMaybe<Scalars['String']['input']>;
-  prefix?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Scalars['String']['input']>;
-  secondaryEmail?: InputMaybe<Scalars['String']['input']>;
-  state?: InputMaybe<Scalars['String']['input']>;
-  suffix?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type Api_Car_CreateInputDataDataContactConsignor = {
-  actorType?: InputMaybe<Scalars['String']['input']>;
-  addressLine1?: InputMaybe<Scalars['String']['input']>;
-  addressLine2?: InputMaybe<Scalars['String']['input']>;
-  city?: InputMaybe<Scalars['String']['input']>;
-  company?: InputMaybe<Scalars['String']['input']>;
-  companyContact?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['String']['input']>;
-  displayName?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  faxNumber?: InputMaybe<Scalars['String']['input']>;
-  homeNumber?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['String']['input']>;
-  lastLogin?: InputMaybe<Scalars['String']['input']>;
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  middleName?: InputMaybe<Scalars['String']['input']>;
-  mobileNumber?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  postalCode?: InputMaybe<Scalars['String']['input']>;
-  prefix?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Scalars['String']['input']>;
-  secondaryEmail?: InputMaybe<Scalars['String']['input']>;
-  state?: InputMaybe<Scalars['String']['input']>;
-  suffix?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type Api_Car_CreateInputDataDataContactSeller = {
+export type Api_Car_CreateInputDataDataEntryFeeCollectedBy = {
   actorType?: InputMaybe<Scalars['String']['input']>;
   addressLine1?: InputMaybe<Scalars['String']['input']>;
   addressLine2?: InputMaybe<Scalars['String']['input']>;
@@ -1376,19 +1471,23 @@ export type Api_Car_UpdateInputDataData = {
 };
 
 export type Api_Car_UpdateInputDataDataData = {
+  additionalNote?: InputMaybe<Scalars['String']['input']>;
   auctionId?: InputMaybe<Scalars['String']['input']>;
   bodyStyle?: InputMaybe<Scalars['String']['input']>;
   comments?: InputMaybe<Scalars['String']['input']>;
-  contactApprovedBy?: InputMaybe<Api_Car_UpdateInputDataDataDataContactApprovedBy>;
+  commissionRate?: InputMaybe<Scalars['Float']['input']>;
   contactApprovedById?: InputMaybe<Scalars['String']['input']>;
-  contactConsignor?: InputMaybe<Api_Car_UpdateInputDataDataDataContactConsignor>;
   contactConsignorId?: InputMaybe<Scalars['String']['input']>;
-  contactSeller?: InputMaybe<Api_Car_UpdateInputDataDataDataContactSeller>;
-  contactSellerId?: InputMaybe<Scalars['String']['input']>;
   contactSpecialist?: InputMaybe<Scalars['String']['input']>;
+  customerNet?: InputMaybe<Scalars['Float']['input']>;
   deletedAt?: InputMaybe<Scalars['String']['input']>;
   engineNumber?: InputMaybe<Scalars['String']['input']>;
   engineSize?: InputMaybe<Scalars['String']['input']>;
+  entryFee?: InputMaybe<Scalars['Float']['input']>;
+  entryFeeCollectedBy?: InputMaybe<Api_Car_UpdateInputDataDataDataEntryFeeCollectedBy>;
+  entryFeePaidAt?: InputMaybe<Scalars['String']['input']>;
+  entryFeePaymentMethod?: InputMaybe<Scalars['String']['input']>;
+  entryFeeStatus?: InputMaybe<Scalars['String']['input']>;
   exteriorColor?: InputMaybe<Scalars['String']['input']>;
   exteriorDetailNote?: InputMaybe<Scalars['String']['input']>;
   exteriorFlags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -1398,6 +1497,7 @@ export type Api_Car_UpdateInputDataDataData = {
   interiorColor?: InputMaybe<Scalars['String']['input']>;
   interiorCondition?: InputMaybe<Scalars['String']['input']>;
   interiorSurfaceMaterial?: InputMaybe<Scalars['String']['input']>;
+  isClearTitle?: InputMaybe<Scalars['Boolean']['input']>;
   isConfirmedSeller?: InputMaybe<Scalars['Boolean']['input']>;
   isInDamageOrAccident?: InputMaybe<Scalars['Boolean']['input']>;
   isNumbersMatching?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1411,78 +1511,25 @@ export type Api_Car_UpdateInputDataDataData = {
   make?: InputMaybe<Scalars['String']['input']>;
   marketValueHigh?: InputMaybe<Scalars['Float']['input']>;
   marketValueLow?: InputMaybe<Scalars['Float']['input']>;
+  marketingPhotosIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   mechanicalSuspensionNote?: InputMaybe<Scalars['String']['input']>;
   mileage?: InputMaybe<Scalars['Float']['input']>;
   mileageType?: InputMaybe<Scalars['String']['input']>;
   model?: InputMaybe<Scalars['String']['input']>;
   notablePoints?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  overallNote?: InputMaybe<Scalars['String']['input']>;
   photoIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   reservePrice?: InputMaybe<Scalars['Float']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   tires?: InputMaybe<Scalars['String']['input']>;
   transmission?: InputMaybe<Scalars['String']['input']>;
+  updateID: Scalars['String']['input'];
   vin?: InputMaybe<Scalars['String']['input']>;
   wheels?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type Api_Car_UpdateInputDataDataDataContactApprovedBy = {
-  actorType?: InputMaybe<Scalars['String']['input']>;
-  addressLine1?: InputMaybe<Scalars['String']['input']>;
-  addressLine2?: InputMaybe<Scalars['String']['input']>;
-  city?: InputMaybe<Scalars['String']['input']>;
-  company?: InputMaybe<Scalars['String']['input']>;
-  companyContact?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['String']['input']>;
-  displayName?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  faxNumber?: InputMaybe<Scalars['String']['input']>;
-  homeNumber?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['String']['input']>;
-  lastLogin?: InputMaybe<Scalars['String']['input']>;
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  middleName?: InputMaybe<Scalars['String']['input']>;
-  mobileNumber?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  postalCode?: InputMaybe<Scalars['String']['input']>;
-  prefix?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Scalars['String']['input']>;
-  secondaryEmail?: InputMaybe<Scalars['String']['input']>;
-  state?: InputMaybe<Scalars['String']['input']>;
-  suffix?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type Api_Car_UpdateInputDataDataDataContactConsignor = {
-  actorType?: InputMaybe<Scalars['String']['input']>;
-  addressLine1?: InputMaybe<Scalars['String']['input']>;
-  addressLine2?: InputMaybe<Scalars['String']['input']>;
-  city?: InputMaybe<Scalars['String']['input']>;
-  company?: InputMaybe<Scalars['String']['input']>;
-  companyContact?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['String']['input']>;
-  displayName?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  faxNumber?: InputMaybe<Scalars['String']['input']>;
-  homeNumber?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['String']['input']>;
-  lastLogin?: InputMaybe<Scalars['String']['input']>;
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  middleName?: InputMaybe<Scalars['String']['input']>;
-  mobileNumber?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  postalCode?: InputMaybe<Scalars['String']['input']>;
-  prefix?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Scalars['String']['input']>;
-  secondaryEmail?: InputMaybe<Scalars['String']['input']>;
-  state?: InputMaybe<Scalars['String']['input']>;
-  suffix?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type Api_Car_UpdateInputDataDataDataContactSeller = {
+export type Api_Car_UpdateInputDataDataDataEntryFeeCollectedBy = {
   actorType?: InputMaybe<Scalars['String']['input']>;
   addressLine1?: InputMaybe<Scalars['String']['input']>;
   addressLine2?: InputMaybe<Scalars['String']['input']>;
@@ -1651,6 +1698,147 @@ export type Api_Changelog_UpdateInputDataDataData = {
   dataID?: InputMaybe<Scalars['String']['input']>;
   dataType?: InputMaybe<Scalars['String']['input']>;
   metadata?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Api_Comment_AggregateInput = {
+  data: Api_Comment_AggregateInputData;
+};
+
+export type Api_Comment_AggregateInputData = {
+  countBy: Array<InputMaybe<Scalars['String']['input']>>;
+  operation: Scalars['String']['input'];
+  page?: InputMaybe<Api_Comment_AggregateInputDataPage>;
+};
+
+export type Api_Comment_AggregateInputDataPage = {
+  distinct?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  filter?: InputMaybe<Array<InputMaybe<Api_Comment_AggregateInputDataPageFilter>>>;
+  page?: InputMaybe<Scalars['Float']['input']>;
+  pageSize?: InputMaybe<Scalars['Float']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Api_Comment_AggregateInputDataPageSort>;
+};
+
+export type Api_Comment_AggregateInputDataPageFilter = {
+  field: Scalars['String']['input'];
+  operation: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
+export type Api_Comment_AggregateInputDataPageSort = {
+  field: Scalars['String']['input'];
+  order: Scalars['String']['input'];
+};
+
+export type Api_Comment_CreateInput = {
+  data: Api_Comment_CreateInputData;
+};
+
+export type Api_Comment_CreateInputData = {
+  data: Array<InputMaybe<Api_Comment_CreateInputDataData>>;
+};
+
+export type Api_Comment_CreateInputDataData = {
+  body?: InputMaybe<Scalars['String']['input']>;
+  fileIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  locationID?: InputMaybe<Scalars['String']['input']>;
+  sender?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Api_Comment_DeleteInput = {
+  data: Api_Comment_DeleteInputData;
+};
+
+export type Api_Comment_DeleteInputData = {
+  data: Array<InputMaybe<Scalars['String']['input']>>;
+  forceDelete?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type Api_Comment_GetInput = {
+  data: Api_Comment_GetInputData;
+};
+
+export type Api_Comment_GetInputData = {
+  id: Scalars['String']['input'];
+};
+
+export type Api_Comment_GroupByInput = {
+  data: Api_Comment_GroupByInputData;
+};
+
+export type Api_Comment_GroupByInputData = {
+  countBy: Array<InputMaybe<Scalars['String']['input']>>;
+  groupBy: Array<InputMaybe<Scalars['String']['input']>>;
+  operation: Scalars['String']['input'];
+  page?: InputMaybe<Api_Comment_GroupByInputDataPage>;
+};
+
+export type Api_Comment_GroupByInputDataPage = {
+  distinct?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  filter?: InputMaybe<Array<InputMaybe<Api_Comment_GroupByInputDataPageFilter>>>;
+  page?: InputMaybe<Scalars['Float']['input']>;
+  pageSize?: InputMaybe<Scalars['Float']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Api_Comment_GroupByInputDataPageSort>;
+};
+
+export type Api_Comment_GroupByInputDataPageFilter = {
+  field: Scalars['String']['input'];
+  operation: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
+export type Api_Comment_GroupByInputDataPageSort = {
+  field: Scalars['String']['input'];
+  order: Scalars['String']['input'];
+};
+
+export type Api_Comment_ListInput = {
+  data: Api_Comment_ListInputData;
+};
+
+export type Api_Comment_ListInputData = {
+  page?: InputMaybe<Api_Comment_ListInputDataPage>;
+};
+
+export type Api_Comment_ListInputDataPage = {
+  distinct?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  filter?: InputMaybe<Array<InputMaybe<Api_Comment_ListInputDataPageFilter>>>;
+  page?: InputMaybe<Scalars['Float']['input']>;
+  pageSize?: InputMaybe<Scalars['Float']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Api_Comment_ListInputDataPageSort>;
+};
+
+export type Api_Comment_ListInputDataPageFilter = {
+  field: Scalars['String']['input'];
+  operation: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
+export type Api_Comment_ListInputDataPageSort = {
+  field: Scalars['String']['input'];
+  order: Scalars['String']['input'];
+};
+
+export type Api_Comment_UpdateInput = {
+  data: Api_Comment_UpdateInputData;
+};
+
+export type Api_Comment_UpdateInputData = {
+  data: Array<InputMaybe<Api_Comment_UpdateInputDataData>>;
+};
+
+export type Api_Comment_UpdateInputDataData = {
+  data: Api_Comment_UpdateInputDataDataData;
+  id: Scalars['String']['input'];
+};
+
+export type Api_Comment_UpdateInputDataDataData = {
+  body?: InputMaybe<Scalars['String']['input']>;
+  fileIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  locationID?: InputMaybe<Scalars['String']['input']>;
+  sender?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Api_File_CreateInput = {
@@ -1962,6 +2150,7 @@ export type Auction = {
   state?: Maybe<Scalars['String']['output']>;
   summary?: Maybe<Scalars['String']['output']>;
   tags?: Maybe<Scalars['JSON']['output']>;
+  updateID?: Maybe<Scalars['String']['output']>;
   zip?: Maybe<Scalars['String']['output']>;
 };
 
@@ -2011,6 +2200,7 @@ export type AuctionCreateInput = {
   state?: InputMaybe<Scalars['String']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tags?: InputMaybe<Scalars['JSON']['input']>;
+  updateID?: InputMaybe<Scalars['String']['input']>;
   zip?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2030,6 +2220,7 @@ export type AuctionOrderByInput = {
   name?: InputMaybe<OrderDirection>;
   state?: InputMaybe<OrderDirection>;
   summary?: InputMaybe<OrderDirection>;
+  updateID?: InputMaybe<OrderDirection>;
   zip?: InputMaybe<OrderDirection>;
 };
 
@@ -2067,6 +2258,7 @@ export type AuctionUpdateInput = {
   state?: InputMaybe<Scalars['String']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tags?: InputMaybe<Scalars['JSON']['input']>;
+  updateID?: InputMaybe<Scalars['String']['input']>;
   zip?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2091,6 +2283,7 @@ export type AuctionWhereInput = {
   photos?: InputMaybe<FileManyRelationFilter>;
   state?: InputMaybe<StringFilter>;
   summary?: InputMaybe<StringFilter>;
+  updateID?: InputMaybe<StringFilter>;
   zip?: InputMaybe<StringFilter>;
 };
 
@@ -2107,17 +2300,24 @@ export type BooleanFilter = {
 
 export type Car = {
   __typename?: 'Car';
+  additionalNote?: Maybe<Scalars['String']['output']>;
   auction?: Maybe<Auction>;
   bodyStyle?: Maybe<Scalars['String']['output']>;
   comments?: Maybe<Scalars['String']['output']>;
+  commissionRate?: Maybe<Scalars['Float']['output']>;
   contactApprovedBy?: Maybe<User>;
   contactConsignor?: Maybe<User>;
-  contactSeller?: Maybe<User>;
   contactSpecialist?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
+  customerNet?: Maybe<Scalars['Float']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   engineNumber?: Maybe<Scalars['String']['output']>;
   engineSize?: Maybe<Scalars['String']['output']>;
+  entryFee?: Maybe<Scalars['Float']['output']>;
+  entryFeeCollectedBy?: Maybe<User>;
+  entryFeePaidAt?: Maybe<Scalars['DateTime']['output']>;
+  entryFeePaymentMethod?: Maybe<Scalars['String']['output']>;
+  entryFeeStatus?: Maybe<Scalars['String']['output']>;
   exteriorColor?: Maybe<Scalars['String']['output']>;
   exteriorDetailNote?: Maybe<Scalars['String']['output']>;
   exteriorFlags?: Maybe<Scalars['JSON']['output']>;
@@ -2128,6 +2328,7 @@ export type Car = {
   interiorColor?: Maybe<Scalars['String']['output']>;
   interiorCondition?: Maybe<Scalars['String']['output']>;
   interiorSurfaceMaterial?: Maybe<Scalars['String']['output']>;
+  isClearTitle?: Maybe<Scalars['Boolean']['output']>;
   isConfirmedSeller?: Maybe<Scalars['Boolean']['output']>;
   isInDamageOrAccident?: Maybe<Scalars['Boolean']['output']>;
   isNumbersMatching?: Maybe<Scalars['Boolean']['output']>;
@@ -2142,20 +2343,38 @@ export type Car = {
   make?: Maybe<Scalars['String']['output']>;
   marketValueHigh?: Maybe<Scalars['Float']['output']>;
   marketValueLow?: Maybe<Scalars['Float']['output']>;
+  marketingPhotos?: Maybe<Array<File>>;
+  marketingPhotosCount?: Maybe<Scalars['Int']['output']>;
   mechanicalSuspensionNote?: Maybe<Scalars['String']['output']>;
   mileage?: Maybe<Scalars['Float']['output']>;
   mileageType?: Maybe<Scalars['String']['output']>;
   model?: Maybe<Scalars['String']['output']>;
   notablePoints?: Maybe<Scalars['JSON']['output']>;
+  overallNote?: Maybe<Scalars['String']['output']>;
   photos?: Maybe<Array<File>>;
   photosCount?: Maybe<Scalars['Int']['output']>;
   reservePrice?: Maybe<Scalars['Float']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   tires?: Maybe<Scalars['String']['output']>;
   transmission?: Maybe<Scalars['String']['output']>;
+  updateID?: Maybe<Scalars['String']['output']>;
   vin?: Maybe<Scalars['String']['output']>;
   wheels?: Maybe<Scalars['String']['output']>;
   year?: Maybe<Scalars['Int']['output']>;
+};
+
+
+export type CarMarketingPhotosArgs = {
+  cursor?: InputMaybe<FileWhereUniqueInput>;
+  orderBy?: Array<FileOrderByInput>;
+  skip?: Scalars['Int']['input'];
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: FileWhereInput;
+};
+
+
+export type CarMarketingPhotosCountArgs = {
+  where?: FileWhereInput;
 };
 
 
@@ -2173,17 +2392,24 @@ export type CarPhotosCountArgs = {
 };
 
 export type CarCreateInput = {
+  additionalNote?: InputMaybe<Scalars['String']['input']>;
   auction?: InputMaybe<AuctionRelateToOneForCreateInput>;
   bodyStyle?: InputMaybe<Scalars['String']['input']>;
   comments?: InputMaybe<Scalars['String']['input']>;
+  commissionRate?: InputMaybe<Scalars['Float']['input']>;
   contactApprovedBy?: InputMaybe<UserRelateToOneForCreateInput>;
   contactConsignor?: InputMaybe<UserRelateToOneForCreateInput>;
-  contactSeller?: InputMaybe<UserRelateToOneForCreateInput>;
   contactSpecialist?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  customerNet?: InputMaybe<Scalars['Float']['input']>;
   deletedAt?: InputMaybe<Scalars['DateTime']['input']>;
   engineNumber?: InputMaybe<Scalars['String']['input']>;
   engineSize?: InputMaybe<Scalars['String']['input']>;
+  entryFee?: InputMaybe<Scalars['Float']['input']>;
+  entryFeeCollectedBy?: InputMaybe<UserRelateToOneForCreateInput>;
+  entryFeePaidAt?: InputMaybe<Scalars['DateTime']['input']>;
+  entryFeePaymentMethod?: InputMaybe<Scalars['String']['input']>;
+  entryFeeStatus?: InputMaybe<Scalars['String']['input']>;
   exteriorColor?: InputMaybe<Scalars['String']['input']>;
   exteriorDetailNote?: InputMaybe<Scalars['String']['input']>;
   exteriorFlags?: InputMaybe<Scalars['JSON']['input']>;
@@ -2193,6 +2419,7 @@ export type CarCreateInput = {
   interiorColor?: InputMaybe<Scalars['String']['input']>;
   interiorCondition?: InputMaybe<Scalars['String']['input']>;
   interiorSurfaceMaterial?: InputMaybe<Scalars['String']['input']>;
+  isClearTitle?: InputMaybe<Scalars['Boolean']['input']>;
   isConfirmedSeller?: InputMaybe<Scalars['Boolean']['input']>;
   isInDamageOrAccident?: InputMaybe<Scalars['Boolean']['input']>;
   isNumbersMatching?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2207,16 +2434,19 @@ export type CarCreateInput = {
   make?: InputMaybe<Scalars['String']['input']>;
   marketValueHigh?: InputMaybe<Scalars['Float']['input']>;
   marketValueLow?: InputMaybe<Scalars['Float']['input']>;
+  marketingPhotos?: InputMaybe<FileRelateToManyForCreateInput>;
   mechanicalSuspensionNote?: InputMaybe<Scalars['String']['input']>;
   mileage?: InputMaybe<Scalars['Float']['input']>;
   mileageType?: InputMaybe<Scalars['String']['input']>;
   model?: InputMaybe<Scalars['String']['input']>;
   notablePoints?: InputMaybe<Scalars['JSON']['input']>;
+  overallNote?: InputMaybe<Scalars['String']['input']>;
   photos?: InputMaybe<FileRelateToManyForCreateInput>;
   reservePrice?: InputMaybe<Scalars['Float']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   tires?: InputMaybe<Scalars['String']['input']>;
   transmission?: InputMaybe<Scalars['String']['input']>;
+  updateID?: InputMaybe<Scalars['String']['input']>;
   vin?: InputMaybe<Scalars['String']['input']>;
   wheels?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<Scalars['Int']['input']>;
@@ -2229,13 +2459,20 @@ export type CarManyRelationFilter = {
 };
 
 export type CarOrderByInput = {
+  additionalNote?: InputMaybe<OrderDirection>;
   bodyStyle?: InputMaybe<OrderDirection>;
   comments?: InputMaybe<OrderDirection>;
+  commissionRate?: InputMaybe<OrderDirection>;
   contactSpecialist?: InputMaybe<OrderDirection>;
   createdAt?: InputMaybe<OrderDirection>;
+  customerNet?: InputMaybe<OrderDirection>;
   deletedAt?: InputMaybe<OrderDirection>;
   engineNumber?: InputMaybe<OrderDirection>;
   engineSize?: InputMaybe<OrderDirection>;
+  entryFee?: InputMaybe<OrderDirection>;
+  entryFeePaidAt?: InputMaybe<OrderDirection>;
+  entryFeePaymentMethod?: InputMaybe<OrderDirection>;
+  entryFeeStatus?: InputMaybe<OrderDirection>;
   exteriorColor?: InputMaybe<OrderDirection>;
   exteriorDetailNote?: InputMaybe<OrderDirection>;
   factoryName?: InputMaybe<OrderDirection>;
@@ -2245,6 +2482,7 @@ export type CarOrderByInput = {
   interiorColor?: InputMaybe<OrderDirection>;
   interiorCondition?: InputMaybe<OrderDirection>;
   interiorSurfaceMaterial?: InputMaybe<OrderDirection>;
+  isClearTitle?: InputMaybe<OrderDirection>;
   isConfirmedSeller?: InputMaybe<OrderDirection>;
   isInDamageOrAccident?: InputMaybe<OrderDirection>;
   isNumbersMatching?: InputMaybe<OrderDirection>;
@@ -2263,10 +2501,12 @@ export type CarOrderByInput = {
   mileage?: InputMaybe<OrderDirection>;
   mileageType?: InputMaybe<OrderDirection>;
   model?: InputMaybe<OrderDirection>;
+  overallNote?: InputMaybe<OrderDirection>;
   reservePrice?: InputMaybe<OrderDirection>;
   status?: InputMaybe<OrderDirection>;
   tires?: InputMaybe<OrderDirection>;
   transmission?: InputMaybe<OrderDirection>;
+  updateID?: InputMaybe<OrderDirection>;
   vin?: InputMaybe<OrderDirection>;
   wheels?: InputMaybe<OrderDirection>;
   year?: InputMaybe<OrderDirection>;
@@ -2290,17 +2530,24 @@ export type CarUpdateArgs = {
 };
 
 export type CarUpdateInput = {
+  additionalNote?: InputMaybe<Scalars['String']['input']>;
   auction?: InputMaybe<AuctionRelateToOneForUpdateInput>;
   bodyStyle?: InputMaybe<Scalars['String']['input']>;
   comments?: InputMaybe<Scalars['String']['input']>;
+  commissionRate?: InputMaybe<Scalars['Float']['input']>;
   contactApprovedBy?: InputMaybe<UserRelateToOneForUpdateInput>;
   contactConsignor?: InputMaybe<UserRelateToOneForUpdateInput>;
-  contactSeller?: InputMaybe<UserRelateToOneForUpdateInput>;
   contactSpecialist?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  customerNet?: InputMaybe<Scalars['Float']['input']>;
   deletedAt?: InputMaybe<Scalars['DateTime']['input']>;
   engineNumber?: InputMaybe<Scalars['String']['input']>;
   engineSize?: InputMaybe<Scalars['String']['input']>;
+  entryFee?: InputMaybe<Scalars['Float']['input']>;
+  entryFeeCollectedBy?: InputMaybe<UserRelateToOneForUpdateInput>;
+  entryFeePaidAt?: InputMaybe<Scalars['DateTime']['input']>;
+  entryFeePaymentMethod?: InputMaybe<Scalars['String']['input']>;
+  entryFeeStatus?: InputMaybe<Scalars['String']['input']>;
   exteriorColor?: InputMaybe<Scalars['String']['input']>;
   exteriorDetailNote?: InputMaybe<Scalars['String']['input']>;
   exteriorFlags?: InputMaybe<Scalars['JSON']['input']>;
@@ -2310,6 +2557,7 @@ export type CarUpdateInput = {
   interiorColor?: InputMaybe<Scalars['String']['input']>;
   interiorCondition?: InputMaybe<Scalars['String']['input']>;
   interiorSurfaceMaterial?: InputMaybe<Scalars['String']['input']>;
+  isClearTitle?: InputMaybe<Scalars['Boolean']['input']>;
   isConfirmedSeller?: InputMaybe<Scalars['Boolean']['input']>;
   isInDamageOrAccident?: InputMaybe<Scalars['Boolean']['input']>;
   isNumbersMatching?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2324,16 +2572,19 @@ export type CarUpdateInput = {
   make?: InputMaybe<Scalars['String']['input']>;
   marketValueHigh?: InputMaybe<Scalars['Float']['input']>;
   marketValueLow?: InputMaybe<Scalars['Float']['input']>;
+  marketingPhotos?: InputMaybe<FileRelateToManyForUpdateInput>;
   mechanicalSuspensionNote?: InputMaybe<Scalars['String']['input']>;
   mileage?: InputMaybe<Scalars['Float']['input']>;
   mileageType?: InputMaybe<Scalars['String']['input']>;
   model?: InputMaybe<Scalars['String']['input']>;
   notablePoints?: InputMaybe<Scalars['JSON']['input']>;
+  overallNote?: InputMaybe<Scalars['String']['input']>;
   photos?: InputMaybe<FileRelateToManyForUpdateInput>;
   reservePrice?: InputMaybe<Scalars['Float']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   tires?: InputMaybe<Scalars['String']['input']>;
   transmission?: InputMaybe<Scalars['String']['input']>;
+  updateID?: InputMaybe<Scalars['String']['input']>;
   vin?: InputMaybe<Scalars['String']['input']>;
   wheels?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<Scalars['Int']['input']>;
@@ -2343,17 +2594,24 @@ export type CarWhereInput = {
   AND?: InputMaybe<Array<CarWhereInput>>;
   NOT?: InputMaybe<Array<CarWhereInput>>;
   OR?: InputMaybe<Array<CarWhereInput>>;
+  additionalNote?: InputMaybe<StringFilter>;
   auction?: InputMaybe<AuctionWhereInput>;
   bodyStyle?: InputMaybe<StringFilter>;
   comments?: InputMaybe<StringFilter>;
+  commissionRate?: InputMaybe<FloatNullableFilter>;
   contactApprovedBy?: InputMaybe<UserWhereInput>;
   contactConsignor?: InputMaybe<UserWhereInput>;
-  contactSeller?: InputMaybe<UserWhereInput>;
   contactSpecialist?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateTimeNullableFilter>;
+  customerNet?: InputMaybe<FloatNullableFilter>;
   deletedAt?: InputMaybe<DateTimeNullableFilter>;
   engineNumber?: InputMaybe<StringFilter>;
   engineSize?: InputMaybe<StringFilter>;
+  entryFee?: InputMaybe<FloatNullableFilter>;
+  entryFeeCollectedBy?: InputMaybe<UserWhereInput>;
+  entryFeePaidAt?: InputMaybe<DateTimeNullableFilter>;
+  entryFeePaymentMethod?: InputMaybe<StringFilter>;
+  entryFeeStatus?: InputMaybe<StringFilter>;
   exteriorColor?: InputMaybe<StringFilter>;
   exteriorDetailNote?: InputMaybe<StringFilter>;
   factoryName?: InputMaybe<StringFilter>;
@@ -2363,6 +2621,7 @@ export type CarWhereInput = {
   interiorColor?: InputMaybe<StringFilter>;
   interiorCondition?: InputMaybe<StringFilter>;
   interiorSurfaceMaterial?: InputMaybe<StringFilter>;
+  isClearTitle?: InputMaybe<BooleanFilter>;
   isConfirmedSeller?: InputMaybe<BooleanFilter>;
   isInDamageOrAccident?: InputMaybe<BooleanFilter>;
   isNumbersMatching?: InputMaybe<BooleanFilter>;
@@ -2377,15 +2636,18 @@ export type CarWhereInput = {
   make?: InputMaybe<StringFilter>;
   marketValueHigh?: InputMaybe<FloatNullableFilter>;
   marketValueLow?: InputMaybe<FloatNullableFilter>;
+  marketingPhotos?: InputMaybe<FileManyRelationFilter>;
   mechanicalSuspensionNote?: InputMaybe<StringFilter>;
   mileage?: InputMaybe<FloatNullableFilter>;
   mileageType?: InputMaybe<StringFilter>;
   model?: InputMaybe<StringFilter>;
+  overallNote?: InputMaybe<StringFilter>;
   photos?: InputMaybe<FileManyRelationFilter>;
   reservePrice?: InputMaybe<FloatNullableFilter>;
   status?: InputMaybe<StringFilter>;
   tires?: InputMaybe<StringFilter>;
   transmission?: InputMaybe<StringFilter>;
+  updateID?: InputMaybe<StringFilter>;
   vin?: InputMaybe<StringFilter>;
   wheels?: InputMaybe<StringFilter>;
   year?: InputMaybe<IntNullableFilter>;
@@ -2466,7 +2728,78 @@ export type ClientItemAuthenticationWithPasswordResult = ClientItemAuthenticatio
 export type ClientItemAuthenticationWithPasswordSuccess = {
   __typename?: 'ClientItemAuthenticationWithPasswordSuccess';
   item: User;
+  refreshToken?: Maybe<Scalars['String']['output']>;
   sessionToken: Scalars['String']['output'];
+};
+
+export type Comment = {
+  __typename?: 'Comment';
+  body?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  files?: Maybe<Array<File>>;
+  filesCount?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['ID']['output'];
+  locationID?: Maybe<Scalars['String']['output']>;
+  sender?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type CommentFilesArgs = {
+  cursor?: InputMaybe<FileWhereUniqueInput>;
+  orderBy?: Array<FileOrderByInput>;
+  skip?: Scalars['Int']['input'];
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: FileWhereInput;
+};
+
+
+export type CommentFilesCountArgs = {
+  where?: FileWhereInput;
+};
+
+export type CommentCreateInput = {
+  body?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  files?: InputMaybe<FileRelateToManyForCreateInput>;
+  locationID?: InputMaybe<Scalars['String']['input']>;
+  sender?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CommentOrderByInput = {
+  body?: InputMaybe<OrderDirection>;
+  createdAt?: InputMaybe<OrderDirection>;
+  id?: InputMaybe<OrderDirection>;
+  locationID?: InputMaybe<OrderDirection>;
+  sender?: InputMaybe<OrderDirection>;
+};
+
+export type CommentUpdateArgs = {
+  data: CommentUpdateInput;
+  where: CommentWhereUniqueInput;
+};
+
+export type CommentUpdateInput = {
+  body?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  files?: InputMaybe<FileRelateToManyForUpdateInput>;
+  locationID?: InputMaybe<Scalars['String']['input']>;
+  sender?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CommentWhereInput = {
+  AND?: InputMaybe<Array<CommentWhereInput>>;
+  NOT?: InputMaybe<Array<CommentWhereInput>>;
+  OR?: InputMaybe<Array<CommentWhereInput>>;
+  body?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeNullableFilter>;
+  files?: InputMaybe<FileManyRelationFilter>;
+  id?: InputMaybe<IdFilter>;
+  locationID?: InputMaybe<StringFilter>;
+  sender?: InputMaybe<StringFilter>;
+};
+
+export type CommentWhereUniqueInput = {
+  id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CreateInitialUserInput = {
@@ -3174,6 +3507,9 @@ export type Mutation = {
   api_changelog_create?: Maybe<Api_Changelog_CreateOutput>;
   api_changelog_delete?: Maybe<Api_Changelog_DeleteOutput>;
   api_changelog_update?: Maybe<Api_Changelog_UpdateOutput>;
+  api_comment_create?: Maybe<Api_Comment_CreateOutput>;
+  api_comment_delete?: Maybe<Api_Comment_DeleteOutput>;
+  api_comment_update?: Maybe<Api_Comment_UpdateOutput>;
   api_file_create?: Maybe<Api_File_CreateOutput>;
   api_file_delete?: Maybe<Api_File_DeleteOutput>;
   api_file_update?: Maybe<Api_File_UpdateOutput>;
@@ -3192,6 +3528,8 @@ export type Mutation = {
   createCars?: Maybe<Array<Maybe<Car>>>;
   createChangeLog?: Maybe<ChangeLog>;
   createChangeLogs?: Maybe<Array<Maybe<ChangeLog>>>;
+  createComment?: Maybe<Comment>;
+  createComments?: Maybe<Array<Maybe<Comment>>>;
   createFile?: Maybe<File>;
   createFiles?: Maybe<Array<Maybe<File>>>;
   createGroup?: Maybe<Group>;
@@ -3227,6 +3565,8 @@ export type Mutation = {
   deleteCars?: Maybe<Array<Maybe<Car>>>;
   deleteChangeLog?: Maybe<ChangeLog>;
   deleteChangeLogs?: Maybe<Array<Maybe<ChangeLog>>>;
+  deleteComment?: Maybe<Comment>;
+  deleteComments?: Maybe<Array<Maybe<Comment>>>;
   deleteFile?: Maybe<File>;
   deleteFiles?: Maybe<Array<Maybe<File>>>;
   deleteGroup?: Maybe<Group>;
@@ -3264,6 +3604,8 @@ export type Mutation = {
   updateCars?: Maybe<Array<Maybe<Car>>>;
   updateChangeLog?: Maybe<ChangeLog>;
   updateChangeLogs?: Maybe<Array<Maybe<ChangeLog>>>;
+  updateComment?: Maybe<Comment>;
+  updateComments?: Maybe<Array<Maybe<Comment>>>;
   updateFile?: Maybe<File>;
   updateFiles?: Maybe<Array<Maybe<File>>>;
   updateGroup?: Maybe<Group>;
@@ -3341,6 +3683,21 @@ export type MutationApi_Changelog_UpdateArgs = {
 };
 
 
+export type MutationApi_Comment_CreateArgs = {
+  input: Api_Comment_CreateInput;
+};
+
+
+export type MutationApi_Comment_DeleteArgs = {
+  input: Api_Comment_DeleteInput;
+};
+
+
+export type MutationApi_Comment_UpdateArgs = {
+  input: Api_Comment_UpdateInput;
+};
+
+
 export type MutationApi_File_CreateArgs = {
   input: Api_File_CreateInput;
 };
@@ -3378,17 +3735,24 @@ export type MutationAuthclient_ChangePasswordArgs = {
 
 
 export type MutationAuthclient_LoginArgs = {
-  browserId?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
+  loginType?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
+  refreshToken?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationAuthclient_RegisterArgs = {
+  address_line1?: InputMaybe<Scalars['String']['input']>;
+  address_line2?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   firstName?: InputMaybe<Scalars['String']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
+  postal_code?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3436,6 +3800,16 @@ export type MutationCreateChangeLogArgs = {
 
 export type MutationCreateChangeLogsArgs = {
   data: Array<ChangeLogCreateInput>;
+};
+
+
+export type MutationCreateCommentArgs = {
+  data: CommentCreateInput;
+};
+
+
+export type MutationCreateCommentsArgs = {
+  data: Array<CommentCreateInput>;
 };
 
 
@@ -3611,6 +3985,16 @@ export type MutationDeleteChangeLogArgs = {
 
 export type MutationDeleteChangeLogsArgs = {
   where: Array<ChangeLogWhereUniqueInput>;
+};
+
+
+export type MutationDeleteCommentArgs = {
+  where: CommentWhereUniqueInput;
+};
+
+
+export type MutationDeleteCommentsArgs = {
+  where: Array<CommentWhereUniqueInput>;
 };
 
 
@@ -3794,6 +4178,17 @@ export type MutationUpdateChangeLogArgs = {
 
 export type MutationUpdateChangeLogsArgs = {
   data: Array<ChangeLogUpdateArgs>;
+};
+
+
+export type MutationUpdateCommentArgs = {
+  data: CommentUpdateInput;
+  where: CommentWhereUniqueInput;
+};
+
+
+export type MutationUpdateCommentsArgs = {
+  data: Array<CommentUpdateArgs>;
 };
 
 
@@ -4076,6 +4471,10 @@ export type Query = {
   api_changelog_get?: Maybe<Api_Changelog_GetOutput>;
   api_changelog_groupBy?: Maybe<Api_Changelog_GroupByOutput>;
   api_changelog_list?: Maybe<Api_Changelog_ListOutput>;
+  api_comment_aggregate?: Maybe<Api_Comment_AggregateOutput>;
+  api_comment_get?: Maybe<Api_Comment_GetOutput>;
+  api_comment_groupBy?: Maybe<Api_Comment_GroupByOutput>;
+  api_comment_list?: Maybe<Api_Comment_ListOutput>;
   api_file_get?: Maybe<Api_File_GetOutput>;
   api_file_list?: Maybe<Api_File_ListOutput>;
   api_member_aggregate?: Maybe<Api_Member_AggregateOutput>;
@@ -4093,6 +4492,9 @@ export type Query = {
   changeLog?: Maybe<ChangeLog>;
   changeLogs?: Maybe<Array<ChangeLog>>;
   changeLogsCount?: Maybe<Scalars['Int']['output']>;
+  comment?: Maybe<Comment>;
+  comments?: Maybe<Array<Comment>>;
+  commentsCount?: Maybe<Scalars['Int']['output']>;
   file?: Maybe<File>;
   files?: Maybe<Array<File>>;
   filesCount?: Maybe<Scalars['Int']['output']>;
@@ -4135,6 +4537,7 @@ export type Query = {
   userSystemFlag?: Maybe<UserSystemFlag>;
   userSystemFlags?: Maybe<Array<UserSystemFlag>>;
   userSystemFlagsCount?: Maybe<Scalars['Int']['output']>;
+  user_getRoles?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   users?: Maybe<Array<User>>;
   usersCount?: Maybe<Scalars['Int']['output']>;
 };
@@ -4197,6 +4600,26 @@ export type QueryApi_Changelog_GroupByArgs = {
 
 export type QueryApi_Changelog_ListArgs = {
   input: Api_Changelog_ListInput;
+};
+
+
+export type QueryApi_Comment_AggregateArgs = {
+  input: Api_Comment_AggregateInput;
+};
+
+
+export type QueryApi_Comment_GetArgs = {
+  input: Api_Comment_GetInput;
+};
+
+
+export type QueryApi_Comment_GroupByArgs = {
+  input: Api_Comment_GroupByInput;
+};
+
+
+export type QueryApi_Comment_ListArgs = {
+  input: Api_Comment_ListInput;
 };
 
 
@@ -4289,6 +4712,25 @@ export type QueryChangeLogsArgs = {
 
 export type QueryChangeLogsCountArgs = {
   where?: ChangeLogWhereInput;
+};
+
+
+export type QueryCommentArgs = {
+  where: CommentWhereUniqueInput;
+};
+
+
+export type QueryCommentsArgs = {
+  cursor?: InputMaybe<CommentWhereUniqueInput>;
+  orderBy?: Array<CommentOrderByInput>;
+  skip?: Scalars['Int']['input'];
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: CommentWhereInput;
+};
+
+
+export type QueryCommentsCountArgs = {
+  where?: CommentWhereInput;
 };
 
 
@@ -4738,8 +5180,6 @@ export type User = {
   addressLine1?: Maybe<Scalars['String']['output']>;
   addressLine2?: Maybe<Scalars['String']['output']>;
   adminPassword?: Maybe<PasswordState>;
-  approvedCars?: Maybe<Array<Car>>;
-  approvedCarsCount?: Maybe<Scalars['Int']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   company?: Maybe<Scalars['String']['output']>;
   companyContact?: Maybe<Scalars['String']['output']>;
@@ -4769,8 +5209,6 @@ export type User = {
   prefix?: Maybe<Scalars['String']['output']>;
   role?: Maybe<UserRoleType>;
   secondaryEmail?: Maybe<Scalars['String']['output']>;
-  sellerCars?: Maybe<Array<Car>>;
-  sellerCarsCount?: Maybe<Scalars['Int']['output']>;
   state?: Maybe<Scalars['String']['output']>;
   suffix?: Maybe<Scalars['String']['output']>;
   systemFlags?: Maybe<Array<UserSystemFlag>>;
@@ -4790,20 +5228,6 @@ export type UserActionHistoryArgs = {
 
 export type UserActionHistoryCountArgs = {
   where?: UserActionHistoryWhereInput;
-};
-
-
-export type UserApprovedCarsArgs = {
-  cursor?: InputMaybe<CarWhereUniqueInput>;
-  orderBy?: Array<CarOrderByInput>;
-  skip?: Scalars['Int']['input'];
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: CarWhereInput;
-};
-
-
-export type UserApprovedCarsCountArgs = {
-  where?: CarWhereInput;
 };
 
 
@@ -4874,20 +5298,6 @@ export type UserNotificationsArgs = {
 
 export type UserNotificationsCountArgs = {
   where?: NotificationWhereInput;
-};
-
-
-export type UserSellerCarsArgs = {
-  cursor?: InputMaybe<CarWhereUniqueInput>;
-  orderBy?: Array<CarOrderByInput>;
-  skip?: Scalars['Int']['input'];
-  take?: InputMaybe<Scalars['Int']['input']>;
-  where?: CarWhereInput;
-};
-
-
-export type UserSellerCarsCountArgs = {
-  where?: CarWhereInput;
 };
 
 
@@ -5001,7 +5411,6 @@ export type UserCreateInput = {
   addressLine1?: InputMaybe<Scalars['String']['input']>;
   addressLine2?: InputMaybe<Scalars['String']['input']>;
   adminPassword?: InputMaybe<Scalars['String']['input']>;
-  approvedCars?: InputMaybe<CarRelateToManyForCreateInput>;
   city?: InputMaybe<Scalars['String']['input']>;
   company?: InputMaybe<Scalars['String']['input']>;
   companyContact?: InputMaybe<Scalars['String']['input']>;
@@ -5024,7 +5433,6 @@ export type UserCreateInput = {
   prefix?: InputMaybe<Scalars['String']['input']>;
   role?: InputMaybe<UserRoleType>;
   secondaryEmail?: InputMaybe<Scalars['String']['input']>;
-  sellerCars?: InputMaybe<CarRelateToManyForCreateInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   suffix?: InputMaybe<Scalars['String']['input']>;
   systemFlags?: InputMaybe<UserSystemFlagRelateToManyForCreateInput>;
@@ -5312,7 +5720,6 @@ export type UserUpdateInput = {
   addressLine1?: InputMaybe<Scalars['String']['input']>;
   addressLine2?: InputMaybe<Scalars['String']['input']>;
   adminPassword?: InputMaybe<Scalars['String']['input']>;
-  approvedCars?: InputMaybe<CarRelateToManyForUpdateInput>;
   city?: InputMaybe<Scalars['String']['input']>;
   company?: InputMaybe<Scalars['String']['input']>;
   companyContact?: InputMaybe<Scalars['String']['input']>;
@@ -5335,7 +5742,6 @@ export type UserUpdateInput = {
   prefix?: InputMaybe<Scalars['String']['input']>;
   role?: InputMaybe<UserRoleType>;
   secondaryEmail?: InputMaybe<Scalars['String']['input']>;
-  sellerCars?: InputMaybe<CarRelateToManyForUpdateInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   suffix?: InputMaybe<Scalars['String']['input']>;
   systemFlags?: InputMaybe<UserSystemFlagRelateToManyForUpdateInput>;
@@ -5351,7 +5757,6 @@ export type UserWhereInput = {
   addressLine1?: InputMaybe<StringFilter>;
   addressLine2?: InputMaybe<StringFilter>;
   adminPassword?: InputMaybe<PasswordFilter>;
-  approvedCars?: InputMaybe<CarManyRelationFilter>;
   city?: InputMaybe<StringFilter>;
   company?: InputMaybe<StringFilter>;
   companyContact?: InputMaybe<StringFilter>;
@@ -5375,7 +5780,6 @@ export type UserWhereInput = {
   prefix?: InputMaybe<StringFilter>;
   role?: InputMaybe<UserRoleTypeNullableFilter>;
   secondaryEmail?: InputMaybe<StringFilter>;
-  sellerCars?: InputMaybe<CarManyRelationFilter>;
   state?: InputMaybe<StringFilter>;
   suffix?: InputMaybe<StringFilter>;
   systemFlags?: InputMaybe<UserSystemFlagManyRelationFilter>;
@@ -5506,7 +5910,7 @@ export type Car_ListQueryVariables = Exact<{
 }>;
 
 
-export type Car_ListQuery = { __typename?: 'Query', api_car_list?: { __typename?: 'Api_Car_listOutput', data?: Array<{ __typename?: 'Api_Car_listOutputData', id?: string | null, lotId?: string | null, vin?: string | null, year?: number | null, make?: string | null, model?: string | null, transmission?: string | null, engineSize?: string | null, engineNumber?: string | null, bodyStyle?: string | null, mileage?: number | null, mileageType?: string | null, isNumbersMatching?: boolean | null, isRestored?: boolean | null, isInDamageOrAccident?: boolean | null, exteriorColor?: string | null, factoryName?: string | null, tires?: string | null, wheels?: string | null, exteriorFlags?: Array<string | null> | null, exteriorDetailNote?: string | null, interiorColor?: string | null, interiorSurfaceMaterial?: string | null, interiorCondition?: string | null, mechanicalSuspensionNote?: string | null, frameNote?: string | null, featuresAndOptionsNote?: string | null, notablePoints?: Array<string | null> | null, reservePrice?: number | null, marketValueHigh?: number | null, marketValueLow?: number | null, isSellWithoutReserve?: boolean | null, photoIds?: Array<string | null> | null, isConfirmedSeller?: boolean | null, auctionId?: string | null, createdAt?: string | null, isTitleReceived?: boolean | null, isPaymentProcessed?: boolean | null, isVehicleCollected?: boolean | null, isTransportationDelivered?: boolean | null, comments?: string | null, status?: string | null, contactSellerId?: string | null, contactSpecialist?: string | null, contactApprovedById?: string | null, contactConsignorId?: string | null, deletedAt?: string | null, contactSeller?: { __typename?: 'Api_Car_listOutputDataContactSeller', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, contactApprovedBy?: { __typename?: 'Api_Car_listOutputDataContactApprovedBy', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, contactConsignor?: { __typename?: 'Api_Car_listOutputDataContactConsignor', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, auction?: { __typename?: 'Api_Car_listOutputDataAuction', summary?: string | null, name?: string | null, auctionID?: string | null, eventDateStart?: string | null, eventDateEnd?: string | null } | null, photos?: Array<{ __typename?: 'Api_Car_listOutputDataPhotos', id: string, name: string, url: string, mime: string } | null> | null } | null> | null, page?: { __typename?: 'Api_Car_listOutputPage', total?: number | null, page?: number | null, pageSize?: number | null, range?: { __typename?: 'Api_Car_listOutputPageRange', from: number, to: number } | null } | null } | null };
+export type Car_ListQuery = { __typename?: 'Query', api_car_list?: { __typename?: 'Api_Car_listOutput', data?: Array<{ __typename?: 'Api_Car_listOutputData', id?: string | null, lotId?: string | null, vin?: string | null, year?: number | null, make?: string | null, model?: string | null, transmission?: string | null, engineSize?: string | null, engineNumber?: string | null, bodyStyle?: string | null, mileage?: number | null, mileageType?: string | null, isNumbersMatching?: boolean | null, isRestored?: boolean | null, isInDamageOrAccident?: boolean | null, exteriorColor?: string | null, factoryName?: string | null, tires?: string | null, wheels?: string | null, exteriorFlags?: Array<string | null> | null, exteriorDetailNote?: string | null, interiorColor?: string | null, interiorSurfaceMaterial?: string | null, interiorCondition?: string | null, mechanicalSuspensionNote?: string | null, frameNote?: string | null, featuresAndOptionsNote?: string | null, notablePoints?: Array<string | null> | null, reservePrice?: number | null, marketValueHigh?: number | null, marketValueLow?: number | null, isSellWithoutReserve?: boolean | null, photoIds?: Array<string | null> | null, isConfirmedSeller?: boolean | null, auctionId?: string | null, createdAt?: string | null, isTitleReceived?: boolean | null, isPaymentProcessed?: boolean | null, isVehicleCollected?: boolean | null, isTransportationDelivered?: boolean | null, comments?: string | null, status?: string | null, contactSpecialist?: string | null, contactApprovedById?: string | null, contactConsignorId?: string | null, deletedAt?: string | null, contactApprovedBy?: { __typename?: 'Api_Car_listOutputDataContactApprovedBy', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, contactConsignor?: { __typename?: 'Api_Car_listOutputDataContactConsignor', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, auction?: { __typename?: 'Api_Car_listOutputDataAuction', summary?: string | null, name?: string | null, auctionID?: string | null, eventDateStart?: string | null, eventDateEnd?: string | null } | null, photos?: Array<{ __typename?: 'Api_Car_listOutputDataPhotos', id: string, name: string, url: string, mime: string } | null> | null } | null> | null, page?: { __typename?: 'Api_Car_listOutputPage', total?: number | null, page?: number | null, pageSize?: number | null, range?: { __typename?: 'Api_Car_listOutputPageRange', from: number, to: number } | null } | null } | null };
 
 export type Car_AggregateQueryVariables = Exact<{
   input: Api_Car_AggregateInput;
@@ -5527,7 +5931,7 @@ export type Car_GetQueryVariables = Exact<{
 }>;
 
 
-export type Car_GetQuery = { __typename?: 'Query', api_car_get?: { __typename?: 'Api_Car_getOutput', data?: { __typename?: 'Api_Car_getOutputData', id?: string | null, lotId?: string | null, vin?: string | null, year?: number | null, make?: string | null, model?: string | null, transmission?: string | null, engineSize?: string | null, engineNumber?: string | null, bodyStyle?: string | null, mileage?: number | null, mileageType?: string | null, isNumbersMatching?: boolean | null, isRestored?: boolean | null, isInDamageOrAccident?: boolean | null, exteriorColor?: string | null, factoryName?: string | null, tires?: string | null, wheels?: string | null, exteriorFlags?: Array<string | null> | null, exteriorDetailNote?: string | null, interiorColor?: string | null, interiorSurfaceMaterial?: string | null, interiorCondition?: string | null, mechanicalSuspensionNote?: string | null, frameNote?: string | null, featuresAndOptionsNote?: string | null, notablePoints?: Array<string | null> | null, reservePrice?: number | null, marketValueHigh?: number | null, marketValueLow?: number | null, isSellWithoutReserve?: boolean | null, photoIds?: Array<string | null> | null, isConfirmedSeller?: boolean | null, auctionId?: string | null, createdAt?: string | null, status?: string | null, isTitleReceived?: boolean | null, isPaymentProcessed?: boolean | null, isVehicleCollected?: boolean | null, isTransportationDelivered?: boolean | null, comments?: string | null, contactSellerId?: string | null, contactSpecialist?: string | null, contactApprovedById?: string | null, contactConsignorId?: string | null, deletedAt?: string | null, contactSeller?: { __typename?: 'Api_Car_getOutputDataContactSeller', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, contactApprovedBy?: { __typename?: 'Api_Car_getOutputDataContactApprovedBy', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, contactConsignor?: { __typename?: 'Api_Car_getOutputDataContactConsignor', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, auction?: { __typename?: 'Api_Car_getOutputDataAuction', summary?: string | null, name?: string | null, auctionID?: string | null, eventDateStart?: string | null, eventDateEnd?: string | null } | null, photos?: Array<{ __typename?: 'Api_Car_getOutputDataPhotos', id: string, name: string, url: string, mime: string } | null> | null } | null } | null };
+export type Car_GetQuery = { __typename?: 'Query', api_car_get?: { __typename?: 'Api_Car_getOutput', data?: { __typename?: 'Api_Car_getOutputData', id?: string | null, lotId?: string | null, vin?: string | null, year?: number | null, make?: string | null, model?: string | null, transmission?: string | null, engineSize?: string | null, engineNumber?: string | null, bodyStyle?: string | null, mileage?: number | null, mileageType?: string | null, isNumbersMatching?: boolean | null, isRestored?: boolean | null, isInDamageOrAccident?: boolean | null, exteriorColor?: string | null, factoryName?: string | null, tires?: string | null, wheels?: string | null, exteriorFlags?: Array<string | null> | null, exteriorDetailNote?: string | null, interiorColor?: string | null, interiorSurfaceMaterial?: string | null, interiorCondition?: string | null, mechanicalSuspensionNote?: string | null, frameNote?: string | null, featuresAndOptionsNote?: string | null, notablePoints?: Array<string | null> | null, reservePrice?: number | null, marketValueHigh?: number | null, marketValueLow?: number | null, isSellWithoutReserve?: boolean | null, photoIds?: Array<string | null> | null, isConfirmedSeller?: boolean | null, auctionId?: string | null, createdAt?: string | null, status?: string | null, isTitleReceived?: boolean | null, isPaymentProcessed?: boolean | null, isVehicleCollected?: boolean | null, isTransportationDelivered?: boolean | null, comments?: string | null, contactSpecialist?: string | null, contactApprovedById?: string | null, contactConsignorId?: string | null, deletedAt?: string | null, contactApprovedBy?: { __typename?: 'Api_Car_getOutputDataContactApprovedBy', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, contactConsignor?: { __typename?: 'Api_Car_getOutputDataContactConsignor', actorType?: string | null, name?: string | null, middleName?: string | null, lastName?: string | null, company?: string | null } | null, auction?: { __typename?: 'Api_Car_getOutputDataAuction', summary?: string | null, name?: string | null, auctionID?: string | null, eventDateStart?: string | null, eventDateEnd?: string | null } | null, photos?: Array<{ __typename?: 'Api_Car_getOutputDataPhotos', id: string, name: string, url: string, mime: string } | null> | null } | null } | null };
 
 export type Car_CreateMutationVariables = Exact<{
   input: Api_Car_CreateInput;
@@ -5703,10 +6107,10 @@ export const Authclient_ChangePasswordDocument = {"kind":"Document","definitions
 export const Authclient_RequestPasswordResetDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authclient_requestPasswordReset"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authclient_requestPasswordReset"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}}]}]}}]} as unknown as DocumentNode<Authclient_RequestPasswordResetMutation, Authclient_RequestPasswordResetMutationVariables>;
 export const Authclient_ResetPasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authclient_resetPassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"token"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authclient_resetPassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"token"},"value":{"kind":"Variable","name":{"kind":"Name","value":"token"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}]}]}}]} as unknown as DocumentNode<Authclient_ResetPasswordMutation, Authclient_ResetPasswordMutationVariables>;
 export const UpdateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserWhereUniqueInput"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserUpdateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"lastLogin"}}]}}]}}]} as unknown as DocumentNode<UpdateUserMutation, UpdateUserMutationVariables>;
-export const Car_ListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_List"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_listInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_list"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lotId"}},{"kind":"Field","name":{"kind":"Name","value":"vin"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"make"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"transmission"}},{"kind":"Field","name":{"kind":"Name","value":"engineSize"}},{"kind":"Field","name":{"kind":"Name","value":"engineNumber"}},{"kind":"Field","name":{"kind":"Name","value":"bodyStyle"}},{"kind":"Field","name":{"kind":"Name","value":"mileage"}},{"kind":"Field","name":{"kind":"Name","value":"mileageType"}},{"kind":"Field","name":{"kind":"Name","value":"isNumbersMatching"}},{"kind":"Field","name":{"kind":"Name","value":"isRestored"}},{"kind":"Field","name":{"kind":"Name","value":"isInDamageOrAccident"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorColor"}},{"kind":"Field","name":{"kind":"Name","value":"factoryName"}},{"kind":"Field","name":{"kind":"Name","value":"tires"}},{"kind":"Field","name":{"kind":"Name","value":"wheels"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorFlags"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorDetailNote"}},{"kind":"Field","name":{"kind":"Name","value":"interiorColor"}},{"kind":"Field","name":{"kind":"Name","value":"interiorSurfaceMaterial"}},{"kind":"Field","name":{"kind":"Name","value":"interiorCondition"}},{"kind":"Field","name":{"kind":"Name","value":"mechanicalSuspensionNote"}},{"kind":"Field","name":{"kind":"Name","value":"frameNote"}},{"kind":"Field","name":{"kind":"Name","value":"featuresAndOptionsNote"}},{"kind":"Field","name":{"kind":"Name","value":"notablePoints"}},{"kind":"Field","name":{"kind":"Name","value":"reservePrice"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueHigh"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueLow"}},{"kind":"Field","name":{"kind":"Name","value":"isSellWithoutReserve"}},{"kind":"Field","name":{"kind":"Name","value":"photoIds"}},{"kind":"Field","name":{"kind":"Name","value":"isConfirmedSeller"}},{"kind":"Field","name":{"kind":"Name","value":"auctionId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"isTitleReceived"}},{"kind":"Field","name":{"kind":"Name","value":"isPaymentProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"isVehicleCollected"}},{"kind":"Field","name":{"kind":"Name","value":"isTransportationDelivered"}},{"kind":"Field","name":{"kind":"Name","value":"comments"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"contactSellerId"}},{"kind":"Field","name":{"kind":"Name","value":"contactSeller"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactSpecialist"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedById"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignorId"}},{"kind":"Field","name":{"kind":"Name","value":"auction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"auctionID"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateStart"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateEnd"}}]}},{"kind":"Field","name":{"kind":"Name","value":"photos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"range"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}}]}}]}}]}}]} as unknown as DocumentNode<Car_ListQuery, Car_ListQueryVariables>;
+export const Car_ListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_List"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_listInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_list"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lotId"}},{"kind":"Field","name":{"kind":"Name","value":"vin"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"make"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"transmission"}},{"kind":"Field","name":{"kind":"Name","value":"engineSize"}},{"kind":"Field","name":{"kind":"Name","value":"engineNumber"}},{"kind":"Field","name":{"kind":"Name","value":"bodyStyle"}},{"kind":"Field","name":{"kind":"Name","value":"mileage"}},{"kind":"Field","name":{"kind":"Name","value":"mileageType"}},{"kind":"Field","name":{"kind":"Name","value":"isNumbersMatching"}},{"kind":"Field","name":{"kind":"Name","value":"isRestored"}},{"kind":"Field","name":{"kind":"Name","value":"isInDamageOrAccident"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorColor"}},{"kind":"Field","name":{"kind":"Name","value":"factoryName"}},{"kind":"Field","name":{"kind":"Name","value":"tires"}},{"kind":"Field","name":{"kind":"Name","value":"wheels"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorFlags"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorDetailNote"}},{"kind":"Field","name":{"kind":"Name","value":"interiorColor"}},{"kind":"Field","name":{"kind":"Name","value":"interiorSurfaceMaterial"}},{"kind":"Field","name":{"kind":"Name","value":"interiorCondition"}},{"kind":"Field","name":{"kind":"Name","value":"mechanicalSuspensionNote"}},{"kind":"Field","name":{"kind":"Name","value":"frameNote"}},{"kind":"Field","name":{"kind":"Name","value":"featuresAndOptionsNote"}},{"kind":"Field","name":{"kind":"Name","value":"notablePoints"}},{"kind":"Field","name":{"kind":"Name","value":"reservePrice"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueHigh"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueLow"}},{"kind":"Field","name":{"kind":"Name","value":"isSellWithoutReserve"}},{"kind":"Field","name":{"kind":"Name","value":"photoIds"}},{"kind":"Field","name":{"kind":"Name","value":"isConfirmedSeller"}},{"kind":"Field","name":{"kind":"Name","value":"auctionId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"isTitleReceived"}},{"kind":"Field","name":{"kind":"Name","value":"isPaymentProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"isVehicleCollected"}},{"kind":"Field","name":{"kind":"Name","value":"isTransportationDelivered"}},{"kind":"Field","name":{"kind":"Name","value":"comments"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"contactSpecialist"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedById"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignorId"}},{"kind":"Field","name":{"kind":"Name","value":"auction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"auctionID"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateStart"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateEnd"}}]}},{"kind":"Field","name":{"kind":"Name","value":"photos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"range"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"to"}}]}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"pageSize"}}]}}]}}]}}]} as unknown as DocumentNode<Car_ListQuery, Car_ListQueryVariables>;
 export const Car_AggregateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_Aggregate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_aggregateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"breakdown"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"countBy"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<Car_AggregateQuery, Car_AggregateQueryVariables>;
 export const Car_GroupByDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_GroupBy"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_groupByInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_groupBy"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"breakdown"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uniqueIdentifier"}},{"kind":"Field","name":{"kind":"Name","value":"counts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"countBy"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Car_GroupByQuery, Car_GroupByQueryVariables>;
-export const Car_GetDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_Get"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_getInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_get"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lotId"}},{"kind":"Field","name":{"kind":"Name","value":"vin"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"make"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"transmission"}},{"kind":"Field","name":{"kind":"Name","value":"engineSize"}},{"kind":"Field","name":{"kind":"Name","value":"engineNumber"}},{"kind":"Field","name":{"kind":"Name","value":"bodyStyle"}},{"kind":"Field","name":{"kind":"Name","value":"mileage"}},{"kind":"Field","name":{"kind":"Name","value":"mileageType"}},{"kind":"Field","name":{"kind":"Name","value":"isNumbersMatching"}},{"kind":"Field","name":{"kind":"Name","value":"isRestored"}},{"kind":"Field","name":{"kind":"Name","value":"isInDamageOrAccident"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorColor"}},{"kind":"Field","name":{"kind":"Name","value":"factoryName"}},{"kind":"Field","name":{"kind":"Name","value":"tires"}},{"kind":"Field","name":{"kind":"Name","value":"wheels"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorFlags"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorDetailNote"}},{"kind":"Field","name":{"kind":"Name","value":"interiorColor"}},{"kind":"Field","name":{"kind":"Name","value":"interiorSurfaceMaterial"}},{"kind":"Field","name":{"kind":"Name","value":"interiorCondition"}},{"kind":"Field","name":{"kind":"Name","value":"mechanicalSuspensionNote"}},{"kind":"Field","name":{"kind":"Name","value":"frameNote"}},{"kind":"Field","name":{"kind":"Name","value":"featuresAndOptionsNote"}},{"kind":"Field","name":{"kind":"Name","value":"notablePoints"}},{"kind":"Field","name":{"kind":"Name","value":"reservePrice"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueHigh"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueLow"}},{"kind":"Field","name":{"kind":"Name","value":"isSellWithoutReserve"}},{"kind":"Field","name":{"kind":"Name","value":"photoIds"}},{"kind":"Field","name":{"kind":"Name","value":"isConfirmedSeller"}},{"kind":"Field","name":{"kind":"Name","value":"auctionId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"isTitleReceived"}},{"kind":"Field","name":{"kind":"Name","value":"isPaymentProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"isVehicleCollected"}},{"kind":"Field","name":{"kind":"Name","value":"isTransportationDelivered"}},{"kind":"Field","name":{"kind":"Name","value":"comments"}},{"kind":"Field","name":{"kind":"Name","value":"contactSellerId"}},{"kind":"Field","name":{"kind":"Name","value":"contactSeller"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactSpecialist"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedById"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignorId"}},{"kind":"Field","name":{"kind":"Name","value":"auction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"auctionID"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateStart"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateEnd"}}]}},{"kind":"Field","name":{"kind":"Name","value":"photos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}}]}}]} as unknown as DocumentNode<Car_GetQuery, Car_GetQueryVariables>;
+export const Car_GetDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Car_Get"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_getInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_get"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lotId"}},{"kind":"Field","name":{"kind":"Name","value":"vin"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"make"}},{"kind":"Field","name":{"kind":"Name","value":"model"}},{"kind":"Field","name":{"kind":"Name","value":"transmission"}},{"kind":"Field","name":{"kind":"Name","value":"engineSize"}},{"kind":"Field","name":{"kind":"Name","value":"engineNumber"}},{"kind":"Field","name":{"kind":"Name","value":"bodyStyle"}},{"kind":"Field","name":{"kind":"Name","value":"mileage"}},{"kind":"Field","name":{"kind":"Name","value":"mileageType"}},{"kind":"Field","name":{"kind":"Name","value":"isNumbersMatching"}},{"kind":"Field","name":{"kind":"Name","value":"isRestored"}},{"kind":"Field","name":{"kind":"Name","value":"isInDamageOrAccident"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorColor"}},{"kind":"Field","name":{"kind":"Name","value":"factoryName"}},{"kind":"Field","name":{"kind":"Name","value":"tires"}},{"kind":"Field","name":{"kind":"Name","value":"wheels"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorFlags"}},{"kind":"Field","name":{"kind":"Name","value":"exteriorDetailNote"}},{"kind":"Field","name":{"kind":"Name","value":"interiorColor"}},{"kind":"Field","name":{"kind":"Name","value":"interiorSurfaceMaterial"}},{"kind":"Field","name":{"kind":"Name","value":"interiorCondition"}},{"kind":"Field","name":{"kind":"Name","value":"mechanicalSuspensionNote"}},{"kind":"Field","name":{"kind":"Name","value":"frameNote"}},{"kind":"Field","name":{"kind":"Name","value":"featuresAndOptionsNote"}},{"kind":"Field","name":{"kind":"Name","value":"notablePoints"}},{"kind":"Field","name":{"kind":"Name","value":"reservePrice"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueHigh"}},{"kind":"Field","name":{"kind":"Name","value":"marketValueLow"}},{"kind":"Field","name":{"kind":"Name","value":"isSellWithoutReserve"}},{"kind":"Field","name":{"kind":"Name","value":"photoIds"}},{"kind":"Field","name":{"kind":"Name","value":"isConfirmedSeller"}},{"kind":"Field","name":{"kind":"Name","value":"auctionId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"isTitleReceived"}},{"kind":"Field","name":{"kind":"Name","value":"isPaymentProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"isVehicleCollected"}},{"kind":"Field","name":{"kind":"Name","value":"isTransportationDelivered"}},{"kind":"Field","name":{"kind":"Name","value":"comments"}},{"kind":"Field","name":{"kind":"Name","value":"contactSpecialist"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedById"}},{"kind":"Field","name":{"kind":"Name","value":"contactApprovedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"actorType"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"company"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contactConsignorId"}},{"kind":"Field","name":{"kind":"Name","value":"auction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"auctionID"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateStart"}},{"kind":"Field","name":{"kind":"Name","value":"eventDateEnd"}}]}},{"kind":"Field","name":{"kind":"Name","value":"photos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"mime"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}}]}}]} as unknown as DocumentNode<Car_GetQuery, Car_GetQueryVariables>;
 export const Car_CreateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Car_Create"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_createInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_create"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"ids"}}]}}]}}]} as unknown as DocumentNode<Car_CreateMutation, Car_CreateMutationVariables>;
 export const Car_UpdateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Car_Update"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_updateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_update"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"ids"}}]}}]}}]} as unknown as DocumentNode<Car_UpdateMutation, Car_UpdateMutationVariables>;
 export const Car_DeleteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Car_Delete"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Api_car_deleteInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"api_car_delete"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"ids"}}]}}]}}]} as unknown as DocumentNode<Car_DeleteMutation, Car_DeleteMutationVariables>;

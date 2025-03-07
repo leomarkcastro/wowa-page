@@ -46,14 +46,6 @@ export const Car_List = graphql(`
         isTransportationDelivered
         comments
         status
-        contactSellerId
-        contactSeller {
-          actorType
-          name
-          middleName
-          lastName
-          company
-        }
         contactSpecialist
         contactApprovedById
         contactApprovedBy {
@@ -170,14 +162,6 @@ export const Car_Get = graphql(`
         isVehicleCollected
         isTransportationDelivered
         comments
-        contactSellerId
-        contactSeller {
-          actorType
-          name
-          middleName
-          lastName
-          company
-        }
         contactSpecialist
         contactApprovedById
         contactApprovedBy {
