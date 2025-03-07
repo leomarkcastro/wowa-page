@@ -27,6 +27,8 @@ import { create } from 'zustand';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/use-auth';
 import { pathTitle } from './header';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 export const pathLocation = create<{
   pathName: string;
@@ -135,12 +137,44 @@ const navigationItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-  const { logout, loading, user } = useAuth();
+  const { logout, loading, user, refreshSession } = useAuth();
   const pathID = pathTitle((state) => state.pathName);
   const subPathID = pathTitle((state) => state.subPathName);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { toast } = useToast();
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleRefreshSession = async () => {
+    setIsRefreshing(true);
+    try {
+      const success = await refreshSession();
+      if (success) {
+        toast({
+          title: 'Session Refreshed',
+          description:
+            'Your session has been successfully refreshed using the refresh token.',
+          variant: 'default',
+        });
+      } else {
+        toast({
+          title: 'Refresh Failed',
+          description: 'Unable to refresh your session. Please log in again.',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Error refreshing session:', error);
+      toast({
+        title: 'Refresh Error',
+        description: 'An error occurred while refreshing your session.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   return (
@@ -248,13 +282,25 @@ export function AppSidebar() {
               </span>
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className='text-accent-foreground hover:text-foreground/50'
-            title='Logout'
-          >
-            <LogOut className='h-6 w-6' />
-          </button>
+          <div className='flex items-center gap-2'>
+            {/* <button
+              onClick={handleRefreshSession}
+              className='text-accent-foreground hover:text-foreground/50'
+              title='Refresh Session'
+              disabled={isRefreshing}
+            >
+              <RefreshCw
+                className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`}
+              />
+            </button> */}
+            <button
+              onClick={handleLogout}
+              className='text-accent-foreground hover:text-foreground/50'
+              title='Logout'
+            >
+              <LogOut className='h-6 w-6' />
+            </button>
+          </div>
         </div>
       )}
     </Sidebar>

@@ -96,7 +96,7 @@ export const ChangeLogHistory: React.FC<ChangeLogHistoryProps> = ({
   };
 
   return (
-    <Card>
+    <Card className='w-fullh-[90vh] h-full'>
       <CardHeader>
         <CardTitle>Change History</CardTitle>
       </CardHeader>

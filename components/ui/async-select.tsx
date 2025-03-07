@@ -71,7 +71,7 @@ export function AsyncSelect({
       //   return;
       // }
       try {
-        const results = await fetch(debouncedSearch.trim());
+        const results = await fetch(debouncedSearch?.trim() || '');
         setOptions(results);
       } catch (error) {
         console.error('Error fetching options:', error);
@@ -114,7 +114,7 @@ export function AsyncSelect({
           role='combobox'
           aria-expanded={open}
           disabled={disabled}
-          className='w-full justify-between'
+          className='relative w-full justify-between'
         >
           {value
             ? options.find((item) => item.value === value)?.label || placeholder
@@ -123,6 +123,11 @@ export function AsyncSelect({
             <Loader2 className='ml-2 h-4 w-4 animate-spin' />
           ) : (
             <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+          )}
+          {loading && (
+            <div className='absolute bottom-0 left-0 right-0 h-0.5 w-full overflow-hidden bg-muted'>
+              <div className='animate-progress-bar h-full bg-primary/70' />
+            </div>
           )}
         </Button>
       </PopoverTrigger>

@@ -36,6 +36,9 @@ const generateFieldSchema = (field?: FieldType): z.ZodTypeAny => {
   let schema: z.ZodTypeAny;
 
   switch (field.type) {
+    case 'hidden':
+      schema = z.string().optional(); // Most hidden fields will be strings, but make it optional
+      break;
     case 'select':
     case 'text':
     case 'textarea':
@@ -238,6 +241,7 @@ export function QuickForm({
           'title',
           'divider',
           'fileGallery',
+          'hidden',
         ].includes(field.type)
       ) {
         return field;
@@ -264,21 +268,24 @@ export function QuickForm({
             );
           }
           if (field.type === 'asyncSelect') {
-            const [val, setVal] = useState(value);
-            const [loading, setLoading] = useState(false);
-            useEffect(() => {
-              (async function fetchOptions() {
-                if (!value) return;
-                setLoading(true);
-                const options = await field.fetch(value);
-                console.log(value, options);
-                setVal(
-                  options.find((opt) => opt.value === value)?.label || value,
-                );
-                setLoading(false);
-              })();
-            }, [value]);
-            return loading ? 'Loading...' : val || '--';
+            const AsyncViewOnly = () => {
+              const [val, setVal] = useState(value);
+              const [loading, setLoading] = useState(false);
+              useEffect(() => {
+                (async function fetchOptions() {
+                  if (!value) return;
+                  setLoading(true);
+                  const options = await field.fetch(value);
+                  setVal(
+                    options.find((opt) => opt.value === value)?.label || value,
+                  );
+                  setLoading(false);
+                })();
+              }, [value]);
+              return loading ? 'Loading...' : val || '--';
+            };
+
+            return <AsyncViewOnly />;
           }
           if (field.type === 'checkbox') {
             return value ? 'Yes' : 'No';
@@ -322,6 +329,12 @@ export function QuickForm({
 
     const fieldContent = () => {
       switch (transformedField.type) {
+        case 'hidden':
+          // For hidden fields, we just register the field with the form
+          // but don't render any visible UI elements
+          form.register(transformedField.name);
+          // Return null so nothing is rendered
+          return null;
         case 'tabs': {
           const isMobile = !useMediaQuery('(min-width: 768px)');
           const [tab, setTab] = useState(transformedField.tabs[0]?.name);
@@ -375,17 +388,18 @@ export function QuickForm({
             transformedField,
           );
         }
-        case 'display':
-          return wrapWithBeforeAfter(
+        case 'display': {
+          let displayValue =
             typeof transformedField.component === 'function'
               ? transformedField.component(form)
-              : transformedField.component || (
-                  <div className='rounded-md bg-slate-50 p-2'>
-                    {form.getValues(transformedField.name)}
-                  </div>
-                ),
+              : form.getValues(transformedField.name);
+          return wrapWithBeforeAfter(
+            <div className='rounded-none border-b border-b-foreground/20 p-2'>
+              {displayValue}
+            </div>,
             transformedField,
           );
+        }
         case 'title':
           return (
             <h3 className='pt-4 text-lg font-semibold'>
@@ -678,7 +692,7 @@ export function QuickForm({
       >
         {transformedField.type !== 'title' &&
           transformedField.type !== 'tabs' && (
-            <label className='text-xs font-medium'>
+            <label className='text-xs font-medium text-foreground/60'>
               {/* @ts-ignore */}
               {transformedField.label}
               {/* @ts-ignore */}

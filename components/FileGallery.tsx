@@ -69,7 +69,7 @@ export function FileGallery({
         {visibleFiles.map((file) => (
           <div
             key={file.id}
-            className='group relative cursor-pointer rounded-lg border border-gray-200 p-2 hover:border-primary'
+            className='group relative cursor-pointer rounded-lg border border-muted p-2 hover:border-primary'
             style={{ width: boxWidth, height: boxHeight }}
             onClick={() => onFileClick?.(file)}
           >
@@ -86,7 +86,7 @@ export function FileGallery({
             )}
             {isImageFile(file.filename) ? (
               <>
-                <div className='relative h-full w-full bg-gray-200'>
+                <div className='relative h-full w-full bg-muted'>
                   <img
                     src={file.url}
                     alt={file.filename}

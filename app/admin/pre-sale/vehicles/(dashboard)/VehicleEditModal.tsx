@@ -18,6 +18,7 @@ import { CircleDollarSign } from 'lucide-react';
 import { VEHICLE_STATUSES } from '@/lib/constants/vehicle';
 import { AuctionsDataProvider } from '@/lib/dataProviders/auctions';
 import { ChangeLogHistory } from '@/components/ChangeLogHistory';
+import { useAuth } from '@/hooks/use-auth';
 
 interface VehicleEditModalProps {
   isOpen: boolean;
@@ -26,22 +27,25 @@ interface VehicleEditModalProps {
   readOnly?: boolean;
 }
 
+// NOTE: consignerPhotos are photos
+
 export function VehicleEditModal({
   itemID,
   isOpen,
   onClose,
-  readOnly,
+  readOnly: readOnlyProp,
 }: VehicleEditModalProps) {
   const sp = useSearchParams();
   const [form, setForm] = useState<UseFormReturn<any>>();
   const formRef = useRef<any>(null);
   const [loading, setLoading] = useState(false);
   const [errMessage, setErrMessage] = useState('');
-  const [readonly, setReadonly] = useState(readOnly);
+  const [readonly, setReadonly] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
-    setReadonly(readOnly);
-  }, [readOnly]);
+    setReadonly(readOnlyProp);
+  }, [readOnlyProp]);
 
   const dataProvider = CarsDataProvider;
 
@@ -54,24 +58,8 @@ export function VehicleEditModal({
   };
 
   const handleClose = () => {
-    // remove itemID from search params
-    const url = new URL(window.location.href);
-    url.searchParams.delete('id');
-    url.searchParams.delete('readonly');
-    window.history.pushState({}, '', url.toString());
-
-    console.log('close');
-
     onClose();
   };
-
-  // if itemID is given, push it to search params
-  if (itemID) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('id', itemID);
-    url.searchParams.set('readonly', readonly.toString());
-    window.history.pushState({}, '', url.toString());
-  }
 
   return (
     <>
@@ -84,12 +72,14 @@ export function VehicleEditModal({
         open={isOpen}
         onOpenChange={(open) => !open && handleClose()}
       >
-        <DialogContent className='flex max-h-[90vh] max-w-4xl flex-col gap-0 p-0'>
+        <DialogContent className='flex h-[90vh] max-w-4xl flex-col gap-0 p-0'>
           {loading && (
-            <div className='absolute inset-0 flex items-center justify-center bg-white/50 bg-opacity-90'>
+            <div className='absolute inset-0 flex items-center justify-center bg-foreground/50 bg-opacity-90'>
               <div className='flex items-center gap-4'>
-                <div className='h-3 w-3 animate-spin bg-gray-700' />
-                <p className='text-lg font-semibold text-primary'>Saving...</p>
+                <div className='h-3 w-3 animate-spin bg-background/50' />
+                <p className='text-lg font-semibold text-foreground'>
+                  Saving...
+                </p>
               </div>
             </div>
           )}
@@ -105,11 +95,24 @@ export function VehicleEditModal({
                   {itemID.slice(-7)}
                 </span>
               )}
+              {readonly && (
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={() => {
+                    setReadonly(false);
+                  }}
+                  className='ml-4'
+                >
+                  Edit
+                </Button>
+              )}
             </DialogTitle>
           </DialogHeader>
 
           <div className='h-full overflow-auto px-4'>
             <ResourceForm
+              key={(readonly ? 'readonly' : 'edit') + '::' + itemID || 'new'}
               mode={itemID ? 'edit' : 'create'}
               title={
                 readonly
@@ -136,18 +139,44 @@ export function VehicleEditModal({
                       }) as FileItem,
                   );
                 }
+                if (data.marketingPhotos) {
+                  data.marketingPhotos = data.marketingPhotos.map(
+                    (photo) =>
+                      ({
+                        id: photo.id,
+                        name: photo.url,
+                      }) as FileItem,
+                  );
+                }
+                // Ensure updateID is displayed as readonly
+                if (data.updateID) {
+                  data.updateID = data.updateID.toString();
+                }
                 return data;
               }}
               transformSubmitData={(data) => {
                 setLoading(true);
                 setErrMessage('');
                 const deepCopyData = JSON.parse(JSON.stringify(data));
+
+                // Handle photo IDs
                 deepCopyData.photoIds = deepCopyData.photos?.map(
                   (photo) => photo.id,
                 );
                 delete deepCopyData.photos;
+
+                deepCopyData.marketingPhotosIds =
+                  deepCopyData.marketingPhotos?.map((photo) => photo.id);
+                delete deepCopyData.marketingPhotos;
+
+                // Clean up related objects
                 delete deepCopyData.auction;
                 delete deepCopyData.createdAt;
+                delete deepCopyData.contactConsignor;
+                delete deepCopyData.contactApprovedBy;
+                delete deepCopyData.entryFeeCollectedBy;
+
+                // Don't delete updateID as it's needed for tracking changes
 
                 return deepCopyData;
               }}
@@ -170,6 +199,13 @@ export function VehicleEditModal({
                 if (v.isSellWithoutReserve) {
                   toHide.push({ id: 'reservePrice', toHide: true });
                 }
+
+                // Hide entry fee payment method and collected by fields if status is not 'paid'
+                if (v.entryFeeStatus !== 'paid') {
+                  toHide.push({ id: 'entryFeePaymentMethod', toHide: true });
+                  toHide.push({ id: 'entryFeeCollectedById', toHide: true });
+                }
+
                 return toHide;
               }}
               fields={[
@@ -184,19 +220,6 @@ export function VehicleEditModal({
                           label: 'Basic Information',
                           row: 1,
                           cell: 2,
-                        },
-                        {
-                          type: 'select',
-                          name: 'status',
-                          label: 'Status',
-                          required: true,
-                          row: 2,
-                          cell: 1,
-                          // allowCustom: true,
-                          options: VEHICLE_STATUSES.map((status) => ({
-                            label: status.label,
-                            value: status.value,
-                          })).filter((status) => status.value !== 'all'),
                         },
                         {
                           type: 'text',
@@ -239,6 +262,10 @@ export function VehicleEditModal({
                           cell: 1,
                         },
                         {
+                          type: 'hidden',
+                          name: 'updateID',
+                        },
+                        {
                           type: 'title',
                           label: 'Engine & Body',
                           row: 3,
@@ -273,6 +300,20 @@ export function VehicleEditModal({
                           cell: 1,
                         },
                         {
+                          type: 'text',
+                          name: 'tires',
+                          label: 'Tires',
+                          row: 4,
+                          cell: 1,
+                        },
+                        {
+                          type: 'text',
+                          name: 'wheels',
+                          label: 'Wheels',
+                          row: 4,
+                          cell: 1,
+                        },
+                        {
                           type: 'title',
                           label: 'Appearance',
                           row: 5,
@@ -292,29 +333,24 @@ export function VehicleEditModal({
                           row: 5,
                           cell: 1,
                         },
-                        {
-                          type: 'text',
-                          name: 'interiorSurfaceMaterial',
-                          label: 'Interior Surface Material',
-                          row: 6,
-                          cell: 1,
-                        },
-                      ],
-                    },
-                    {
-                      name: 'Condition',
-                      fields: [
+
+                        // IMPORTANT: The following fields were intentionally removed and should not be re-added:
+                        // - interiorSurfaceMaterial
+                        // - factoryName
+                        // - frameNote
+                        // - featuresAndOptionsNote
+
                         {
                           type: 'title',
                           label: 'Usage & Status',
-                          row: 1,
+                          row: 6,
                           cell: 2,
                         },
                         {
                           type: 'number',
                           name: 'mileage',
                           label: 'Mileage',
-                          row: 1,
+                          row: 6,
                           cell: 1,
                         },
                         {
@@ -325,43 +361,47 @@ export function VehicleEditModal({
                             { label: 'Miles', value: 'miles' },
                             { label: 'Kilometers', value: 'km' },
                           ],
-                          row: 1,
+                          row: 6,
                           cell: 1,
                         },
                         {
                           type: 'title',
                           label: 'Vehicle History',
-                          row: 2,
+                          row: 7,
                           cell: 2,
                         },
                         {
                           type: 'checkbox',
                           name: 'isNumbersMatching',
                           label: 'Numbers Matching',
-
-                          row: 2,
+                          row: 7,
                           cell: 1,
                         },
                         {
                           type: 'checkbox',
                           name: 'isRestored',
                           label: 'Restored',
-
-                          row: 2,
+                          row: 7,
                           cell: 1,
                         },
                         {
                           type: 'checkbox',
                           name: 'isInDamageOrAccident',
                           label: 'Damage or Accident History',
-
-                          row: 3,
+                          row: 8,
+                          cell: 1,
+                        },
+                        {
+                          type: 'checkbox',
+                          name: 'isClearTitle',
+                          label: 'Clear Title',
+                          row: 8,
                           cell: 1,
                         },
                         {
                           type: 'title',
                           label: 'Condition Details',
-                          row: 4,
+                          row: 9,
                           cell: 2,
                         },
                         {
@@ -389,28 +429,42 @@ export function VehicleEditModal({
                               value: 'fullyDetailed',
                             },
                           ],
-                          row: 4,
+                          row: 9,
                           cell: 1,
+                        },
+                        {
+                          type: 'textarea',
+                          name: 'exteriorDetailNote',
+                          label: 'Exterior Detail Notes',
+                          row: 9,
+                          cell: 2,
                         },
                         {
                           type: 'textarea',
                           name: 'mechanicalSuspensionNote',
                           label: 'Mechanical & Suspension Notes',
-                          row: 5,
-                          cell: 2,
-                        },
-                        {
-                          type: 'textarea',
-                          name: 'frameNote',
-                          label: 'Frame Notes',
-                          row: 6,
+                          row: 10,
                           cell: 2,
                         },
                         {
                           type: 'textarea',
                           name: 'interiorCondition',
                           label: 'Interior Condition',
-                          row: 7,
+                          row: 11,
+                          cell: 2,
+                        },
+                        {
+                          type: 'textarea',
+                          name: 'overallNote',
+                          label: 'Overall Notes',
+                          row: 12,
+                          cell: 2,
+                        },
+                        {
+                          type: 'textarea',
+                          name: 'additionalNote',
+                          label: 'Additional Notes',
+                          row: 12,
                           cell: 2,
                         },
                       ],
@@ -420,15 +474,42 @@ export function VehicleEditModal({
                       fields: [
                         {
                           type: 'title',
-                          label: 'Vehicle Documentation',
+                          label: 'Marketing & Consigner Photos',
                           row: 1,
                           cell: 2,
                         },
                         {
                           type: 'multiFileInput',
+                          name: 'marketingPhotos',
+                          label: 'Marketing Photos',
+                          row: 2,
+                          cell: 2,
+                        },
+                        {
+                          type: 'fileGallery',
+                          name: 'marketingPhotos',
+                          label: '',
+                          onDelete(file) {
+                            console.log('onDelete', file);
+                          },
+                          onFileClick(file) {
+                            window.open(
+                              process.env.NEXT_PUBLIC_SERVER_URL +
+                                '/api/files/name/' +
+                                file.filename,
+                              '_blank',
+                            );
+                          },
+                          row: 3,
+                          cell: 2,
+                          size: 250,
+                          aspectRatio: 16 / 9,
+                        },
+                        {
+                          type: 'multiFileInput',
                           name: 'photos',
-                          label: 'Upload Image',
-                          row: 1,
+                          label: 'Consigner Photos',
+                          row: 4,
                           cell: 2,
                         },
                         {
@@ -446,21 +527,21 @@ export function VehicleEditModal({
                               '_blank',
                             );
                           },
-                          row: 1,
+                          row: 5,
                           cell: 2,
                           size: 250,
                           aspectRatio: 16 / 9,
                         },
                         {
                           type: 'divider',
-                          row: 2,
+                          row: 6,
                           cell: 2,
                         },
                         {
                           type: 'array',
                           name: 'notablePoints',
                           label: 'Notable Points',
-                          row: 2,
+                          row: 6,
                           cell: 2,
                           field: {
                             type: 'text',
@@ -502,6 +583,23 @@ export function VehicleEditModal({
                           cell: 1,
                         },
                         {
+                          type: 'number',
+                          name: 'customerNet',
+                          label: 'Customer Net',
+                          before: (
+                            <CircleDollarSign className='text-gray-500' />
+                          ),
+                          row: 2,
+                          cell: 1,
+                        },
+                        {
+                          type: 'number',
+                          name: 'commissionRate',
+                          label: 'Commission Rate (%)',
+                          row: 2,
+                          cell: 1,
+                        },
+                        {
                           type: 'checkbox',
                           name: 'isSellWithoutReserve',
                           label: 'Sell Without Reserve',
@@ -521,17 +619,245 @@ export function VehicleEditModal({
                         },
                         {
                           type: 'title',
-                          label: 'Payment Status',
+                          label: 'Payments',
                           row: 4,
                           cell: 2,
                         },
                         {
-                          type: 'checkbox',
-                          name: 'isPaymentProcessed',
-                          label: 'Payment Processed',
-
+                          type: 'number',
+                          name: 'entryFee',
+                          label: 'Entry Fee',
+                          before: (
+                            <CircleDollarSign className='text-gray-500' />
+                          ),
                           row: 5,
                           cell: 1,
+                        },
+                        {
+                          type: 'select',
+                          name: 'entryFeeStatus',
+                          label: 'Entry Fee Status',
+                          options: [
+                            { label: 'Pending', value: 'pending' },
+                            { label: 'Paid', value: 'paid' },
+                            { label: 'Waived', value: 'waived' },
+                          ],
+                          row: 5,
+                          cell: 1,
+                        },
+                        {
+                          type: 'select',
+                          name: 'entryFeePaymentMethod',
+                          label: 'Entry Fee Payment Method',
+                          options: [
+                            { label: 'Credit Card', value: 'creditCard' },
+                            { label: 'Bank Transfer', value: 'bankTransfer' },
+                            { label: 'Cash', value: 'cash' },
+                            { label: 'Check', value: 'check' },
+                            { label: 'Other', value: 'other' },
+                          ],
+                          row: 6,
+                          cell: 1,
+                        },
+                        {
+                          type: 'asyncSelect',
+                          name: 'entryFeeCollectedById',
+                          label: 'Entry Fee Collected By',
+                          row: 6,
+                          cell: 1,
+                          addNewItemAction(inputValue) {
+                            window.open('/admin/users/staff', '_blank');
+                          },
+                          after(form) {
+                            return (
+                              <Button
+                                onClick={(e) => {
+                                  e.preventDefault();
+
+                                  form.setValue(
+                                    'entryFeeCollectedById',
+                                    user.id + 'xy',
+                                  );
+                                }}
+                              >
+                                Set as Me
+                              </Button>
+                            );
+                          },
+                          async fetch(query) {
+                            return (
+                              await MembersDataProvider.getList({
+                                sorters: [],
+                                search: query,
+                                filters: [],
+                                pagination: { page: 1, perPage: 10 },
+                              })
+                            ).data.map((item) => ({
+                              label: [item.name, item.lastName].join(' '),
+                              value: item.id,
+                            }));
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      name: 'Consigner Info',
+                      fields: [
+                        {
+                          type: 'title',
+                          label: 'Consigner Information',
+                          row: 1,
+                          cell: 1,
+                        },
+                        {
+                          type: 'asyncSelect',
+                          name: 'contactConsignorId',
+                          label: 'Contact Consignor',
+                          row: 2,
+                          cell: 2,
+                          addNewItemAction(inputValue) {
+                            window.open('/admin/users/consignor', '_blank');
+                          },
+                          async fetch(query) {
+                            return (
+                              await MembersDataProvider.getList({
+                                sorters: [],
+                                search: query,
+                                filters: [],
+                                pagination: { page: 1, perPage: 10 },
+                              })
+                            ).data.map((item) => ({
+                              label: [item.name, item.lastName].join(' '),
+                              value: item.id,
+                            }));
+                          },
+                        },
+                        // IMPORTANT: this is not used anymore
+                        // {
+                        //   type: 'checkbox',
+                        //   name: 'isConfirmedSeller',
+                        //   label: 'Confirmed Consignor',
+                        //   row: 2,
+                        //   cell: 1,
+                        // },
+                        {
+                          type: 'custom',
+                          name: 'consignerInfoDisplay',
+                          label: 'Consigner Details',
+                          row: 3,
+                          cell: 2,
+                          component(form) {
+                            const consigner =
+                              form.getValues('contactConsignor');
+                            const consignerId =
+                              form.getValues('contactConsignorId');
+
+                            if (!consigner || !consigner.id || !consignerId) {
+                              return (
+                                <div className='rounded-md bg-gray-50 p-4'>
+                                  <p className='text-gray-500'>
+                                    No consigner information available.
+                                  </p>
+                                </div>
+                              );
+                            }
+
+                            return (
+                              <div className='space-y-4'>
+                                <div className='grid grid-cols-2 gap-4'>
+                                  <div className='space-y-2'>
+                                    <p className='text-sm font-medium text-gray-500'>
+                                      Name
+                                    </p>
+                                    <p className='text-base'>
+                                      {consigner?.prefix || ''}{' '}
+                                      {consigner?.name || ''}{' '}
+                                      {consigner?.middleName || ''}{' '}
+                                      {consigner?.lastName || ''}{' '}
+                                      {consigner?.suffix || ''}
+                                    </p>
+                                  </div>
+
+                                  <div className='space-y-2'>
+                                    <p className='text-sm font-medium text-gray-500'>
+                                      Email
+                                    </p>
+                                    <p className='text-base'>
+                                      {consigner?.email || 'N/A'}
+                                    </p>
+                                  </div>
+
+                                  <div className='space-y-2'>
+                                    <p className='text-sm font-medium text-gray-500'>
+                                      Company
+                                    </p>
+                                    <p className='text-base'>
+                                      {consigner?.company || 'N/A'}
+                                    </p>
+                                  </div>
+
+                                  <div className='space-y-2'>
+                                    <p className='text-sm font-medium text-gray-500'>
+                                      Phone
+                                    </p>
+                                    <p className='text-base'>
+                                      {consigner?.mobileNumber || 'N/A'}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className='space-y-2'>
+                                  <p className='text-sm font-medium text-gray-500'>
+                                    Address
+                                  </p>
+                                  <p className='text-base'>
+                                    {consigner?.addressLine1 ? (
+                                      <>
+                                        {consigner.addressLine1}
+                                        {consigner.addressLine2 && (
+                                          <>, {consigner.addressLine2}</>
+                                        )}
+                                        {consigner.city && (
+                                          <>, {consigner.city}</>
+                                        )}
+                                        {consigner.state && (
+                                          <>, {consigner.state}</>
+                                        )}
+                                        {consigner.postalCode && (
+                                          <> {consigner.postalCode}</>
+                                        )}
+                                      </>
+                                    ) : (
+                                      'N/A'
+                                    )}
+                                  </p>
+                                </div>
+
+                                <div className='pt-4'>
+                                  <Button
+                                    onClick={() => {
+                                      if (consignerId) {
+                                        // Open the ConsignerEditModal in a new tab
+                                        const url = new URL(
+                                          window.location.origin +
+                                            '/admin/users/consignor',
+                                        );
+                                        url.searchParams.set('id', consignerId);
+                                        url.searchParams.set(
+                                          'readonly',
+                                          'false',
+                                        );
+                                        window.open(url.toString(), '_blank');
+                                      }
+                                    }}
+                                    disabled={!consignerId}
+                                  >
+                                    Edit Consigner
+                                  </Button>
+                                </div>
+                              </div>
+                            );
+                          },
                         },
                       ],
                     },
@@ -545,17 +871,22 @@ export function VehicleEditModal({
                           cell: 2,
                         },
                         {
-                          type: 'checkbox',
-                          name: 'isConfirmedSeller',
-                          label: 'Confirmed Seller',
+                          type: 'select',
+                          name: 'status',
+                          label: 'Status',
                           row: 2,
                           cell: 1,
+                          // allowCustom: true,
+                          options: VEHICLE_STATUSES.map((status) => ({
+                            label: status.label,
+                            value: status.value,
+                          })).filter((status) => status.value !== 'all'),
                         },
                         {
                           type: 'asyncSelect',
-                          name: 'contactConsignorId',
-                          label: 'Contact Consignor',
-                          row: 3,
+                          name: 'contactApprovedById',
+                          label: 'Contact Approved By',
+                          row: 2,
                           cell: 1,
                           addNewItemAction(inputValue) {
                             window.open('/admin/users/consignor', '_blank');
@@ -581,29 +912,7 @@ export function VehicleEditModal({
                           row: 3,
                           cell: 1,
                         },
-                        {
-                          type: 'asyncSelect',
-                          name: 'contactApprovedById',
-                          label: 'Contact Approved By',
-                          row: 4,
-                          cell: 1,
-                          addNewItemAction(inputValue) {
-                            window.open('/admin/users/consignor', '_blank');
-                          },
-                          async fetch(query) {
-                            return (
-                              await MembersDataProvider.getList({
-                                sorters: [],
-                                search: query,
-                                filters: [],
-                                pagination: { page: 1, perPage: 10 },
-                              })
-                            ).data.map((item) => ({
-                              label: [item.name, item.lastName].join(' '),
-                              value: item.id,
-                            }));
-                          },
-                        },
+
                         {
                           type: 'title',
                           label: 'Process Status',
@@ -615,7 +924,7 @@ export function VehicleEditModal({
                           name: 'auctionId',
                           label: 'Auction',
                           row: 6,
-                          cell: 1,
+                          cell: 2,
                           addNewItemAction(inputValue) {
                             window.open('/admin/sales/auction', '_blank');
                           },
@@ -644,13 +953,20 @@ export function VehicleEditModal({
                           type: 'checkbox',
                           name: 'isVehicleCollected',
                           label: 'Vehicle Collected',
-                          row: 7,
+                          row: 6,
                           cell: 1,
                         },
                         {
                           type: 'checkbox',
                           name: 'isTransportationDelivered',
                           label: 'Transportation Delivered',
+                          row: 7,
+                          cell: 1,
+                        },
+                        {
+                          type: 'checkbox',
+                          name: 'isPaymentProcessed',
+                          label: 'Payment Processed',
                           row: 7,
                           cell: 1,
                         },

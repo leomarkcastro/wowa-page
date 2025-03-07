@@ -81,6 +81,10 @@ const SelectContent = React.forwardRef<
         className,
       )}
       position={position}
+      onPointerDownOutside={(e) => {
+        // Prevent the event from propagating to the dialog overlay
+        e.stopPropagation();
+      }}
       {...props}
     >
       <SelectScrollUpButton />

@@ -20,10 +20,11 @@ import {
 } from '@/components/ui/alert-dialog';
 import { ColumnsDataTable, DataProviderTable } from './quick-table';
 import { PlusIcon } from 'lucide-react';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect, useCallback } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { DataProvider } from '@/lib/services/dataProvider';
 import { createProvider } from '@/lib/services/createProvider';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
 interface DataTableTemplateProps {
   title: string;
@@ -68,6 +69,50 @@ export function DataTableTemplate({
   const [readOnly, setReadOnly] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Check for id and readonly parameters in the URL
+    const idParam = searchParams.get('id');
+    const readOnlyParam = searchParams.get('readonly');
+
+    if (idParam) {
+      setItemID(idParam);
+      setIsEditing(true);
+
+      // Set readonly to true if readonly=true is in the URL
+      if (readOnlyParam === 'true') {
+        setReadOnly(true);
+      } else {
+        setReadOnly(false);
+      }
+    }
+  }, [searchParams]);
+
+  // Function to handle modal close and clear URL parameters
+  const handleModalClose = useCallback(() => {
+    setIsEditing(false);
+    setItemID(null);
+    setReadOnly(null);
+    console.log('closing');
+  }, [pathname, router, searchParams]);
+
+  useEffect(() => {
+    if (itemID || itemID === null) {
+      console.log('setting url');
+      const url = new URL(window.location.href);
+      if (itemID) {
+        url.searchParams.set('id', itemID);
+        url.searchParams.set('readonly', readOnly.toString());
+      } else {
+        url.searchParams.delete('id');
+        url.searchParams.delete('readonly');
+      }
+      window.history.pushState({}, '', url.toString());
+    }
+  }, [itemID, readOnly]);
 
   const dataHookProvider = createProvider({
     name: dataProvider.name,
@@ -139,8 +184,9 @@ export function DataTableTemplate({
       )}
 
       <EditModal
+        key={`${itemID}::${isEditing}::${readOnly}`}
         isOpen={isEditing}
-        onClose={() => setIsEditing(false)}
+        onClose={handleModalClose}
         itemID={itemID}
         readOnly={readOnly}
       />

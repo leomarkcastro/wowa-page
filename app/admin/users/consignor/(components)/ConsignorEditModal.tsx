@@ -46,19 +46,11 @@ export function ConsignorEditModal({
   };
 
   const handleClose = () => {
-    const url = new URL(window.location.href);
-    url.searchParams.delete('id');
-    url.searchParams.delete('readonly');
-    window.history.pushState({}, '', url.toString());
     onClose();
+    if (readOnly !== readonly) {
+      setReadonly(readOnly);
+    }
   };
-
-  if (itemID) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('id', itemID);
-    url.searchParams.set('readonly', readonly.toString());
-    window.history.pushState({}, '', url.toString());
-  }
 
   return (
     <>
@@ -68,11 +60,11 @@ export function ConsignorEditModal({
         open={isOpen}
         onOpenChange={(open) => !open && handleClose()}
       >
-        <DialogContent className='flex max-h-[90vh] max-w-4xl flex-col gap-0 p-0'>
+        <DialogContent className='flex h-[90vh] max-w-4xl flex-col gap-0 p-0'>
           {loading && (
             <div className='absolute inset-0 flex items-center justify-center bg-accent/50 bg-opacity-90 text-accent-foreground'>
               <div className='flex items-center gap-4'>
-                <div className='h-3 w-3 animate-spin bg-gray-700' />
+                <div className='bg-backkground/50 h-3 w-3 animate-spin' />
                 <p className='text-lg font-semibold text-primary'>Saving...</p>
               </div>
             </div>
@@ -89,11 +81,24 @@ export function ConsignorEditModal({
                   {itemID.slice(-7)}
                 </span>
               )}
+              {readonly && (
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={() => {
+                    setReadonly(false);
+                  }}
+                  className='ml-4'
+                >
+                  Edit
+                </Button>
+              )}
             </DialogTitle>
           </DialogHeader>
 
           <div className='h-full overflow-auto px-4'>
             <ResourceForm
+              key={(readonly ? 'readonly' : 'edit') + '::' + itemID || 'new'}
               mode={itemID ? 'edit' : 'create'}
               title={
                 readonly
@@ -135,13 +140,21 @@ export function ConsignorEditModal({
                   type: 'tabs',
                   tabs: [
                     {
-                      name: 'Personal Information',
+                      name: 'Personal & Company',
                       fields: [
+                        {
+                          type: 'title',
+                          name: 'personalInfoHeading',
+                          label: 'Personal Information',
+                          row: 1,
+
+                          cell: 1,
+                        },
                         {
                           type: 'text',
                           name: 'prefix',
                           label: 'Prefix',
-                          row: 1,
+                          row: 2,
                           cell: 1,
                         },
                         {
@@ -149,14 +162,14 @@ export function ConsignorEditModal({
                           name: 'name',
                           label: 'First Name',
                           required: true,
-                          row: 1,
+                          row: 2,
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'middleName',
                           label: 'Middle Name',
-                          row: 2,
+                          row: 3,
                           cell: 1,
                         },
                         {
@@ -164,115 +177,147 @@ export function ConsignorEditModal({
                           name: 'lastName',
                           label: 'Last Name',
                           required: true,
-                          row: 2,
+                          row: 3,
+
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'suffix',
                           label: 'Suffix',
-                          row: 3,
+                          row: 4,
+                          cell: 1,
+                        },
+                        {
+                          type: 'divider',
+                          row: 5,
+
+                          cell: 1,
+                        },
+                        {
+                          type: 'title',
+                          name: 'companyInfoHeading',
+                          label: 'Company Information',
+                          row: 6,
+
+                          cell: 1,
+                        },
+                        {
+                          type: 'text',
+                          name: 'company',
+                          label: 'Company Name',
+                          row: 7,
+                          cell: 1,
+                        },
+                        {
+                          type: 'text',
+                          name: 'companyContact',
+                          label: 'Company Contact',
+                          row: 7,
+
                           cell: 1,
                         },
                       ],
                     },
                     {
-                      name: 'Contact Information',
+                      name: 'Contact & Address',
                       fields: [
+                        {
+                          type: 'title',
+                          name: 'contactInfoHeading',
+                          label: 'Contact Information',
+                          row: 1,
+
+                          cell: 1,
+                        },
                         {
                           type: 'text',
                           name: 'email',
                           label: 'Email',
                           required: true,
-                          row: 1,
+                          row: 2,
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'secondaryEmail',
                           label: 'Secondary Email',
-                          row: 1,
+                          row: 2,
+
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'mobileNumber',
                           label: 'Mobile Number',
-                          row: 2,
+                          row: 3,
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'homeNumber',
                           label: 'Home Number',
-                          row: 2,
+                          row: 3,
+
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'faxNumber',
                           label: 'Fax Number',
-                          row: 3,
+                          row: 4,
                           cell: 1,
                         },
-                      ],
-                    },
-                    {
-                      name: 'Address',
-                      fields: [
+                        {
+                          type: 'divider',
+                          row: 5,
+
+                          cell: 1,
+                        },
+                        {
+                          type: 'title',
+                          name: 'addressInfoHeading',
+                          label: 'Address Information',
+                          row: 6,
+
+                          cell: 1,
+                        },
                         {
                           type: 'text',
                           name: 'addressLine1',
                           label: 'Address Line 1',
-                          row: 1,
-                          cell: 2,
+                          row: 7,
+                          cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'addressLine2',
                           label: 'Address Line 2',
-                          row: 2,
-                          cell: 2,
+                          row: 7,
+
+                          cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'city',
                           label: 'City',
-                          row: 3,
+                          row: 8,
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'state',
                           label: 'State',
-                          row: 3,
+                          row: 8,
+
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'postalCode',
                           label: 'Postal Code',
-                          row: 4,
+                          row: 9,
                           cell: 1,
-                        },
-                      ],
-                    },
-                    {
-                      name: 'Company Information',
-                      fields: [
-                        {
-                          type: 'text',
-                          name: 'company',
-                          label: 'Company Name',
-                          row: 1,
-                          cell: 2,
-                        },
-                        {
-                          type: 'text',
-                          name: 'companyContact',
-                          label: 'Company Contact',
-                          row: 2,
-                          cell: 2,
                         },
                       ],
                     },

@@ -16,6 +16,7 @@ export const Car_List = graphql(`
         bodyStyle
         mileage
         mileageType
+        isClearTitle
         isNumbersMatching
         isRestored
         isInDamageOrAccident
@@ -33,11 +34,105 @@ export const Car_List = graphql(`
         featuresAndOptionsNote
         notablePoints
         reservePrice
+        additionalNote
+        overallNote
+        customerNet
+        commissionRate
+        entryFee
+        entryFeeStatus
+        entryFeePaymentMethod
+        entryFeeCollectedById
+        entryFeeCollectedBy {
+          id
+          email
+          prefix
+          name
+          middleName
+          lastName
+          suffix
+          displayName
+          role
+          actorType
+          mobileNumber
+          faxNumber
+          homeNumber
+          secondaryEmail
+          addressLine1
+          addressLine2
+          city
+          state
+          postalCode
+          company
+          companyContact
+          isActive
+          lastLogin
+          createdAt
+          updatedAt
+        }
+        entryFeePaidAt
         marketValueHigh
         marketValueLow
         isSellWithoutReserve
         photoIds
+        marketingPhotosIds
         isConfirmedSeller
+        contactConsignor {
+          id
+          email
+          prefix
+          name
+          middleName
+          lastName
+          suffix
+          displayName
+          role
+          actorType
+          mobileNumber
+          faxNumber
+          homeNumber
+          secondaryEmail
+          addressLine1
+          addressLine2
+          city
+          state
+          postalCode
+          company
+          companyContact
+          isActive
+          lastLogin
+          createdAt
+          updatedAt
+        }
+        contactConsignorId
+        contactSpecialist
+        contactApprovedBy {
+          id
+          email
+          prefix
+          name
+          middleName
+          lastName
+          suffix
+          displayName
+          role
+          actorType
+          mobileNumber
+          faxNumber
+          homeNumber
+          secondaryEmail
+          addressLine1
+          addressLine2
+          city
+          state
+          postalCode
+          company
+          companyContact
+          isActive
+          lastLogin
+          createdAt
+          updatedAt
+        }
+        contactApprovedById
         auctionId
         createdAt
         isTitleReceived
@@ -46,37 +141,66 @@ export const Car_List = graphql(`
         isTransportationDelivered
         comments
         status
-        contactSpecialist
-        contactApprovedById
-        contactApprovedBy {
-          actorType
-          name
-          middleName
-          lastName
-          company
-        }
-        contactConsignor {
-          actorType
-          name
-          middleName
-          lastName
-          company
-        }
-        contactConsignorId
         auction {
-          summary
-          name
+          id
           auctionID
+          name
+          addressLine1
+          addressLine2
+          city
+          state
+          zip
+          country
+          summary
+          body
+          tags
           eventDateStart
           eventDateEnd
+          photoIds
+          createdAt
+          photos {
+            id
+            assignedTo
+            name
+            url
+            mime
+            size
+            metadata
+            createdAt
+            path
+            category
+            note
+          }
+          deletedAt
         }
         photos {
           id
+          assignedTo
           name
           url
           mime
+          size
+          metadata
+          createdAt
+          path
+          category
+          note
+        }
+        marketingPhotos {
+          id
+          assignedTo
+          name
+          url
+          mime
+          size
+          metadata
+          createdAt
+          path
+          category
+          note
         }
         deletedAt
+        updateID
       }
       page {
         total
@@ -132,6 +256,7 @@ export const Car_Get = graphql(`
         bodyStyle
         mileage
         mileageType
+        isClearTitle
         isNumbersMatching
         isRestored
         isInDamageOrAccident
@@ -149,50 +274,173 @@ export const Car_Get = graphql(`
         featuresAndOptionsNote
         notablePoints
         reservePrice
+        additionalNote
+        overallNote
+        customerNet
+        commissionRate
+        entryFee
+        entryFeeStatus
+        entryFeePaymentMethod
+        entryFeeCollectedById
+        entryFeeCollectedBy {
+          id
+          email
+          prefix
+          name
+          middleName
+          lastName
+          suffix
+          displayName
+          role
+          actorType
+          mobileNumber
+          faxNumber
+          homeNumber
+          secondaryEmail
+          addressLine1
+          addressLine2
+          city
+          state
+          postalCode
+          company
+          companyContact
+          isActive
+          lastLogin
+          createdAt
+          updatedAt
+        }
+        entryFeePaidAt
         marketValueHigh
         marketValueLow
         isSellWithoutReserve
         photoIds
+        marketingPhotosIds
         isConfirmedSeller
+        contactConsignor {
+          id
+          email
+          prefix
+          name
+          middleName
+          lastName
+          suffix
+          displayName
+          role
+          actorType
+          mobileNumber
+          faxNumber
+          homeNumber
+          secondaryEmail
+          addressLine1
+          addressLine2
+          city
+          state
+          postalCode
+          company
+          companyContact
+          isActive
+          lastLogin
+          createdAt
+          updatedAt
+        }
+        contactConsignorId
+        contactSpecialist
+        contactApprovedBy {
+          id
+          email
+          prefix
+          name
+          middleName
+          lastName
+          suffix
+          displayName
+          role
+          actorType
+          mobileNumber
+          faxNumber
+          homeNumber
+          secondaryEmail
+          addressLine1
+          addressLine2
+          city
+          state
+          postalCode
+          company
+          companyContact
+          isActive
+          lastLogin
+          createdAt
+          updatedAt
+        }
+        contactApprovedById
         auctionId
         createdAt
-        status
         isTitleReceived
         isPaymentProcessed
         isVehicleCollected
         isTransportationDelivered
         comments
-        contactSpecialist
-        contactApprovedById
-        contactApprovedBy {
-          actorType
-          name
-          middleName
-          lastName
-          company
-        }
-        contactConsignor {
-          actorType
-          name
-          middleName
-          lastName
-          company
-        }
-        contactConsignorId
+        status
         auction {
-          summary
-          name
+          id
           auctionID
+          name
+          addressLine1
+          addressLine2
+          city
+          state
+          zip
+          country
+          summary
+          body
+          tags
           eventDateStart
           eventDateEnd
+          photoIds
+          createdAt
+          photos {
+            id
+            assignedTo
+            name
+            url
+            mime
+            size
+            metadata
+            createdAt
+            path
+            category
+            note
+          }
+          deletedAt
         }
         photos {
           id
+          assignedTo
           name
           url
           mime
+          size
+          metadata
+          createdAt
+          path
+          category
+          note
+        }
+        marketingPhotos {
+          id
+          assignedTo
+          name
+          url
+          mime
+          size
+          metadata
+          createdAt
+          path
+          category
+          note
         }
         deletedAt
+        updateID
       }
     }
   }

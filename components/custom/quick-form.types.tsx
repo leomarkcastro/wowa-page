@@ -162,6 +162,10 @@ export type FieldType =
       min?: number;
       max?: number;
       required?: boolean;
+    } & BaseFieldProps)
+  | ({
+      type: 'hidden';
+      name: string;
     } & BaseFieldProps);
 
 export interface QuickFormProps {

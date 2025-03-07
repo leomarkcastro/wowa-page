@@ -1,9 +1,20 @@
 import { graphql } from '../generated';
 
 export const Login = graphql(`
-  mutation Authclient_login($email: String!, $password: String!) {
-    authclient_login(email: $email, password: $password) {
+  mutation Authclient_login(
+    $email: String!
+    $password: String!
+    $refreshToken: Boolean
+    $loginType: String
+  ) {
+    authclient_login(
+      email: $email
+      password: $password
+      refreshToken: $refreshToken
+      loginType: $loginType
+    ) {
       ... on ClientItemAuthenticationWithPasswordSuccess {
+        refreshToken
         sessionToken
       }
       ... on ClientItemAuthenticationWithPasswordFailure {

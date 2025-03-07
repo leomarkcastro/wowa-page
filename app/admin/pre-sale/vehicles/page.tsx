@@ -41,9 +41,7 @@ const Dashboard = () => {
       filterSection={
         <>
           <StatusSelector
-            selectedStatus={
-              carsFiltering.status || ('pending' as VehicleStatus)
-            }
+            selectedStatus={carsFiltering.status || ('all' as VehicleStatus)}
             setSelectedStatus={(val) => {
               setCarsFiltering({
                 ...carsFiltering,

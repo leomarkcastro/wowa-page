@@ -33,8 +33,19 @@ export interface RegisterUser {
   lastName: string;
 }
 
+export interface LoginCredentials {
+  email: string;
+  password: string;
+  loginType?: string;
+}
+
 export interface AuthBehavior {
-  loginFn: (credentials: { email: string; password: string }) => Promise<User>;
+  loginFn: (
+    credentials: LoginCredentials,
+    rememberMe?: boolean,
+  ) => Promise<User>;
+  loginWithRefreshTokenFn: () => Promise<User | null>;
+  forceRefreshTokenLoginFn: () => Promise<User | null>;
   logoutFn: () => Promise<void>;
   getMeFn: () => Promise<User>;
   registerFn: (data: RegisterUser) => Promise<User>;
@@ -47,8 +58,9 @@ export interface AuthBehavior {
 interface AuthContextType {
   user: Partial<User> | null;
   loading: boolean;
-  login: (credentials: { email: string; password: string }) => Promise<User>;
+  login: (credentials: LoginCredentials, rememberMe?: boolean) => Promise<User>;
   logout: () => Promise<void>;
+  refreshSession: () => Promise<boolean>;
   me: () => Promise<User>;
   updateMe: (data: UpdateUser) => Promise<void>;
   isLoggedIn: boolean;
@@ -77,11 +89,28 @@ export function AuthProvider({
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const userData = await behavior.getMeFn();
+        // First try to get the user with the current session token
+        let userData = await behavior.getMeFn();
+
+        // If that fails, try to login with refresh token
+        if (!userData) {
+          userData = await behavior.loginWithRefreshTokenFn();
+        }
+
         setUser(userData);
       } catch (error) {
         console.error('Failed to load user:', error);
-        setUser(null);
+        // Try to login with refresh token if regular auth fails
+        try {
+          const userData = await behavior.loginWithRefreshTokenFn();
+          setUser(userData);
+        } catch (refreshError) {
+          console.error(
+            'Failed to auto-login with refresh token:',
+            refreshError,
+          );
+          setUser(null);
+        }
       } finally {
         setLoading(false);
       }
@@ -91,9 +120,9 @@ export function AuthProvider({
   }, [behavior]);
 
   const login = useCallback(
-    async (credentials: { email: string; password: string }) => {
+    async (credentials: LoginCredentials, rememberMe = false) => {
       try {
-        const userData = await behavior.loginFn(credentials);
+        const userData = await behavior.loginFn(credentials, rememberMe);
         setUser(userData);
         return userData;
       } catch (error) {
@@ -111,6 +140,20 @@ export function AuthProvider({
     } catch (error) {
       console.error('Logout failed:', error);
       throw error;
+    }
+  }, [behavior]);
+
+  const refreshSession = useCallback(async () => {
+    try {
+      const userData = await behavior.forceRefreshTokenLoginFn();
+      if (userData) {
+        setUser(userData);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Force refresh token login failed:', error);
+      return false;
     }
   }, [behavior]);
 
@@ -195,9 +238,10 @@ export function AuthProvider({
 
   const value = {
     user,
-    loading, // Add loading to context value
+    loading,
     login,
     logout,
+    refreshSession,
     me,
     updateMe,
     isLoggedIn: !!user,

@@ -40,6 +40,10 @@ export function AuctionEditModal({
     setReadonly(readOnly);
   }, [readOnly]);
 
+  const handleClose = () => {
+    onClose();
+  };
+
   const dataProvider = AuctionsDataProvider;
 
   const onSubmit = async () => {
@@ -49,24 +53,6 @@ export function AuctionEditModal({
       );
     }
   };
-
-  const handleClose = () => {
-    // remove itemID from search params
-    const url = new URL(window.location.href);
-    url.searchParams.delete('id');
-    url.searchParams.delete('readonly');
-    window.history.pushState({}, '', url.toString());
-
-    onClose();
-  };
-
-  // if itemID is given, push it to search params
-  if (itemID) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('id', itemID);
-    url.searchParams.set('readonly', readonly.toString());
-    window.history.pushState({}, '', url.toString());
-  }
 
   return (
     <>
@@ -79,12 +65,14 @@ export function AuctionEditModal({
         open={isOpen}
         onOpenChange={(open) => !open && handleClose()}
       >
-        <DialogContent className='flex max-h-[90vh] max-w-4xl flex-col gap-0 p-0'>
+        <DialogContent className='flex h-[90vh] max-w-4xl flex-col gap-0 p-0'>
           {loading && (
             <div className='absolute inset-0 flex items-center justify-center bg-accent/50 bg-opacity-90 text-accent-foreground'>
               <div className='flex items-center gap-4'>
-                <div className='h-3 w-3 animate-spin bg-gray-700' />
-                <p className='text-lg font-semibold text-primary'>Saving...</p>
+                <div className='h-3 w-3 animate-spin bg-background/50' />
+                <p className='text-lg font-semibold text-foreground'>
+                  Saving...
+                </p>
               </div>
             </div>
           )}
@@ -138,6 +126,10 @@ export function AuctionEditModal({
                 data.eventDateEnd = fMoment(data.eventDateEnd).format(
                   'YYYY-MM-DDTHH:mm',
                 );
+                // Ensure updateID is displayed as readonly
+                if (data.updateID) {
+                  data.updateID = data.updateID.toString();
+                }
                 return data;
               }}
               transformSubmitData={(data) => {
@@ -148,6 +140,7 @@ export function AuctionEditModal({
                   deepCopyData.photos?.map((photo) => photo.id) || [];
                 delete deepCopyData.photos;
                 delete deepCopyData.createdAt;
+                // Don't delete updateID as it's needed for tracking changes
                 return deepCopyData;
               }}
               onAfterSubmit={() => {
@@ -222,6 +215,14 @@ export function AuctionEditModal({
                           label: 'End Date',
                           required: true,
                           row: 4,
+                          cell: 1,
+                        },
+                        {
+                          type: 'text',
+                          name: 'updateID',
+                          label: 'Update ID',
+                          readonly: true,
+                          row: 5,
                           cell: 1,
                         },
                       ],

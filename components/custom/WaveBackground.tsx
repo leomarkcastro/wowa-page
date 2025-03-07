@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import { useTheme } from 'next-themes';
+import React, { useEffect, useRef, useMemo } from 'react';
 
 interface Wave {
   color: string;
@@ -13,33 +14,48 @@ interface WaveBackgroundProps {
 }
 
 export const WaveBackground: React.FC<WaveBackgroundProps> = ({ children }) => {
+  const { theme } = useTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number>(0);
   const points = 100;
 
-  const waves: Wave[] = [
-    {
-      color: 'rgba(59, 130, 246, 0.45)', // Changed to blue with more opacity
-      amplitude: 50,
-      frequency: 0.005,
-      speed: 0.01,
-      phase: 0,
-    },
-    {
-      color: 'rgba(96, 165, 250, 0.35)',
-      amplitude: 30,
-      frequency: 0.01,
-      speed: 0.008,
-      phase: 2,
-    },
-    {
-      color: 'rgba(147, 197, 253, 0.2)',
-      amplitude: 20,
-      frequency: 0.02,
-      speed: 0.005,
-      phase: 4,
-    },
-  ];
+  const waves = useMemo(() => {
+    // Define theme-specific colors
+    const isDark = theme === 'dark';
+
+    return [
+      {
+        // First wave - more opacity
+        color: isDark
+          ? 'rgba(59, 130, 246, 0.45)' // Blue for dark mode
+          : 'rgba(59, 130, 246, 0.45)', // Same blue for light mode
+        amplitude: 50,
+        frequency: 0.005,
+        speed: 0.01,
+        phase: 0,
+      },
+      {
+        // Second wave - medium opacity
+        color: isDark
+          ? 'rgba(96, 165, 250, 0.35)' // Lighter blue for dark mode
+          : 'rgba(96, 165, 250, 0.35)', // Same lighter blue for light mode
+        amplitude: 30,
+        frequency: 0.01,
+        speed: 0.008,
+        phase: 2,
+      },
+      {
+        // Third wave - least opacity
+        color: isDark
+          ? 'rgba(147, 197, 253, 0.2)' // Lightest blue for dark mode
+          : 'rgba(147, 197, 253, 0.2)', // Same lightest blue for light mode
+        amplitude: 20,
+        frequency: 0.02,
+        speed: 0.005,
+        phase: 4,
+      },
+    ];
+  }, [theme]);
 
   const handleResize = () => {
     if (canvasRef.current) {
@@ -56,9 +72,12 @@ export const WaveBackground: React.FC<WaveBackgroundProps> = ({ children }) => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Set background color based on theme
+    const backgroundColor =
+      theme === 'dark' ? 'rgba(17, 24, 39, 1)' : 'rgba(255, 255, 255, 1)';
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 1)');
+    gradient.addColorStop(0, backgroundColor);
+    gradient.addColorStop(1, backgroundColor);
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -97,8 +116,8 @@ export const WaveBackground: React.FC<WaveBackgroundProps> = ({ children }) => {
         }
       }
 
+      // Transparent stroke
       ctx.strokeStyle = 'rgba(255, 255, 255, 0)';
-      //   ctx.lineWidth = 2;
       ctx.stroke();
     });
 
@@ -120,7 +139,7 @@ export const WaveBackground: React.FC<WaveBackgroundProps> = ({ children }) => {
         window.cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, []);
+  }, [theme]); // Add theme as a dependency to re-render when theme changes
 
   return (
     <div
@@ -146,7 +165,7 @@ export const WaveBackground: React.FC<WaveBackgroundProps> = ({ children }) => {
           position: 'relative',
           zIndex: 10,
           padding: '32px',
-          color: 'white',
+          color: theme === 'dark' ? 'white' : 'black', // Text color based on theme
         }}
       >
         {children}

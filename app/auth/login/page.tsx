@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -33,10 +35,13 @@ export default function LoginPage() {
 
     try {
       // Add your login API call here
-      const response = await login({
-        email,
-        password,
-      });
+      const response = await login(
+        {
+          email,
+          password,
+        },
+        rememberMe,
+      );
 
       if (!response?.id) {
         throw new Error('Login failed');
@@ -147,6 +152,19 @@ export default function LoginPage() {
               )}
             </Button>
           </div>
+        </div>
+        <div className='flex items-center space-x-2'>
+          <Checkbox
+            id='rememberMe'
+            checked={rememberMe}
+            onCheckedChange={(checked) => setRememberMe(checked === true)}
+          />
+          <label
+            htmlFor='rememberMe'
+            className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+          >
+            Remember me
+          </label>
         </div>
         <Button
           type='submit'
