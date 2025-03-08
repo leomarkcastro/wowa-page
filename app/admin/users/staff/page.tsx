@@ -13,21 +13,25 @@ import {
 const ConsignorList = () => {
   return (
     <DataTableTemplate
-      title='Consignors'
-      description='Manage consignor accounts'
+      title='Staff'
+      description='Staff Members and Possible Unregistered Accounts'
       initialFilters={{
         actorType: [
           {
-            operator: 'equals',
+            operator: 'nequals',
             value: ACTORTYPE_ENUM.Consignor,
+          },
+          {
+            operator: 'nequals',
+            value: ACTORTYPE_ENUM.Bidder,
           },
         ],
       }}
       dataProvider={MembersDataProvider}
-      addNewLabel='Add New Consignor'
+      addNewLabel='Add New Account'
       EditModal={ConsignorEditModal}
       defaultValues={{
-        actorType: ACTORTYPE_ENUM.Consignor,
+        actorType: ACTORTYPE_ENUM.CustomerSupport,
       }}
       tableColumns={({
         setIsEditing,

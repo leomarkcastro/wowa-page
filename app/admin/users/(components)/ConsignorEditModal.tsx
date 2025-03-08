@@ -18,13 +18,27 @@ interface ConsignorEditModalProps {
   onClose: () => void;
   itemID?: string;
   readOnly?: boolean;
+  defaultValues?: any;
 }
+
+export const ACTORTYPE_ENUM = {
+  SuperAdmin: 'SuperAdmin',
+  Auction: 'Auction',
+  Sales: 'Sales',
+  Consignor: 'Consignor',
+  Bidder: 'Bidder',
+  BackofficeManager: 'BackofficeManager',
+  CustomerSupport: 'CustomerSupport',
+  MarketingManager: 'MarketingManager',
+  AutomotiveLogistics: 'AutomotiveLogistics',
+};
 
 export function ConsignorEditModal({
   itemID,
   isOpen,
   onClose,
   readOnly,
+  defaultValues,
 }: ConsignorEditModalProps) {
   const sp = useSearchParams();
   const [form, setForm] = useState<UseFormReturn<any>>();
@@ -72,10 +86,10 @@ export function ConsignorEditModal({
           <DialogHeader className='border-b p-2'>
             <DialogTitle className='p-2 px-4 text-xl font-semibold text-primary'>
               {readonly
-                ? 'View Consignor'
+                ? 'View Account'
                 : itemID
-                  ? 'Edit Consignor'
-                  : 'Add Consignor'}
+                  ? 'Edit Account'
+                  : 'Add Account'}
               {itemID && (
                 <span className='ml-4 font-mono text-sm uppercase text-gray-600'>
                   {itemID.slice(-7)}
@@ -102,12 +116,12 @@ export function ConsignorEditModal({
               mode={itemID ? 'edit' : 'create'}
               title={
                 readonly
-                  ? 'View Consignor'
+                  ? 'View Account'
                   : itemID
-                    ? 'Edit Consignor'
-                    : 'Add Consignor'
+                    ? 'Edit Account'
+                    : 'Add Account'
               }
-              subtitle='Consignor Information'
+              subtitle='Account Information'
               dataProvider={MembersDataProvider}
               hideActionsCard={true}
               hideHeader={true}
@@ -115,10 +129,14 @@ export function ConsignorEditModal({
               dontReturnOnSubmit={itemID ? true : false}
               onForm={(form) => setForm(form)}
               formRef={formRef}
+              defaultValues={itemID ? undefined : defaultValues}
+              preprocessData={(data) => {
+                // console.log(data);
+                return data;
+              }}
               transformSubmitData={(data) => {
                 setLoading(true);
                 setErrMessage('');
-                data.actorType = 'consignor';
                 return data;
               }}
               onAfterSubmit={() => {
@@ -135,6 +153,7 @@ export function ConsignorEditModal({
               getIDon={() => {
                 return sp.get('id');
               }}
+              gridCols={3}
               fields={[
                 {
                   type: 'tabs',
@@ -147,14 +166,6 @@ export function ConsignorEditModal({
                           name: 'personalInfoHeading',
                           label: 'Personal Information',
                           row: 1,
-
-                          cell: 1,
-                        },
-                        {
-                          type: 'text',
-                          name: 'prefix',
-                          label: 'Prefix',
-                          row: 2,
                           cell: 1,
                         },
                         {
@@ -169,7 +180,7 @@ export function ConsignorEditModal({
                           type: 'text',
                           name: 'middleName',
                           label: 'Middle Name',
-                          row: 3,
+                          row: 2,
                           cell: 1,
                         },
                         {
@@ -177,44 +188,61 @@ export function ConsignorEditModal({
                           name: 'lastName',
                           label: 'Last Name',
                           required: true,
+                          row: 2,
+                          cell: 1,
+                        },
+                        {
+                          type: 'select',
+                          name: 'actorType',
+                          label: 'Role',
+                          required: true,
+                          options: Object.entries(ACTORTYPE_ENUM).map(
+                            ([key, value]) => ({
+                              label: key,
+                              value: value,
+                            }),
+                          ),
                           row: 3,
-
+                          cell: 1,
+                        },
+                        {
+                          type: 'text',
+                          name: 'prefix',
+                          label: 'Prefix',
+                          row: 3,
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'suffix',
                           label: 'Suffix',
-                          row: 4,
+                          row: 3,
                           cell: 1,
                         },
                         {
                           type: 'divider',
                           row: 5,
-
-                          cell: 1,
+                          cell: 3,
                         },
                         {
                           type: 'title',
                           name: 'companyInfoHeading',
                           label: 'Company Information',
                           row: 6,
-
-                          cell: 1,
+                          cell: 3,
                         },
                         {
                           type: 'text',
                           name: 'company',
                           label: 'Company Name',
                           row: 7,
-                          cell: 1,
+                          cell: 2,
                         },
                         {
                           type: 'text',
                           name: 'companyContact',
                           label: 'Company Contact',
                           row: 7,
-
                           cell: 1,
                         },
                       ],
@@ -227,7 +255,6 @@ export function ConsignorEditModal({
                           name: 'contactInfoHeading',
                           label: 'Contact Information',
                           row: 1,
-
                           cell: 1,
                         },
                         {
@@ -243,7 +270,6 @@ export function ConsignorEditModal({
                           name: 'secondaryEmail',
                           label: 'Secondary Email',
                           row: 2,
-
                           cell: 1,
                         },
                         {
@@ -258,28 +284,25 @@ export function ConsignorEditModal({
                           name: 'homeNumber',
                           label: 'Home Number',
                           row: 3,
-
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'faxNumber',
                           label: 'Fax Number',
-                          row: 4,
+                          row: 3,
                           cell: 1,
                         },
                         {
                           type: 'divider',
                           row: 5,
-
-                          cell: 1,
+                          cell: 3,
                         },
                         {
                           type: 'title',
                           name: 'addressInfoHeading',
                           label: 'Address Information',
                           row: 6,
-
                           cell: 1,
                         },
                         {
@@ -294,7 +317,6 @@ export function ConsignorEditModal({
                           name: 'addressLine2',
                           label: 'Address Line 2',
                           row: 7,
-
                           cell: 1,
                         },
                         {
@@ -309,14 +331,13 @@ export function ConsignorEditModal({
                           name: 'state',
                           label: 'State',
                           row: 8,
-
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'postalCode',
                           label: 'Postal Code',
-                          row: 9,
+                          row: 8,
                           cell: 1,
                         },
                       ],

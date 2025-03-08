@@ -33,7 +33,14 @@ const Dashboard = () => {
           deleted: value === 'deleted',
         });
       }}
-      initialFilters={{}}
+      initialFilters={{
+        eventDateEnd: [
+          {
+            operator: auctionsFiltering.deleted ? 'lte' : 'gte',
+            value: 'd:' + fMoment().format('YYYY-MM-DD'),
+          },
+        ],
+      }}
       filterSection={<></>}
       dataProvider={AuctionsDataProvider}
       EditModal={AuctionEditModal}
@@ -81,6 +88,7 @@ const Dashboard = () => {
           key: 'eventDateStart',
           label: 'Start Date',
           sortable: true,
+          specialType: 'date',
           filterable: ['contains', 'equals'],
           renderCell(value) {
             return fMoment(value).format('MMM DD, YYYY hh:mm A');
@@ -90,6 +98,7 @@ const Dashboard = () => {
           key: 'eventDateEnd',
           label: 'End Date',
           sortable: true,
+          specialType: 'date',
           filterable: ['contains', 'equals'],
           renderCell(value) {
             return fMoment(value).format('MMM DD, YYYY hh:mm A');

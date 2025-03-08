@@ -64,6 +64,8 @@ export interface ColumnsDataTable {
   renderCell?: (value: any, allValue: any) => React.ReactNode;
 }
 
+export type FilterDeclarations = Record<string, FilterValue[]>;
+
 // Update interfaces
 interface DataTableProps {
   name: string;
@@ -71,7 +73,7 @@ interface DataTableProps {
   columns: ColumnsDataTable[];
   actionButtons?: React.ReactNode;
   onRowClick?: (row: any) => void;
-  initialFilters?: Record<string, FilterValue[]>; // Add this line
+  initialFilters?: FilterDeclarations; // Add this line
   enableUrlPersistence?: boolean; // Add this line
   passFilters?: boolean; // Add this line
 }
@@ -173,7 +175,7 @@ export function DataProviderTable({
     key: string;
     direction: 'asc' | 'desc';
   } | null>(null);
-  const [_filters, setFilters] = useState<Record<string, FilterValue[]>>({});
+  const [_filters, setFilters] = useState<FilterDeclarations>({});
 
   const filters = useMemo(() => {
     // combbined initialFilters and _filters keys

@@ -19,6 +19,7 @@ import { VEHICLE_STATUSES } from '@/lib/constants/vehicle';
 import { AuctionsDataProvider } from '@/lib/dataProviders/auctions';
 import { ChangeLogHistory } from '@/components/ChangeLogHistory';
 import { useAuth } from '@/hooks/use-auth';
+import { FieldType } from '@/components/custom/quick-form.types';
 
 interface VehicleEditModalProps {
   isOpen: boolean;
@@ -676,7 +677,7 @@ export function VehicleEditModal({
 
                                   form.setValue(
                                     'entryFeeCollectedById',
-                                    user.id + 'xy',
+                                    user.id,
                                   );
                                 }}
                               >
@@ -972,26 +973,30 @@ export function VehicleEditModal({
                         },
                       ],
                     },
-                    {
-                      name: 'Edit History',
-                      fields: [
-                        {
-                          type: 'custom',
-                          label: 'Edit History Table',
-                          name: 'created',
-                          row: 1,
-                          cell: 2,
-                          component(form) {
-                            return (
-                              <ChangeLogHistory
-                                dataType='car'
-                                dataId={itemID}
-                              />
-                            );
-                          },
-                        },
-                      ],
-                    },
+                    ...(itemID
+                      ? [
+                          {
+                            name: 'Edit History',
+                            fields: [
+                              {
+                                type: 'custom',
+                                label: 'Edit History Table',
+                                name: 'created',
+                                row: 1,
+                                cell: 2,
+                                component(form) {
+                                  return (
+                                    <ChangeLogHistory
+                                      dataType='car'
+                                      dataId={itemID}
+                                    />
+                                  );
+                                },
+                              } as FieldType,
+                            ],
+                          } as { name: string; fields: FieldType[] },
+                        ]
+                      : []),
                   ],
                 },
               ]}

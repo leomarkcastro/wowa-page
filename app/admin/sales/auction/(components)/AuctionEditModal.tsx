@@ -15,6 +15,93 @@ import { useSearchParams } from 'next/navigation';
 import { FileItem } from '@/components/ui/MultiFileInput';
 import { fMoment } from '@/lib/services/fMoment';
 import { ChangeLogHistory } from '@/components/ChangeLogHistory';
+import { CarsDataProvider } from '@/lib/dataProviders/cars';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { formatMoney } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { FieldType } from '@/components/custom/quick-form.types';
+
+interface AssignedCarsListProps {
+  loadingCars: boolean;
+  assignedCars: any[];
+  carColumns: {
+    accessorKey: string;
+    header: string;
+    cell?: ({
+      row,
+    }: {
+      row: { getValue: (key: string) => any };
+    }) => React.ReactNode;
+  }[];
+}
+
+const AssignedCarsList: React.FC<AssignedCarsListProps> = ({
+  loadingCars,
+  assignedCars,
+  carColumns,
+}) => {
+  return (
+    <div className='w-full'>
+      {loadingCars ? (
+        <div className='flex items-center justify-center p-8'>
+          <div className='mr-2 h-3 w-3 animate-spin bg-primary/50' />
+          <p>Loading cars...</p>
+        </div>
+      ) : assignedCars.length === 0 ? (
+        <div className='p-8 text-center text-muted-foreground'>
+          No cars assigned to this auction yet.
+        </div>
+      ) : (
+        <div className='w-full overflow-auto'>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {carColumns.map((column) => (
+                  <TableHead key={column.accessorKey}>
+                    {column.header}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {assignedCars.map((car) => (
+                <TableRow
+                  key={car.id}
+                  className='cursor-pointer'
+                  onClick={() =>
+                    window.open(
+                      `/admin/pre-sale/vehicles?id=${car.id}&readonly=true`,
+                      '_blank',
+                    )
+                  }
+                >
+                  {carColumns.map((column) => (
+                    <TableCell key={`${car.id}-${column.accessorKey}`}>
+                      {column.cell
+                        ? column.cell({
+                            row: {
+                              getValue: (key) => car[key],
+                            },
+                          })
+                        : car[column.accessorKey]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface AuctionEditModalProps {
   isOpen: boolean;
@@ -35,13 +122,24 @@ export function AuctionEditModal({
   const [loading, setLoading] = useState(false);
   const [errMessage, setErrMessage] = useState('');
   const [readonly, setReadonly] = useState(readOnly);
+  const [assignedCars, setAssignedCars] = useState<any[]>([]);
+  const [loadingCars, setLoadingCars] = useState(false);
 
   useEffect(() => {
     setReadonly(readOnly);
   }, [readOnly]);
 
+  useEffect(() => {
+    if (isOpen && itemID) {
+      fetchAssignedCars();
+    }
+  }, [isOpen, itemID]);
+
   const handleClose = () => {
     onClose();
+    if (readOnly !== readonly) {
+      setReadonly(readOnly);
+    }
   };
 
   const dataProvider = AuctionsDataProvider;
@@ -53,6 +151,111 @@ export function AuctionEditModal({
       );
     }
   };
+
+  const fetchAssignedCars = async () => {
+    if (!itemID) return;
+
+    setLoadingCars(true);
+    try {
+      const response = await CarsDataProvider.getList({
+        pagination: { page: 1, perPage: 100 },
+        sorters: [],
+        search: '',
+        filters: [
+          {
+            field: 'auctionId',
+            operator: 'equals',
+            value: itemID,
+          },
+          {
+            field: 'deletedAt',
+            operator: 'equals',
+            value: 's:null',
+          },
+        ],
+        meta: {},
+      });
+
+      setAssignedCars(response.data || []);
+    } catch (error) {
+      console.error('Error fetching assigned cars:', error);
+    } finally {
+      setLoadingCars(false);
+    }
+  };
+
+  const carColumns = [
+    {
+      accessorKey: 'id',
+      header: 'Ref ID',
+      cell: ({ row }) => {
+        const id = row.getValue('id') as string;
+        return (
+          <p className='font-mono'>
+            {id.length > 10 ? id.slice(-7).toUpperCase() : id}
+          </p>
+        );
+      },
+    },
+    {
+      accessorKey: 'lotId',
+      header: 'Lot ID',
+    },
+    {
+      accessorKey: 'year',
+      header: 'Year',
+    },
+    {
+      accessorKey: 'make',
+      header: 'Make',
+    },
+    {
+      accessorKey: 'model',
+      header: 'Model',
+    },
+    {
+      accessorKey: 'marketValueLow',
+      header: 'Low Est.',
+      cell: ({ row }) => {
+        const value = row.getValue('marketValueLow');
+        return formatMoney(value as number);
+      },
+    },
+    {
+      accessorKey: 'marketValueHigh',
+      header: 'High Est.',
+      cell: ({ row }) => {
+        const value = row.getValue('marketValueHigh');
+        return formatMoney(value as number);
+      },
+    },
+    {
+      accessorKey: 'isSellWithoutReserve',
+      header: 'Reserve',
+      cell: ({ row }) => {
+        const value = row.getValue('isSellWithoutReserve') as boolean;
+        return value ? 'Y' : 'N';
+      },
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => {
+        const value = (
+          (row.getValue('status') as string) || 'pending'
+        ).toUpperCase();
+        let variant = 'secondary';
+        if (['approved'].includes(value.toLowerCase())) {
+          variant = 'default';
+        } else if (
+          ['declined', 'cancelled', 'withdrawn'].includes(value.toLowerCase())
+        ) {
+          variant = 'destructive';
+        }
+        return <Badge variant={variant as any}>{value}</Badge>;
+      },
+    },
+  ];
 
   return (
     <>
@@ -88,11 +291,24 @@ export function AuctionEditModal({
                   {itemID.slice(-7)}
                 </span>
               )}
+              {readonly && (
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={() => {
+                    setReadonly(false);
+                  }}
+                  className='ml-4'
+                >
+                  Edit
+                </Button>
+              )}
             </DialogTitle>
           </DialogHeader>
 
           <div className='h-full overflow-auto px-4'>
             <ResourceForm
+              key={(readonly ? 'readonly' : 'edit') + '::' + itemID || 'new'}
               mode={itemID ? 'edit' : 'create'}
               title={
                 readonly
@@ -172,11 +388,17 @@ export function AuctionEditModal({
                       name: 'Basic Information',
                       fields: [
                         {
+                          type: 'title',
+                          label: 'Auction Details',
+                          row: 1,
+                          cell: 2,
+                        },
+                        {
                           type: 'text',
                           name: 'auctionID',
                           label: 'Auction ID',
                           required: true,
-                          row: 1,
+                          row: 2,
                           cell: 1,
                         },
                         {
@@ -184,21 +406,32 @@ export function AuctionEditModal({
                           name: 'name',
                           label: 'Auction Name',
                           required: true,
-                          row: 1,
+                          row: 2,
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'summary',
                           label: 'Summary',
-                          row: 2,
+                          row: 3,
                           cell: 2,
                         },
                         {
                           type: 'textarea',
                           name: 'body',
                           label: 'Description',
-                          row: 3,
+                          row: 4,
+                          cell: 2,
+                        },
+                        {
+                          type: 'divider',
+                          row: 5,
+                          cell: 2,
+                        },
+                        {
+                          type: 'title',
+                          label: 'Auction Schedule',
+                          row: 6,
                           cell: 2,
                         },
                         {
@@ -206,7 +439,7 @@ export function AuctionEditModal({
                           name: 'eventDateStart',
                           label: 'Start Date',
                           required: true,
-                          row: 4,
+                          row: 7,
                           cell: 1,
                         },
                         {
@@ -214,16 +447,13 @@ export function AuctionEditModal({
                           name: 'eventDateEnd',
                           label: 'End Date',
                           required: true,
-                          row: 4,
+                          row: 7,
                           cell: 1,
                         },
                         {
-                          type: 'text',
-                          name: 'updateID',
-                          label: 'Update ID',
-                          readonly: true,
-                          row: 5,
-                          cell: 1,
+                          type: 'divider',
+                          row: 9,
+                          cell: 2,
                         },
                       ],
                     },
@@ -231,46 +461,57 @@ export function AuctionEditModal({
                       name: 'Location',
                       fields: [
                         {
+                          type: 'title',
+                          label: 'Auction Location',
+                          row: 1,
+                          cell: 2,
+                        },
+                        {
                           type: 'text',
                           name: 'addressLine1',
                           label: 'Address Line 1',
-                          row: 1,
+                          row: 2,
                           cell: 2,
                         },
                         {
                           type: 'text',
                           name: 'addressLine2',
                           label: 'Address Line 2',
-                          row: 2,
+                          row: 3,
                           cell: 2,
                         },
                         {
                           type: 'text',
                           name: 'city',
                           label: 'City',
-                          row: 3,
+                          row: 4,
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'state',
                           label: 'State/Province',
-                          row: 3,
+                          row: 4,
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'zip',
                           label: 'ZIP/Postal Code',
-                          row: 4,
+                          row: 5,
                           cell: 1,
                         },
                         {
                           type: 'text',
                           name: 'country',
                           label: 'Country',
-                          row: 4,
+                          row: 5,
                           cell: 1,
+                        },
+                        {
+                          type: 'divider',
+                          row: 6,
+                          cell: 2,
                         },
                       ],
                     },
@@ -278,10 +519,16 @@ export function AuctionEditModal({
                       name: 'Media & Tags',
                       fields: [
                         {
+                          type: 'title',
+                          label: 'Auction Media',
+                          row: 1,
+                          cell: 2,
+                        },
+                        {
                           type: 'multiFileInput',
                           name: 'photos',
                           label: 'Upload Photos',
-                          row: 1,
+                          row: 2,
                           cell: 2,
                         },
                         {
@@ -300,10 +547,21 @@ export function AuctionEditModal({
                           aspectRatio: 16 / 9,
                         },
                         {
+                          type: 'divider',
+                          row: 4,
+                          cell: 2,
+                        },
+                        {
+                          type: 'title',
+                          label: 'Auction Tags',
+                          row: 5,
+                          cell: 2,
+                        },
+                        {
                           type: 'array',
                           name: 'tags',
                           label: 'Tags',
-                          row: 4,
+                          row: 6,
                           cell: 2,
                           field: {
                             type: 'text',
@@ -311,29 +569,64 @@ export function AuctionEditModal({
                             cell: 2,
                           },
                         },
-                      ],
-                    },
-
-                    {
-                      name: 'Edit History',
-                      fields: [
                         {
-                          type: 'custom',
-                          label: 'Edit History Table',
-                          name: 'created',
-                          row: 1,
+                          type: 'divider',
+                          row: 7,
                           cell: 2,
-                          component(form) {
-                            return (
-                              <ChangeLogHistory
-                                dataType='auction'
-                                dataId={itemID}
-                              />
-                            );
-                          },
                         },
                       ],
                     },
+                    ...(itemID
+                      ? [
+                          {
+                            name: 'Assigned Cars',
+                            fields: [
+                              {
+                                type: 'title',
+                                label: 'Cars Assigned to this Auction',
+                                row: 1,
+                                cell: 2,
+                              },
+                              {
+                                type: 'custom',
+                                label: 'Cars List',
+                                name: 'carsList',
+                                row: 2,
+                                cell: 2,
+                                component() {
+                                  return (
+                                    <AssignedCarsList
+                                      loadingCars={loadingCars}
+                                      assignedCars={assignedCars}
+                                      carColumns={carColumns}
+                                    />
+                                  );
+                                },
+                              } as FieldType,
+                            ],
+                          } as { name: string; fields: FieldType[] },
+                          {
+                            name: 'Edit History',
+                            fields: [
+                              {
+                                type: 'custom',
+                                label: 'Edit History Table',
+                                name: 'created',
+                                row: 1,
+                                cell: 2,
+                                component(form) {
+                                  return (
+                                    <ChangeLogHistory
+                                      dataType='auction'
+                                      dataId={itemID}
+                                    />
+                                  );
+                                },
+                              } as FieldType,
+                            ],
+                          } as { name: string; fields: FieldType[] },
+                        ]
+                      : []),
                   ],
                 },
               ]}

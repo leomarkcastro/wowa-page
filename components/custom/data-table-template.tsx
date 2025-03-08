@@ -18,7 +18,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { ColumnsDataTable, DataProviderTable } from './quick-table';
+import {
+  ColumnsDataTable,
+  DataProviderTable,
+  FilterDeclarations,
+} from './quick-table';
 import { PlusIcon } from 'lucide-react';
 import { ReactNode, useState, useEffect, useCallback } from 'react';
 import { toast } from '@/hooks/use-toast';
@@ -47,8 +51,10 @@ interface DataTableTemplateProps {
     onClose: () => void;
     itemID: string | null;
     readOnly: boolean;
+    defaultValues?: any;
   }>;
-  initialFilters?: Record<string, any>;
+  initialFilters?: FilterDeclarations;
+  defaultValues?: any;
 }
 
 export function DataTableTemplate({
@@ -63,6 +69,7 @@ export function DataTableTemplate({
   addNewLabel = 'Add New',
   EditModal,
   initialFilters,
+  defaultValues,
 }: DataTableTemplateProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [itemID, setItemID] = useState<string | null>(null);
@@ -101,7 +108,6 @@ export function DataTableTemplate({
 
   useEffect(() => {
     if (itemID || itemID === null) {
-      console.log('setting url');
       const url = new URL(window.location.href);
       if (itemID) {
         url.searchParams.set('id', itemID);
@@ -189,6 +195,7 @@ export function DataTableTemplate({
         onClose={handleModalClose}
         itemID={itemID}
         readOnly={readOnly}
+        defaultValues={itemID ? undefined : defaultValues}
       />
 
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
